@@ -96,7 +96,7 @@ TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
 
 
-## 👇 Extra Code in resources/[qb]/qb-vehicleshop/client.lua at the bottom this file.
+## 👇 Extra Code in resources/[qb]/qb-vehicleshop/client.lua at the bottom.
 ```
 RegisterNetEvent('qb-vehicleshop:client:reloadShops', function(source)
     for k,v in pairs(Config.Shops) do
