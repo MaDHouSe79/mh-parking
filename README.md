@@ -39,7 +39,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ## 🍀 Features
 - ✅ Easy to install and use
 - ✅ QB-Phone notifications
-- ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players.
+- ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
 - ✅ User Controll like displaying text on screen.
 - ✅ Police can, if thay want, always see who owns the vehicle by using /parknames
 
