@@ -191,4 +191,4 @@ Discord: https://discord.gg/cEMSeE9dgS
 
 
 ## Any bugs or issues, let my know, and i try to fix it.
-Keep it nice and clean for everybody and have fun with this awesome parking system 😎
+Keep it nice and clean for everybody and have fun with this awesome parking mod 😎
