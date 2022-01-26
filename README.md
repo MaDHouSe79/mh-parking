@@ -185,10 +185,13 @@ CREATE TABLE `player_parking`  (
 - 5: you now have added a new language to the system, enjoy 😎
 
 
-## Subscript to my channel : https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A
-## join Discord : https://discord.gg/cEMSeE9dgS
+## Subscript : 
+Youtube: https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A
+
+## Discord : 
+Discord: https://discord.gg/cEMSeE9dgS
 
 
 
-Any bugs or issues, let my know, and i try to fix it.
+## Any bugs or issues, let my know, and i try to fix it.
 Keep it nice and clean for everybody and have fun with this awesome parking system 😎
