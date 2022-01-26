@@ -182,7 +182,7 @@ CREATE TABLE `player_parking`  (
 - 5: you now have added a new language to the system, enjoy 😎
 
 
-## Subscribe & Discord: 
+## Subscribe & Discord
 - [Subscribe](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
 
