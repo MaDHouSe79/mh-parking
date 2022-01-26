@@ -8,7 +8,7 @@ This mod is more intended for large servers, with VIP players, you can give this
 
 This mod is also good if players crashes or if the server gets a reboot, and if you have persossion, 
 and you have parked your car, you never have to get your car from the garage again,
-but if you do forget to park your vehicle, your car can be found in garage or impound.
+but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
 
 This is my second mod i make public, so please by kind to my 😁 i still have much to learn.
 
