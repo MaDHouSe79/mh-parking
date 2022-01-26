@@ -88,7 +88,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ You can impound this vehicles, if a user park their vehicle incorrectly, and you added the trigger correctly...
 - ✅ You can give a fine, and then if you want, you can still impound this vehicle.
 - ✅ If a player want, they can enable the hud to see the name and plate of this persons parked vehicle, by using /parknames.
-- ✅ The Polices and Mechanics client side trigger event, for the police of mechanic to impount a vehicle correctly. 
+- ✅ The Polices and Mechanics client side trigger event, for the police or mechanic to impount a vehicle correctly. 
 - ✅ You MUST add this to your police impound client function or client trigger event.
 - 💥 DONT FORGET THIS PART BELOW, OR PLAYERS CAN GET THERE VEHICLE AT THE GARAGE FOR FREE.
 ````
