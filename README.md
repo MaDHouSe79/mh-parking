@@ -5,6 +5,7 @@ This is a very awesome parking system, that i specially made for [qb-core](https
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
 This mod is more intended for large servers, with VIP players, you can give this players an extra feature,
+
 to let them park in front of there own house.
 
 This mod is also good if players crashes or if the server gets a reboot, and if you have persossion, 
