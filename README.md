@@ -32,7 +32,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys) 
-
+- ✅ [qb-vehicleshop](https://github.com/qbcore-framework/qb-vehicleshop) 
 
 
 ## 🍀 Features
