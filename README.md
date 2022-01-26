@@ -7,7 +7,7 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house.
 
 This mod is also good if players crashes or if the server gets a reboot, and if you have persossion to park,
-and you have parked your vehicle, then you never have to get your car from the garage again, but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
+and you have parked your vehicle, then you never have to get your vehicle from the garage again, but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
 
 This is my second mod i make public, so please by kind to my 😁 i still have much to learn.
 
