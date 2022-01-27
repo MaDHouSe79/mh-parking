@@ -4,7 +4,9 @@ This is a very awesome parking mod, that i specially made for [qb-core](https://
 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
-This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house.
+This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house,
+or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place,
+you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
 
 This mod is also good if players crashes or if the server gets a reboot, and if you have persossion to park,
 and you have parked your vehicle, then you never have to get your vehicle from the garage again, but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
@@ -92,6 +94,33 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ````
 TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
+
+
+## 👇 Extra Code in resources/[qb]/qb-vehicleshop/client.lua at the bottom.
+```
+RegisterNetEvent('qb-vehicleshop:client:reloadShops', function(source)
+    for k,v in pairs(Config.Shops) do
+        for i = 1, #Config.Shops[k]['ShowroomVehicles'] do
+            local model = GetHashKey(Config.Shops[k]["ShowroomVehicles"][i].defaultVehicle)
+            RequestModel(model)
+            while not HasModelLoaded(model) do
+                Wait(0)
+            end
+            local veh = CreateVehicle(model, Config.Shops[k]["ShowroomVehicles"][i].coords.x, Config.Shops[k]["ShowroomVehicles"][i].coords.y, Config.Shops[k]["ShowroomVehicles"][i].coords.z, false, false)
+            SetModelAsNoLongerNeeded(model)
+            SetEntityAsMissionEntity(veh, true, true)
+            SetVehicleOnGroundProperly(veh)
+            SetEntityInvincible(veh,true)
+            SetVehicleDirtLevel(veh, 0.0)
+            SetVehicleDoorsLocked(veh, 3)
+            SetEntityHeading(veh, Config.Shops[k]["ShowroomVehicles"][i].coords.w)
+            FreezeEntityPosition(veh,true)
+            SetVehicleNumberPlateText(veh, 'BUY ME')
+        end    
+        createVehZones(k)
+    end
+end)    
+```
 
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
