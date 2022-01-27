@@ -28,6 +28,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 [![Watch the video2](https://www.madirc.nl/fivem/foto1.png)](https://www.youtube.com/watch?v=bSRZpbHlDkk)
 
 ## 💪 Dependencies
+- ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
