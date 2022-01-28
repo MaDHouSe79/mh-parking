@@ -21,7 +21,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-## 📸 Screenshots 👊😁👍 (picture's are from a older version i rebuild)
+## 📸 Screenshots 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
 ![foto2](https://www.madirc.nl/fivem/foto2.png)
 ![foto3](https://www.madirc.nl/fivem/foto3.png) 
@@ -188,8 +188,7 @@ CREATE TABLE `player_parking`  (
 - 1: copy a file from the [qb]/qb-parking/shared/locales directory
 - 2: rename this file for example fr.lua or sp.lua
 - 3: translate the lines in the file to your language
-- 4: go to config.lua and replace nl with your language filename name
-- 5: you now have added a new language to the system, enjoy 😎
+- 4: you now have added a new language to the system, enjoy 😎
 
 
 ## 🙈 Subscribe & Discord
