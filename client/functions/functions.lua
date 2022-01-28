@@ -1,7 +1,7 @@
-local function CreateParkDisPlay(player)
-	local owner = string.format(Lang:t("info.owner", {owner = player.citizenname}))..'\n'
-	local model = string.format(Lang:t("info.model", {model = player.model}))..'\n'
-	local plate = string.format(Lang:t("info.plate", {plate = player.plate}))..'\n'
+local function CreateParkDisPlay(vehicleData)
+	local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
+	local model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+	local plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
 	return string.format("%s", model..plate..owner)
 end
 
