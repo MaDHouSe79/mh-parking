@@ -1,4 +1,4 @@
-## QB-parking Version 1.0 A Rebuilded by MaDHouSe (Coming Soon)
+## QB-parking Version 1.0 Created by MaDHouSe (Coming Soon)
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house, or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place, you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
@@ -49,7 +49,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 Stap 3: Add the player_parking.sql to your correct database.
 - 👉 Stap 4: Add your vip players to the VipPlayer table in qb-parking/shared/config.lua there is an example how to do this.
 - 👉 Stap 5: Add any recommended extra code what I say you should add.
-- 👉 Stap 6: If you are 💯% sure you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
+- 👉 Stap 6: If you are 100% sure, you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
 
 
 
@@ -65,10 +65,11 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
 - ✅ User Controll like displaying text on screen.
 - ✅ Police can, if thay want, always see who owns the vehicle by using /parknames
+- ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
 - 👉 Your players can setup youtube scene, and if they want, they can come back later, and your vecihles are still there.
-- 👉 This is very usefull cause if you make scene's and if somehthing goes wrong, then don't wory you vechiles are right there where you parked.
+- 👉 This is very usefull cause if you make scene and somehthing goes wrong, then don't wory you vechiles are right there where you parked.
 - 👉 And of course you should not forget to park your vehicle 👊😁👍
 
 
@@ -85,7 +86,8 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 ## ⚙️ Settings
 - 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
 - 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
-- 👉 A little knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
+- 👉
+- 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
 
 
 
