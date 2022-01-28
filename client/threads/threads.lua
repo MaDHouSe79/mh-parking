@@ -39,7 +39,7 @@ CreateThread(function()
 				local vehicle = GetVehiclePedIsIn(player)
 				if storedVehicle ~= false and IsAllowToPark(Citizenid) then
 					DisplayHelpText(Lang:t("info.press_drive_car"))
-					if IsControlJustReleased(0, Config.parkingButton) then --[[F5]]
+					if IsControlJustReleased(0, Config.parkingButton) then
 						isUsingParkCommand = true
 					end
 				end
