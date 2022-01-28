@@ -8,6 +8,7 @@ local Translations = {
         ["freeforall"]          = "Park systeem: ingeschakelt voor iedereen.",
         ["parkvip"]             = "Park systeem: ingeschakelt alleen voor VIP.",
         ["no_permission"]       = "Park systeem: Je hebt geen rechten om te mogen parkeren.",
+        ["offline"]             = "Park Systeen is offline",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",
