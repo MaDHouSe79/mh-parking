@@ -20,7 +20,7 @@ local function DeleteNearByVehicle(location)
 	end
 end
 
--- When player drive the car
+-- Make vehicle ready to drive
 local function MakeVehicleReadyToDrive(vehicle)
 	-- Delete the local entity first
 	DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
@@ -41,6 +41,7 @@ local function MakeVehicleReadyToDrive(vehicle)
 	SetModelAsNoLongerNeeded(vehicle.props["model"])
 end
 
+-- Drive 
 function Drive(player, vehicle)
 	action = 'drive'
 	QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
