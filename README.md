@@ -195,6 +195,6 @@ CREATE TABLE `player_parking`  (
 
 
 
-## 🐞 Any bugs or issues, let my know, and i try my best to fix it.
+## 🐞 Any bugs issues or suggestions, let my know.
 - If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
