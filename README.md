@@ -1,8 +1,7 @@
-## QB-parking Version 1.0 Created by MaDHouSe (Coming Soon)
+## QB-parking Version 1.0 A Rebuilded by MaDHouSe (Coming Soon)
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house, or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place, you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
-
 
 This mod is also good if players crashes or if the server gets a reboot, and if you have persossion to park,
 and you have parked your vehicle, then you never have to get your vehicle from the garage again, but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
@@ -11,13 +10,11 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 
 
 
-
 ## This qb-parking system is a rebuild of esx_realparking 
-esx_realparking is created by [Akkariin Meiko](https://github.com/kasuganosoras/) 
-but i completely rebuild and change this system for QB-Core and i add some other stuff to it. 
+[esx_realparking](https://github.com/kasuganosoras/esx_realparking/) is created by [Akkariin Meiko](https://github.com/kasuganosoras/) 
+but i completely rebuild and change this system for QB-Core and i add some other features to it. 
 [Akkariin Meiko](https://github.com/kasuganosoras/) did a great job to make this mod public, 
 Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊😁👍
-
 
 
 
@@ -31,11 +28,9 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-
 ## 🎥 Videos 👊😁👍
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
 [![Watch the video2](https://www.madirc.nl/fivem/foto1.png)](https://www.youtube.com/watch?v=bSRZpbHlDkk)
-
 
 
 
@@ -48,11 +43,19 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
+## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
+- 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it :)
+- 👉 Stap 2: Copy the directory qb-parking to resources/[qb]/
+- 👉 Stap 3: Add the player_parking.sql to your correct database.
+- 👉 Stap 4: Add your vip players to the VipPlayer table in qb-parking/shared/config.lua there is an example how to do this.
+- 👉 Stap 5: Add any recommended extra code what I say you should add.
+- 👉 Stap 6: If you are 💯% sure you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
+
+
 
 ## 💯 Included and optional
 - ✅ [3D Waypoint](https://www.gta5-mods.com/scripts/3d-waypoint)
 - ✅ if you want to add every waypoint as 3D Waypoint in world space.
-
 
 
 
@@ -65,9 +68,8 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
 - 👉 Your players can setup youtube scene, and if they want, they can come back later, and your vecihles are still there.
-- 👉 This is very usefull cause if you make scene and somehthing goes wrong, then don't wory you vechiles are right there where you parked.
+- 👉 This is very usefull cause if you make scene's and if somehthing goes wrong, then don't wory you vechiles are right there where you parked.
 - 👉 And of course you should not forget to park your vehicle 👊😁👍
-
 
 
 
@@ -80,12 +82,10 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-
 ## ⚙️ Settings
 - 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
 - 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
-- 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
-
+- 👉 A little knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
 
 
 
@@ -97,12 +97,10 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-
 ## 💯 I tested this mod on a computer/server with the following settings
 - ✅ Prossessor: I7 12xCore
 - ✅ Memory: 16 gig memory
 - ✅ Graphics: GTX 1050 TI 4GB
-
 
 
 
@@ -118,7 +116,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ You can give a fine, and then if you want, you can still impound this vehicle.
 - ✅ If a player want, they can enable the hud to see the name and plate of this persons parked vehicle, by using /parknames.
 - ✅ The Polices and Mechanics client side trigger event, for the police or mechanic to impount a vehicle correctly. 
-- ✅ You MUST add this to your police and mechanic impound function or trigger event.
+- ✅ You MUST add this to your police and or mechanic impound trigger event.
 - 💥 DON'T FORGET THIS PART BELOW, OR PLAYERS CAN GET THERE VEHICLE AT THE GARAGE BACK FOR FREE WHEN THE REJOIN THE SERVER.
 ````
 TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
@@ -160,7 +158,6 @@ end)
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
 - ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
-
 ## resources[qb]/qb-core/server/player.lua Line:506
 ````
 { table = 'player_parking' },
@@ -183,7 +180,6 @@ CREATE TABLE `player_parking`  (
 ````
 
 
-
 ## ⚙️ To get a other languages
 - 1: copy a file from the [qb]/qb-parking/shared/locales directory
 - 2: rename this file for example fr.lua or sp.lua
@@ -191,9 +187,11 @@ CREATE TABLE `player_parking`  (
 - 4: you now have added a new language to the system, enjoy 😎
 
 
+
 ## 🙈 Subscribe & Discord
 - [Subscribe](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
+
 
 
 ## 🐞 Any bugs or issues, let my know, and i try my best to fix it.
