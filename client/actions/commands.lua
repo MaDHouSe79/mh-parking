@@ -25,10 +25,8 @@ RegisterCommand(Config.Command.vip, function()
     if IsAdmin(Citizenid) then
         OnlyAllowVipPlayers = not OnlyAllowVipPlayers
         if OnlyAllowVipPlayers then
-           -- QBCore.Functions.Notify(Lang:t('system.enable', {type = "vip"}), "primary", 1500)
             QBCore.Functions.Notify(Lang:t('system.parkvip', {type = "vip"}), "primary", 1500)
         else
-            --QBCore.Functions.Notify(Lang:t('system.disable', {type = "vip"}), "primary", 1500)
             QBCore.Functions.Notify(Lang:t('system.freeforall', {type = "freeforall"}), "primary", 1500)
         end
     else
