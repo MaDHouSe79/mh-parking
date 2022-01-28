@@ -1,8 +1,8 @@
 -- Save the car to database
 function SaveParkingCar(vehicleData, model, plate, PlayerData)
 	local payerName = PlayerData.name
-	if Config.useRolePlayName then
-		payerName = PlayerData.charinfo.firstname ..' '.. PlayerData.charinfo.lastname
+	if Config.useRoleplayName then
+		payerName = PlayerData.charinfo.firstname ..''.. PlayerData.charinfo.lastname
 	end
 	MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
 		["@citizenid"]   = PlayerData.citizenid,
@@ -71,7 +71,7 @@ end
 function RefreshVehicles(src)
 	if src == nil then src = -1 end
 	local vehicles = {}
-	MySQL.Async.fetchAll("SELECT * FROM player_parking ", {}, function(rs)
+	MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
 		if type(rs) == 'table' and #rs > 0 then
 			for k, v in pairs(rs) do
 				table.insert(vehicles, {
