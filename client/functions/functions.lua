@@ -16,7 +16,7 @@ local function PrepareVehicle(entity, vehicleData)
 	SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
 	SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
 	SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
-	exports['LegacyFuel']:SetFuel(entity, 100.0)
+	exports['LegacyFuel']:SetFuel(entity, vehicleData.vehicle.health.tank)
 	SetVehRadioStation(entity, 'OFF')
 	SetVehicleDirtLevel(entity, 0)
 	QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
@@ -92,14 +92,14 @@ function DisplayParkedOwnerText()
 	if not HideParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
-		for k, v in pairs(LocalVehicles) do
-			displayWhoOwnesThisCar = CreateParkDisPlay(v)
-			if #(pl - vector3(v.location.x, v.location.y, v.location.z)) < Config.DisplayDistance then
-				if PlayerData.job == "police" and onDuty == true then
-					Draw3DText(v.location.x, v.location.y, v.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+		for k, vehicle in pairs(LocalVehicles) do
+			displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
+			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
+				if PlayerJob == "police" and onDuty == true then
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 				end
 				if PlayerData.citizenid == v.citizenid then
-					Draw3DText(v.location.x, v.location.y, v.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 				end
 			end
 		end
@@ -108,15 +108,15 @@ end
 
 -- Get the stored vehicle player is in
 function GetPlayerInStoredCar(player)
-	local vehicleEntity = GetVehiclePedIsIn(player)
-	local findVeh = false
+	local entity = GetVehiclePedIsIn(player)
+	local findVehicle = false
 	for i = 1, #LocalVehicles do
-		if LocalVehicles[i].entity == vehicleEntity then
-			findVeh = LocalVehicles[i]
+		if LocalVehicles[i].entity == entity then
+			findVehicle = LocalVehicles[i]
 			break
 		end
 	end
-	return findVeh
+	return findVehicle
 end
 
 -- Spawn local vehicles(server data)
