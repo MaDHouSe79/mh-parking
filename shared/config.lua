@@ -1,5 +1,5 @@
 Config                        = {}
-Config.debug                  = true
+Config.debug                  = false
 Config.Maxcarparking          = 50           -- max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 50           -- distence to see test above vehicles
 Config.SoundWhenCloseDoors    = false        -- sound when closing doors
@@ -17,26 +17,26 @@ Config.HideParkedVehicleNames = false        -- 👉 default is true, if you wan
 
 
 Config.Command = {
-	park         = 'park',                   -- User/Admin permission
-	parknames    = 'park-names',             -- User/Admin permission
-	notification = 'park-notification',      -- User/Admin permission
-	vip          = 'park-vip',               -- Admin permission
-	system       = 'park-system',            -- Admin permission
+	park         = 'park',               -- User/Admin permission
+	parknames    = 'park-names',         -- User/Admin permission
+	notification = 'park-notification',  -- User/Admin permission
+	vip          = 'park-vip',           -- Admin permission
+	system       = 'park-system',        -- Admin permission
 }
 
 Config.VipPlayers = {                        -- Add more vip plaers if you want.
 	[1] = {
-		username  = "MaDHouSe",              -- Just to know who it is
-		citizenid = "AWC63661",              -- you gen cet this from the databse players table copy citizenid and add this here
+		username  = "MaDHouSe",      -- Just to know who it is
+		citizenid = "AWC63661",      -- you gen cet this from the databse players table copy citizenid and add this here
 		isAdmin   = true,
 	},
 
-	[2] = {                                  -- example player 2 to add more players as VIP
+	[2] = {                              -- example player 2 to add more players as VIP
 		username  = "changeme",
 		citizenid = "changeme",
 		isAdmin   = false,
 	},
-	[3] = {                                  -- example player 3 to add more players as VIP
+	[3] = {                              -- example player 3 to add more players as VIP
 		username  = "changeme",
 		citizenid = "changeme",
 		isAdmin   = false,
