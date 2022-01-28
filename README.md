@@ -39,7 +39,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
-- ✅ [qb-vehiclekeys](https://github.com/MaDHouSe79/qb-vehiclekeys) (already edited by me)
+- ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys) (already edited by me)
 
 
 
@@ -124,8 +124,8 @@ TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
 
 
-
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
+- You can also downlnoad this [qb-vehiclekeys](https://github.com/MaDHouSe79/qb-vehiclekeys) i lready edited for you
 ````
 RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
