@@ -69,7 +69,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
 - 👉 Your players can setup youtube scene, and if they want, they can come back later, and your vechiles are still there.
-- 👉 This is very usefull cause if you make scene and somehthing goes wrong, then don't wory you vechiles are right there where you parked.
+- 👉 This is very usefull cause if you make scene and somehthing goes wrong, then don't wory you vechiles are right there.
 - 👉 And of course you should not forget to park your vehicle 👊😁👍
 
 
