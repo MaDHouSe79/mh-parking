@@ -96,6 +96,35 @@ TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
 
 
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
+````
+RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    TriggerServerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', plate, citizenid)
+end)
+````
+
+
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
+````
+RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    if VehicleList then
+        local val = VehicleList[plate]
+        if val then
+            VehicleList[plate].owners[citizenid] = true
+        else
+            VehicleList[plate] = { owners = {} }
+            VehicleList[plate].owners[citizenid] = true
+        end
+    else
+        VehicleList = {}
+        VehicleList[plate] = { owners = {} }
+        VehicleList[plate].owners[citizenid] = true
+    end
+end)
+````
+
+
+
 ## 👇 Extra Code in resources/[qb]/qb-vehicleshop/client.lua at the bottom.
 ```
 RegisterNetEvent('qb-vehicleshop:client:reloadShops', function(source)
@@ -121,34 +150,6 @@ RegisterNetEvent('qb-vehicleshop:client:reloadShops', function(source)
     end
 end)    
 ```
-
-
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
-````
-RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    if VehicleList then
-        local val = VehicleList[plate]
-        if val then
-            VehicleList[plate].owners[citizenid] = true
-        else
-            VehicleList[plate] = { owners = {} }
-            VehicleList[plate].owners[citizenid] = true
-        end
-    else
-        VehicleList = {}
-        VehicleList[plate] = { owners = {} }
-        VehicleList[plate].owners[citizenid] = true
-    end
-end)
-````
-
-
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-````
-RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    TriggerServerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', plate, citizenid)
-end)
-````
 
 
 ## 👇 To keep things nice and clean for the qb-core system and database.
