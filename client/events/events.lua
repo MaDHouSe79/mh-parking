@@ -45,5 +45,5 @@ end)
 
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
-	QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
+    QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
