@@ -44,7 +44,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
-- 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it :)
+- 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it 😁
 - 👉 Stap 2: Copy the directory qb-parking to resources/[qb]/
 - 👉 Stap 3: Add the player_parking.sql to your correct database.
 - 👉 Stap 4: Add your vip players to the VipPlayer table in qb-parking/shared/config.lua there is an example how to do this.
