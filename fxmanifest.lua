@@ -7,8 +7,8 @@ version '1.0.0'
 
 shared_scripts {
 	'@qb-core/shared/locale.lua',
-    'locales/en.lua', -- change en to your language
-    'shared/config.lua',
+        'locales/en.lua', -- change en to your language
+        'shared/config.lua',
 	'shared/functions.lua',
 	'shared/variables.lua',
 }
