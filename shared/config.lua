@@ -6,6 +6,9 @@ Config.SoundWhenCloseDoors    = false        -- sound when closing doors
 Config.parkingButton          = 166          -- F5 (vehicle exit and or park)
 
 
+Config.useRolePlayName        = true         -- if you want to use Roleplay name above the cars (firstname lastname) set this on true
+
+
 -- 👇 Base config when the server start
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting.
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting.
