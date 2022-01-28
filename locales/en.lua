@@ -8,6 +8,7 @@ local Translations = {
         ["freeforall"]          = "Park system: is now enabled for all players.",
         ["parkvip"]             = "Park system: is now only enabled for VIP.",
         ["no_permission"]       = "Park systeem: You do not have permission to park.",
+        ["offline"]             = "Park Systeen is offline",
     },
     success = {
         ["parked"]              = "Your car is packed",
