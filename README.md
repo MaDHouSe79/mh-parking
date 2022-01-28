@@ -21,7 +21,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-## 📸 Screenshots 👊😁👍 (this foto's are from a older version i rebuild)
+## 📸 Screenshots 👊😁👍 (picture's are from a older version i rebuild)
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
 ![foto2](https://www.madirc.nl/fivem/foto2.png)
 ![foto3](https://www.madirc.nl/fivem/foto3.png) 
