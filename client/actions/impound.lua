@@ -1,4 +1,4 @@
--- Impound vehicle for esx_policejob
+-- Impound vehicle
 function ImpoundVehicle(vehicle)
 	for i = 1, #LocalVehicles do
 		if vehicle == LocalVehicles[i].entity then
