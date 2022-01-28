@@ -55,13 +55,13 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 		else
 			cb({
 				status  = false,
-				message = "You are not allows to use the park system",
+				message = Lang:t("system.no_permission"),
 			})
 		end
 	else 
 		cb({
 			status  = false,
-			message = "Park Systen is disable",
+			message = Lang:t("system.offline"),
 		})
 	end
 end)
@@ -105,13 +105,13 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 		else
 			cb({
 				status  = false,
-				message = "You are not allows to use the park system",
+				message = Lang:t("system.no_permission"),
 			})
 		end
 	else 
 		cb({
 			status  = false,
-			message = "Park Systen is disable",
+			message = Lang:t("system.offline"),
 		})
 	end
 end)
