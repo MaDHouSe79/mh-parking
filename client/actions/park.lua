@@ -18,7 +18,7 @@ local function ParkCar(player, vehicle)
 	SetVehicleLights(vehicle, 0)
 end
 
--- Send Email the the player phone
+-- Send Email to the player phone
 local function SendMail(mail_sender, mail_subject, mail_message)
 	if PhoneNotification then
 		local coords = GetEntityCoords(PlayerPedId())
