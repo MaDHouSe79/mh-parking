@@ -68,11 +68,9 @@ end)
 
 -- When player request to drive the car
 QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, vehicleData)
-
 	if UseParkingSystem then
 		local src     = source
 		local Player  = QBCore.Functions.GetPlayer(src)
-
 		if IsAllowToPark(Player.PlayerData.citizenid) then
 			local plate   = vehicleData.plate
 			local isFound = false
@@ -80,7 +78,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 				for k, v in pairs(vehicles) do
 					if type(v.plate) ~= 'nil' and plate == v.plate then
 						isFound = true
-					end		
+					end
 				end
 				if isFound then
 					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
@@ -121,7 +119,6 @@ end)
 -- When the police impound the car, support for esx_policejob
 QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb, vehicleData)
 	local src     = source
-    local Player  = QBCore.Functions.GetPlayer(src)
     local plate   = vehicleData.plate
 	MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate

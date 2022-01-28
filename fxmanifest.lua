@@ -7,12 +7,10 @@ version '1.0.0'
 
 shared_scripts {
 	'@qb-core/shared/locale.lua',
-    'shared/locale.lua',
-    'locales/nl.lua', -- change nl to your language
+    'locales/en.lua', -- change en to your language
     'shared/config.lua',
 	'shared/functions.lua',
 	'shared/variables.lua',
-	'@qb-core/shared/locale.lua',
 }
 
 client_scripts {
@@ -27,7 +25,7 @@ client_scripts {
 }
 
 server_scripts {
-	'@oxmysql/lib/MySQL.lua',	
+	'@oxmysql/lib/MySQL.lua',
 	'server/events/events.lua',
 	'server/functions/functions.lua',
 	'server/callbacks/callback.lua',

@@ -1,4 +1,59 @@
--- Save 
+-- Park
+local function ParkCar(player, vehicle)
+	TaskLeaveVehicle(player, vehicle)
+	for i = 0, 5 do
+		SetVehicleDoorShut(vehicle, i, false) -- will close all doors from 0-5
+		if Config.SoundWhenCloseDoors then
+			PlayVehicleDoorCloseSound(vehicle, i)
+		end
+	end
+	Wait(2000)
+	SetVehicleDoorsLocked(vehicle, 2)
+	SetVehicleLights(vehicle, 2)
+	Wait(150)
+	SetVehicleLights(vehicle, 0)
+	Wait(150)
+	SetVehicleLights(vehicle, 2)
+	Wait(150)
+	SetVehicleLights(vehicle, 0)
+end
+
+-- Send Email the the player phone
+local function SendMail(mail_sender, mail_subject, mail_message)
+	if PhoneNotification then
+		local coords = GetEntityCoords(PlayerPedId())
+		TriggerServerEvent('qb-phone:server:sendNewMail', {
+			sender  = mail_sender,
+			subject = mail_subject,
+			message = mail_message,
+			button = {
+                enabled = true,
+                buttonEvent = "qb-parking:client:setParkedVecihleLocation",
+                buttonData = coords
+            }
+		})
+	end
+end
+
+-- Get the street name where you are at the moment.
+local function GetStreetName()
+	local ped       = PlayerPedId()
+	local veh       = GetVehiclePedIsIn(ped, false)
+	local coords    = GetEntityCoords(PlayerPedId())
+	local zone      = GetNameOfZone(coords.x, coords.y, coords.z)
+	local zoneLabel = GetLabelText(zone)
+	local var       = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
+	local hash      = GetStreetNameFromHashKey(var)
+	local street    = nil
+	if hash == '' then
+		street = zoneLabel
+	else
+		street = hash..', '..zoneLabel
+	end
+	return street
+end
+
+-- Save
 function Save(player, vehicle)
 	ParkCar(player, vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
@@ -12,15 +67,15 @@ function Save(player, vehicle)
 			SendMail(
 				Lang:t('mail.sender' , {
 					company   = Lang:t('info.companyName'),
-				}), 
+				}),
 				Lang:t('mail.subject', {
 					model     = carModelName,
-					plate     = LastUsedPlate, 
-				}), 
+					plate     = LastUsedPlate,
+				}),
 				Lang:t('mail.message', {
 					street    = GetStreetName(),
 				    company   = Lang:t('info.companyName'),
-					username  = PlayerData.charinfo.firstname, 
+					username  = PlayerData.charinfo.firstname,
 					model     = carModelName,
 					plate     = LastUsedPlate,
 				})
@@ -32,28 +87,9 @@ function Save(player, vehicle)
 		props       = vehicleProps,
 		livery      = GetVehicleLivery(vehicle),
 		citizenid   = PlayerData.citizenid,
-		plate       = vehicleProps.plate, 
+		plate       = vehicleProps.plate,
 		model       = carModelName,
 		health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
-		location    = {x = GetEntityCoords(vehicle).x, y = GetEntityCoords(vehicle).y, z = GetEntityCoords(vehicle).z - 0.5, h = GetEntityHeading(vehicle)},   
+		location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
 	})
-end
-
-function ParkCar(player, vehicle)
-	TaskLeaveVehicle(player, vehicle)						
-	for i = 0, 5 do
-		SetVehicleDoorShut(vehicle, i, false) -- will close all doors from 0-5
-		if Config.SoundWhenCloseDoors then
-			PlayVehicleDoorCloseSound(vehicle, i)
-		end
-	end			
-	Citizen.Wait(2000)
-	SetVehicleDoorsLocked(vehicle, 2)
-	SetVehicleLights(vehicle, 2)
-	Citizen.Wait(150)
-	SetVehicleLights(vehicle, 0)
-	Citizen.Wait(150)
-	SetVehicleLights(vehicle, 2)
-	Citizen.Wait(150)
-	SetVehicleLights(vehicle, 0)
 end
