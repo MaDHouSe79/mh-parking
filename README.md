@@ -49,7 +49,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 
 
-## Included and optional
+## 💯 Included and optional
 - ✅ [3D Waypoint](https://www.gta5-mods.com/scripts/3d-waypoint)
 - ✅ if you want to add every waypoint as 3D Waypoint in world space.
 
