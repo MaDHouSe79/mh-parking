@@ -32,7 +32,6 @@ function SaveToImpound(plate, citizenid)
 		["@plate"]     = plate,
 		["@citizenid"] = citizenid
 	})
-		
 	MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
 		["@plate"]     = plate,
 		["@citizenid"] = citizenid
@@ -55,7 +54,7 @@ function FindPlayerVehicles(citizenid, cb)
 end
 
 -- Get the number of the vehicles.
-function GetVehicleNumOfParking(name)
+function GetVehicleNumOfParking()
 	local rs = MySQL.Async.fetchAll('SELECT id FROM player_parking', {})
 	if type(rs) == 'table' then
 		return #rs
@@ -73,15 +72,15 @@ function RefreshVehicles(src)
 			for k, v in pairs(rs) do
 				table.insert(vehicles, {
 					vehicle     = json.decode(v.data),
-					plate       = v.plate, 
-					citizenid   = v.citizenid, 
+					plate       = v.plate,
+					citizenid   = v.citizenid,
 					citizenname = v.citizenname,
 					model       = v.model,
 				})
 				if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
 					TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
 				end
-			end		
+			end
 			TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
 		end
 	end)

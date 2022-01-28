@@ -22,7 +22,7 @@ action                 = 'none'
 VehiclesList           = {}
 
 
--- Shared By Server And Client 
+-- Shared By Server And Client
 PhoneNotification      = Config.PhoneNotification
 UseParkingSystem       = Config.UseParkingSystem
 OnlyAllowVipPlayers    = Config.OnlyAllowVipPlayers

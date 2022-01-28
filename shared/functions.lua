@@ -6,7 +6,7 @@ function IsAllowToPark(citizenid)
             for k, v in pairs(Config.VipPlayers) do
                 if v.citizenid == citizenid then
                     state = true
-                end		
+                end
             end
         else
             state =  true
@@ -21,7 +21,7 @@ function IsAdmin(citizenid)
     for k, v in pairs(Config.VipPlayers) do
         if v.citizenid == citizenid and v.isAdmin then
             return true
-        end		
+        end
     end
 	return false
 end

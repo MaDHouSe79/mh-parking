@@ -1,19 +1,17 @@
 -- Main thread
-Citizen.CreateThread(function()	
+CreateThread(function()
 	PlayerData = QBCore.Functions.GetPlayerData()
-	Citizenid  = PlayerData.citizenid
+	PlayerJob = PlayerData.job
+	Citizenid = PlayerData.citizenid
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Wait(0)
-		local pl = GetEntityCoords(GetPlayerPed(-1))
-		
-		if GetDistanceBetweenCoords(pl.x, pl.y, pl.z, Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z, true) < Config.ParkingLocation.s then
+		local pl = GetEntityCoords(PlayerPedId())
+		if #(pl - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.ParkingLocation.s then
 			inParking = true
 			crParking = 'allparking'
 		end
-		
 		if inParking then
 			if not SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)
@@ -22,27 +20,27 @@ Citizen.CreateThread(function()
 				Wait(2000)
 			end
 		else
-			if SpawnedVehicles then 
+			if SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)
-				SpawnedVehicles = false 
+				SpawnedVehicles = false
 			end
 		end
+		Wait(0)
 	end
 end)
 
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	if UseParkingSystem then
 		while true do
-			Citizen.Wait(0)
-			if inParking and IsPedInAnyVehicle(GetPlayerPed(-1)) then
-				local player = GetPlayerPed(-1)
+			local player = PlayerPedId()
+			if inParking and IsPedInAnyVehicle(player) then
 				local storedVehicle = GetPlayerInStoredCar(player)
-				local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1))
+				local vehicle = GetVehiclePedIsIn(player)
 				if storedVehicle ~= false and IsAllowToPark(Citizenid) then
 					DisplayHelpText(Lang:t("info.press_drive_car"))
-					if IsControlJustReleased(0, Config.parkingButton) then --[[F5]] 
-						isUsingParkCommand = true 
+					if IsControlJustReleased(0, Config.parkingButton) then --[[F5]]
+						isUsingParkCommand = true
 					end
 				end
 				if isUsingParkCommand then
@@ -66,13 +64,14 @@ Citizen.CreateThread(function()
 			else
 				isUsingParkCommand = false
 			end
+			Wait(0)
 		end
 	end
 end)
 
-Citizen.CreateThread(function()	
+CreateThread(function()
     while true do
-        Citizen.Wait(0);
         DisplayParkedOwnerText()
-    end 
+		Wait(0)
+    end
 end)

@@ -29,7 +29,7 @@ Config.VipPlayers = {                        -- Add more vip plaers if you want.
 	},
 
 	[2] = {                                  -- example player 2 to add more players as VIP
-		username  = "changeme",               
+		username  = "changeme",
 		citizenid = "changeme",
 		isAdmin   = false,
 	},
@@ -40,4 +40,4 @@ Config.VipPlayers = {                        -- Add more vip plaers if you want.
 	}, -- just add more here
 }
 
-Config.ParkingLocation={x=232.11,y=-770.14,z=0.0,s=99999099.0,h=900.10}
+Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
