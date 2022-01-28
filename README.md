@@ -183,7 +183,7 @@ CREATE TABLE `player_parking`  (
 
 
 ## ⚙️ To get a other languages
-- 1: copy a file from the [qb]/qb-parking/shared/locales directory
+- 1: copy a file from the [qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
 - 3: translate the lines in the file to your language
 - 4: you now have added a new language to the system, enjoy 😎
