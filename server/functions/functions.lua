@@ -36,7 +36,7 @@ function SaveToImpound(plate, citizenid)
 	["@plate"]     = plate,
 	["@citizenid"] = citizenid
     })
-    MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
+    MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
 	["@plate"]     = plate,
 	["@citizenid"] = citizenid
     })
