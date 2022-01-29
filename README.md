@@ -64,7 +64,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ QB-Phone notifications
 - ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
 - ✅ User Controll like displaying text on screen.
-- ✅ Police can, if thay want, always see who owns the vehicle by using /parknames
+- ✅ Police can, if thay want, always see who owns the vehicle by using /park-names
 - ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
