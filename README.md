@@ -181,6 +181,52 @@ CREATE TABLE `player_parking`  (
 ````
 
 
+## If you have issues with impound and fuel, then replace this code.
+- go to [qb]/policejob/client/job.lua start line 122.
+````
+function TakeOutImpound(vehicle)
+    local coords = Config.Locations["impound"][currentGarage]
+    if coords then
+        QBCore.Functions.SpawnVehicle(vehicle.vehicle, function(veh)
+            QBCore.Functions.TriggerCallback('qb-garage:server:GetVehicleProperties', function(properties)
+                QBCore.Functions.SetVehicleProperties(veh, properties)
+                SetVehicleNumberPlateText(veh, vehicle.plate)
+                SetEntityHeading(veh, coords.w)
+                exports['LegacyFuel']:SetFuel(veh, vehicle.fuel)
+                doCarDamage(veh, vehicle)
+                TriggerServerEvent('police:server:TakeOutImpound',vehicle.plate)
+                closeMenuFull()
+                TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+                TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+                SetVehicleEngineOn(veh, true, true)
+            end, vehicle.plate)
+        end, coords, true)
+    end
+end
+````
+--Change it with this code
+````
+function TakeOutImpound(vehicle)
+    local coords = Config.Locations["impound"][currentGarage]
+    if coords then
+        QBCore.Functions.SpawnVehicle(vehicle.vehicle, function(veh)
+            QBCore.Functions.TriggerCallback('qb-garage:server:GetVehicleProperties', function(properties)
+                QBCore.Functions.SetVehicleProperties(veh, properties)
+                SetVehicleNumberPlateText(veh, vehicle.plate)
+                SetEntityHeading(veh, coords.w)
+                exports['LegacyFuel']:SetFuel(veh, 100.0)
+                doCarDamage(veh, vehicle)
+                TriggerServerEvent('police:server:TakeOutImpound',vehicle.plate)
+                closeMenuFull()
+                TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+                TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+                SetVehicleEngineOn(veh, true, true)
+            end, vehicle.plate)
+        end, coords, true)
+    end
+end
+````
+
 ## ⚙️ To get a other languages
 - 1: copy a file from the [qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
