@@ -1,12 +1,12 @@
 -- Save the car to database
 function SaveParkingCar(vehicleData, model, plate, PlayerData)
-    local payerName = PlayerData.name
+    local playerName = PlayerData.name
     if Config.useRoleplayName then
-	payerName = PlayerData.charinfo.firstname ..' '.. PlayerData.charinfo.lastname
+	playerName = PlayerData.charinfo.firstname ..' '.. PlayerData.charinfo.lastname
     end
     MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
 	["@citizenid"]   = PlayerData.citizenid,
-	["@citizenname"] = payerName,
+	["@citizenname"] = playerName,
 	["@plate"]       = plate,
 	['@model']       = model,
 	["@data"]        = json.encode(vehicleData),
