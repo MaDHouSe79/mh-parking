@@ -1,4 +1,4 @@
-Config                        = {}
+Config                        = Config or {}
 Config.debug                  = false
 Config.Maxcarparking          = 50           -- max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 50           -- distence to see test above vehicles
