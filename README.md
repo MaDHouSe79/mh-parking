@@ -204,7 +204,7 @@ function TakeOutImpound(vehicle)
     end
 end
 ````
---Change it with this code
+-- 👇 Change it with this code
 ````
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
