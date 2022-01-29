@@ -181,8 +181,8 @@ CREATE TABLE `player_parking`  (
 ````
 
 
-## If you have issues with impound and fuel, then replace this code.
-- go to [qb]/policejob/client/job.lua start line 122.
+## 🤬 If you have issues with impound and fuel, then replace this code.
+- 👉 Go to [qb]/qb-policejob/client/job.lua do to line 122.
 ````
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
