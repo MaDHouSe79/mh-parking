@@ -98,7 +98,7 @@ function DisplayParkedOwnerText()
 		if PlayerJob == "police" and onDuty == true then
 		    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 		end
-		if PlayerData.citizenid == v.citizenid then
+		if PlayerData.citizenid == vehicle.citizenid then
 		    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 		end
 	    end
