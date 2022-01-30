@@ -227,6 +227,13 @@ function TakeOutImpound(vehicle)
 end
 ````
 
+## ⚙️ If F5 is not working for you with keybinds.
+--place thic code in [qb]qb-parking/client/command.lua
+```
+RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
+```
+
+
 ## ⚙️ To get a other languages
 - 1: copy a file from the [qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
