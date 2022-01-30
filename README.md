@@ -228,7 +228,7 @@ end
 ````
 
 ## ⚙️ If F5 is not working for you with keybinds.
---place thic code in [qb]qb-parking/client/command.lua
+--place thic code in /[qb]/qb-parking/client/command.lua
 ```
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
