@@ -182,7 +182,7 @@ CREATE TABLE `player_parking`  (
 
 
 ## 🤬 If you have issues with impound and fuel, then replace this code.
-- 👉 Go to [qb]/qb-policejob/client/job.lua go to line 122.
+- 👉 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
 ````
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
@@ -228,7 +228,7 @@ end
 ````
 
 ## ⚙️ If F5 is not working for you with keybinds.
---place thic code in /[qb]/qb-parking/client/command.lua
+--place thic code in resources/[qb]/qb-parking/client/command.lua
 ```
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
