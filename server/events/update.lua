@@ -5,7 +5,7 @@ if Config.CheckForUpdates then
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
     end)
 end
---https://raw.githubusercontent.com/MaDHouSe79/qb-parking/master/version
+
 RegisterServerEvent("dp:CheckVersion") 
 AddEventHandler("dp:CheckVersion", function()
     if updateavail then
