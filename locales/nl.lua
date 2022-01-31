@@ -9,7 +9,7 @@ local Translations = {
         ["parkvip"]             = "Park systeem: ingeschakelt alleen voor VIP.",
         ["no_permission"]       = "Park systeem: Je hebt geen rechten om te mogen parkeren.",
         ["offline"]             = "Park Systeen is offline",
-        ["update_needed"]       = "Park ystem is outdated....",
+        ["update_needed"]       = "Park System is verouderd....",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",

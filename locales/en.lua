@@ -7,8 +7,9 @@ local Translations = {
         ["disable"]             = "Park system %{type} is now disable",
         ["freeforall"]          = "Park system: is now enabled for all players.",
         ["parkvip"]             = "Park system: is now only enabled for VIP.",
-        ["no_permission"]       = "Park systeem: You do not have permission to park.",
-        ["offline"]             = "Park Systeen is offline",
+        ["no_permission"]       = "Park system: You do not have permission to park.",
+        ["offline"]             = "Park System is offline",
+        ["update_needed"]       = "Park System is outdated....",
     },
     success = {
         ["parked"]              = "Your car is packed",
