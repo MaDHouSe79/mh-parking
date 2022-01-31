@@ -1,4 +1,7 @@
 Config                        = Config or {}
+
+Config.CheckForUpdates        = true         -- is you want to stay updated keep it on true
+
 Config.Maxcarparking          = 50           -- max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 50           -- distence to see text above parked vehicles (player dependent)
 Config.SoundWhenCloseDoors    = false        -- if you want sound when closing vehicles doors
