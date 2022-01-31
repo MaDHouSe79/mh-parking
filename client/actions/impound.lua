@@ -1,7 +1,7 @@
 -- Impound vehicle
-function ImpoundVehicle(vehicle)
+function ImpoundVehicle(entity)
     for i = 1, #LocalVehicles do
-	if vehicle == LocalVehicles[i].entity then
+	if entity == LocalVehicles[i].entity then
 	    QBCore.Functions.TriggerCallback("qb-parking:server:impound", function(callback)
 		if callback.status then
 		    FreezeEntityPosition(LocalVehicles[i].entity, false)
