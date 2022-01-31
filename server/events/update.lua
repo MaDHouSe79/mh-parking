@@ -1,7 +1,7 @@
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
         updatePath = "/MaDHouSe79/qb-parking"
-        resourceName = "qb-parking ("..GetCurrentResourceName()..")"
+        resourceName = "("..GetCurrentResourceName()..")"
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
     end)
 end
