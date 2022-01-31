@@ -42,8 +42,8 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
 
-## 😁 Optional
-- if you use a other fuel script then LegacyFuel for example, cc-fuel, then change this in the config file. (Config.YourFuelExportName)
+## 😁 Optional 👊😁👍
+- ✅ if you use a other fuel script then LegacyFuel for example, cc-fuel, then change this in the config file. (Config.YourFuelExportName)
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
@@ -84,6 +84,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 Typ "/park-vip" if you only want to use vip parking. (Admin Only)
 - 👉 Typ "/park-system" if you want to turn on or off the system. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on f5 the word "park"
+
 
 
 ## ⚙️ Settings
