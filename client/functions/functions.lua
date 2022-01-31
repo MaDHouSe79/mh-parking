@@ -186,17 +186,15 @@ function DeleteLocalVehicle(vehicle)
 	    if vehicle ~= nil then
 		if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
 		    if vehicle.plate == LocalVehicles[i].plate then
-			local tmpModel = GetEntityModel(vehicle)
-			SetModelAsNoLongerNeeded(tmpModel)
 			DeleteEntity(LocalVehicles[i].entity)
 			table.remove(LocalVehicles, i)
-			tmpModel = nil
 		    end
 		end
 	    end
 	end
     end
 end
+
 
 -- Just some help text
 function DisplayHelpText(text)
