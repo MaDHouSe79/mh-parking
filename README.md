@@ -129,7 +129,6 @@ TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-- You can also downlnoad this [qb-vehiclekeys](https://github.com/MaDHouSe79/qb-vehiclekeys) i have already edited for you
 ````
 RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
