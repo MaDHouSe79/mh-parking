@@ -42,8 +42,9 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
 
-## Optional
+## 😁 Optional
 - if you use a other fuel script then LegacyFuel for example, cc-fuel, then change this in the config file. (Config.YourFuelExportName)
+
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it 😁
