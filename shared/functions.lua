@@ -7,6 +7,8 @@ function IsAllowToPark(citizenid)
                     return true
                 end
             end
+        else
+            return true
         end
     end
     return false
