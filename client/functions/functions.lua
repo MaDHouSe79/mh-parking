@@ -1,3 +1,5 @@
+TriggerServerEvent("qb-parking:CheckVersion")
+
 -- Create display text for parked vehicle
 local function CreateParkDisPlay(vehicleData)
     local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'

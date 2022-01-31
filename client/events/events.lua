@@ -48,7 +48,11 @@ end)
 -- Client site is Using Park Command
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
     if IsAllowToPark() then
-        isUsingParkCommand = true
+        if UpdateAvailable then
+            QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
+        else
+            isUsingParkCommand = true
+        end
     end
 end)
 
@@ -56,4 +60,9 @@ end)
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
+end)
+
+-- for Update checks
+RegisterNetEvent("qb-parking:client:Update", function(state)
+    UpdateAvailable = state
 end)
