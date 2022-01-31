@@ -25,7 +25,7 @@ client_scripts {
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    --'server/events/update.lua',
+    'server/events/update.lua',
     'server/events/events.lua',
     'server/functions/functions.lua',
     'server/callbacks/callback.lua',
