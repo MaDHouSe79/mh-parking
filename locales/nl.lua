@@ -26,6 +26,7 @@ local Translations = {
         ["must_own_car"]        = "Je moet de auto bezitten om hem te kunnen parkeren.",
         ["has_take_the_car"]    = "Jou voertuig is uit de pakeer zone gehaalt",
         ["only_cars_allowd"]    = "Je kunt hier alleen auto's parkeren",
+        ["stop_car"]            = "Stop het voertuig voor dat je het wilt parkeren...",
     },
     mail = {
         ["sender"]              = "%{company}",
@@ -33,6 +34,7 @@ local Translations = {
         ["message"]             = "Hey, %{username}<br /><br />Bedankt voor het vertrouwen in onze parkeerplaats!<br /><br />Om u het niet te laten vergeten waar jij jou auto gepakeerd hebt.<br />Krijgt je hierbij ook een herinderings e-mail met kenteken en de locatie waar je jou auto ongeveer gepakeerd hebt<br /><br />Eigennaar: %{username}<br />Model: %{model}<br />Kenteken: %{plate}<br />Locatie:%{street}<br /><br/><br/>%{company}",
     },
 }
+
 Lang = Locale:new({
     phrases = Translations,
     warnOnMissing = true

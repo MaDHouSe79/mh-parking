@@ -230,7 +230,7 @@ RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5')
 ```
 
 
-## ⚙️ To get a other languages
+## ⚙️ To get a other languages.
 - 1: copy a file from the [qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
 - 3: translate the lines in the file to your language

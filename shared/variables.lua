@@ -1,7 +1,7 @@
--- Shared By Server And Client
+-- Shared By Server And Client.
 QBCore                 = exports['qb-core']:GetCoreObject()
 
--- Client Only
+-- Client Only.
 PlayerData             = {}
 PlayerJob              = {}
 LocalVehiclesList      = {}
@@ -17,10 +17,10 @@ parkName               = nil
 vehicleEntity          = nil
 action                 = 'none'
 
--- Server Only
+-- Server Only.
 VehiclesList           = {}
 
--- Shared By Server And Client
+-- Shared By Server And Client.
 PhoneNotification      = Config.PhoneNotification
 UseParkingSystem       = Config.UseParkingSystem
 OnlyAllowVipPlayers    = Config.OnlyAllowVipPlayers

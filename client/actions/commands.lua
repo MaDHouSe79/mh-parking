@@ -1,7 +1,9 @@
+-- Command To park and unpark your vehicle 
 RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
 end, false)
 
+-- Command on of for parking names
 RegisterCommand(Config.Command.parknames, function()
     HideParkedVehicleNames = not HideParkedVehicleNames
     if HideParkedVehicleNames then
@@ -11,6 +13,7 @@ RegisterCommand(Config.Command.parknames, function()
     end
 end, false)
 
+-- Command To turn on of the phone notifications
 RegisterCommand(Config.Command.notification, function()
     PhoneNotification = not PhoneNotification
     if PhoneNotification then
@@ -20,7 +23,7 @@ RegisterCommand(Config.Command.notification, function()
     end
 end, false)
 
--- Admin Only
+-- Turn on and off the park vip system in game (Admin Only)
 RegisterCommand(Config.Command.vip, function()
     if IsAdmin(Citizenid) then
         OnlyAllowVipPlayers = not OnlyAllowVipPlayers
@@ -34,6 +37,7 @@ RegisterCommand(Config.Command.vip, function()
     end
 end, false)
 
+-- Turn on and off the park system in game (Admin Only)
 RegisterCommand(Config.Command.system, function()
     if IsAdmin(Citizenid) then
         UseParkingSystem = not UseParkingSystem

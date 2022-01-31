@@ -26,6 +26,7 @@ local Translations = {
         ["must_own_car"]        = "You must own the car to park it.",
         ["has_take_the_car"]    = "Your vehicle has been removed from the parking zone",
         ["only_cars_allowd"]    = "You can only park cars here",
+        ["stop_car"]            = "Stop your vehicle before you park",
     },
     mail = {
         ["sender"]              = "%{company}",
@@ -33,6 +34,7 @@ local Translations = {
         ["message"]             = "Hey, %{username}<br /><br />Thank you for trusting our parking lot!<br /><br />To make sure you don't forget where you parked your car.<br />Will you also receive a reminder e-mail with license plate and the location where you parked your car approximately<br /><br />Owner: %{username}<br />Model: %{model}<br />Plate: %{plate}<br />Location:%{street}<br /><br/><br/>%{company}",
     },
 }
+
 Lang = Locale:new({
     phrases = Translations,
     warnOnMissing = true

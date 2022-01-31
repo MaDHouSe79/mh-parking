@@ -1,3 +1,4 @@
+-- This wil let you know is there is an update.
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
         updatePath = "/MaDHouSe79/qb-parking"

@@ -14,7 +14,7 @@ function IsAllowToPark(citizenid)
     return false
 end
 
--- Check if a citizenid is an admin
+-- Check if a citizenid is an admin.
 function IsAdmin(citizenid)
     for k, v in pairs(Config.VipPlayers) do
         if v.citizenid == citizenid and v.isAdmin then

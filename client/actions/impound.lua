@@ -1,4 +1,4 @@
--- Impound vehicle
+-- Impound vehicle.
 function ImpoundVehicle(entity)
     for i = 1, #LocalVehicles do
 		if entity == LocalVehicles[i].entity then

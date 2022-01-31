@@ -1,4 +1,4 @@
--- Park
+-- Park.
 local function ParkCar(player, vehicle)
     TaskLeaveVehicle(player, vehicle)
     for i = 0, 5 do
@@ -18,7 +18,7 @@ local function ParkCar(player, vehicle)
     SetVehicleLights(vehicle, 0)
 end
 
--- Send Email to the player phone
+-- Send Email to the player phone.
 local function SendMail(mail_sender, mail_subject, mail_message)
     if PhoneNotification then
         local coords = GetEntityCoords(PlayerPedId())
@@ -49,7 +49,7 @@ local function GetStreetName()
     return street
 end
 
--- Save
+-- Save.
 function Save(player, vehicle)
     ParkCar(player, vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)

@@ -1,20 +1,19 @@
 Config                        = Config or {}
 
-Config.CheckForUpdates        = true         -- is you want to stay updated keep it on true
+Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
+Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
+Config.DisplayDistance        = 50           -- 👉 Distence to see text above parked vehicles (player dependent)
+Config.SoundWhenCloseDoors    = false        -- 👉 If you want sound when closing vehicles doors
+Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
+Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
 
-Config.Maxcarparking          = 50           -- max allowed cars in world space (Default, dont go to hight)
-Config.DisplayDistance        = 50           -- distence to see text above parked vehicles (player dependent)
-Config.SoundWhenCloseDoors    = false        -- if you want sound when closing vehicles doors
-Config.parkingButton          = 166          -- F5 (vehicle exit and or park)
-Config.useRoleplayName        = true         -- if you want to use Roleplay name above the cars (firstname lastname) set this on true
-
-Config.YourFuelExportName     = 'LegacyFuel' -- default is LegacyFuel, if you use a other fuel script, for example cc-fuel
+Config.YourFuelExportName     = 'LegacyFuel' -- Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
 
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.OnlyAllowVipPlayers    = true         -- 👉 I recommend, to use this mod only for vip players.... (default true)
-Config.HideParkedVehicleNames = false        -- 👉 default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
+Config.HideParkedVehicleNames = false        -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 
 -- change rhis to your own commands
 Config.Command = {
@@ -29,7 +28,7 @@ Config.Command = {
 Config.VipPlayers = {                        -- Add more vip plaers if you want.
     [1] = {
 	username  = "MaDHouSe",              -- Just to know who it is
-	citizenid = "AWC63661",              -- you gen cet this from the databse players table copy citizenid and add this here
+	citizenid = "TAD48182",              -- you gen cet this from the databse players table copy citizenid and add this here
 	isAdmin   = true,
     },
 

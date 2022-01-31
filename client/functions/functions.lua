@@ -1,3 +1,4 @@
+-- Create display text for parked vehicle
 local function CreateParkDisPlay(vehicleData)
     local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
     local model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
@@ -5,6 +6,7 @@ local function CreateParkDisPlay(vehicleData)
     return string.format("%s", model..plate..owner)
 end
 
+-- Prepare vehicle for use
 local function PrepareVehicle(entity, vehicleData)
     -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
@@ -23,17 +25,20 @@ local function PrepareVehicle(entity, vehicleData)
     SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
 end
 
--- Load Entity
+-- Load Entity.
 local function LoadEntity(vehicleData, type)
     LoadModel(vehicleData.vehicle.props["model"])
-    vehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z, vehicleData.vehicle.location.w, false)
-    QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
+	Wait(500)
+    vehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.2, vehicleData.vehicle.location.w, false)
+	QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
     if type == 'server' then
         TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
     end
+	Wait(500)
     PrepareVehicle(vehicleEntity, vehicleData)
 end
 
+-- This only triggers is you going to drive
 local function DoAction(action)
     if action == 'drive' then
 		action = nil
@@ -45,7 +50,7 @@ local function DoAction(action)
     end
 end
 
--- Insert Data to table
+-- Insert Data to table.
 local function TableInsert(vehicleEntity, vehicleData)
     table.insert(LocalVehicles, {
 		entity      = vehicleEntity,
@@ -65,7 +70,7 @@ local function TableInsert(vehicleEntity, vehicleData)
     })
 end
 
--- Draw 3d text on screen
+-- Draw 3d text on screen.
 local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     local p     = GetGameplayCamCoords()
     local dist  = #(p - vector3(x, y, z))
@@ -88,6 +93,7 @@ local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
+-- To Display Owner Text by parked vehicles
 function DisplayParkedOwnerText()
     if not HideParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
@@ -96,17 +102,17 @@ function DisplayParkedOwnerText()
 			displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
 			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
 				if PlayerJob == "police" and onDuty == true then
-					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.5, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 				end
 				if PlayerData.citizenid == vehicle.citizenid then
-					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.5, displayWhoOwnesThisCar, 0, 0.04, 0.04)
 				end
 			end
 		end
     end
 end
 
--- Get the stored vehicle player is in
+-- Get the stored vehicle player is in.
 function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
     local findVehicle = false
@@ -119,25 +125,25 @@ function GetPlayerInStoredCar(player)
     return findVehicle
 end
 
--- Spawn local vehicles(server data)
+-- Spawn local vehicles(server data).
 function SpawnVehicles(vehicles)
     CreateThread(function()
 	while IsDeleting do Citizen.Wait(100) end
-	if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-	    for i = 1, #vehicles, 1 do
-		DeleteLocalVehicle(vehicles[i].vehicle)
-		LoadEntity(vehicles[i], 'server')
-		Wait(100)
-		FreezeEntityPosition(vehicleEntity, true)
-		TableInsert(vehicleEntity, vehicles[i])
-		DoAction(action)
-		Wait(100)
-	    end
-	end
+		if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
+			for i = 1, #vehicles, 1 do
+			DeleteLocalVehicle(vehicles[i].vehicle)
+			LoadEntity(vehicles[i], 'server')
+			Wait(1500)
+			FreezeEntityPosition(vehicleEntity, true)
+			TableInsert(vehicleEntity, vehicles[i])
+			Wait(100)
+			DoAction(action)
+			end
+		end
     end)
 end
 
--- Spawn single vehicle(client data)
+-- Spawn single vehicle(client data).
 function SpawnVehicle(vehicleData)
     CreateThread(function()
 		if LocalPlayer.state.isLoggedIn then
@@ -147,17 +153,17 @@ function SpawnVehicle(vehicleData)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(vehicleEntity, vehicleData)
 			Wait(50)
-			FreezeEntityPosition(vehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(vehicleEntity, 2)
 			end
 			TableInsert(vehicleEntity, vehicleData)
+			Wait(100)
 			DoAction(action)
 		end
     end)
 end
 
--- remove all Vehicles
+-- Remove all Vehicles.
 function RemoveVehicles(vehicles)
     IsDeleting = true
     if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] ~= nil then
@@ -180,7 +186,7 @@ function RemoveVehicles(vehicles)
     IsDeleting    = false
 end
 
--- Delete single vehicle
+-- Delete single vehicle.
 function DeleteLocalVehicle(vehicle)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] ~= nil then
 		for i = 1, #LocalVehicles do
@@ -196,17 +202,17 @@ function DeleteLocalVehicle(vehicle)
     end
 end
 
--- Just some help text
+-- Just some help text.
 function DisplayHelpText(text)
     SetTextComponentFormat('STRING')
     AddTextComponentString(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
--- Load car model
+-- Load car model.
 function LoadModel(model)
-    RequestModel(model)
-    while not HasModelLoaded(model) do
-        Wait(0)
-    end
+	while not HasModelLoaded(model) do
+		RequestModel(model)
+		Wait(50)
+	end
 end

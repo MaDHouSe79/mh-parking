@@ -1,4 +1,4 @@
--- Save the car to database.
+-- Save the vehicle to database.
 function SaveParkingCar(vehicleData, model, plate, PlayerData)
     local playerName = PlayerData.name
     if Config.useRoleplayName then
@@ -18,7 +18,7 @@ function SaveParkingCar(vehicleData, model, plate, PlayerData)
     })
 end
 
--- When player request to drive the car.
+-- When player request to drive the vehicle.
 function RestoreParkingCar(plate, PlayerData)
     MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 		["@plate"]     = plate,
@@ -30,7 +30,7 @@ function RestoreParkingCar(plate, PlayerData)
     })
 end
 
--- When the police impound the car, support for esx_policejob.
+-- When the police impound the vehicle, support for esx_policejob.
 function SaveToImpound(plate, citizenid)
     MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 		["@plate"]     = plate,

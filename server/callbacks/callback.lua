@@ -1,4 +1,4 @@
--- Save the car to database
+-- Save the car to database.
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
     if UseParkingSystem then
 		local src     = source
@@ -64,7 +64,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
     end
 end)
 
--- When player request to drive the car
+-- When player request to drive the car.
 QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, vehicleData)
     if UseParkingSystem then
 		local src     = source
