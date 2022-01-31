@@ -14,7 +14,6 @@ shared_scripts {
 }
 
 client_scripts {
-    --"client/waypoint/3DWaypointClient.net.dll", -- only uncommend this if you want to have 3d waypoints
     'client/functions/functions.lua',
     'client/actions/drive.lua',
     'client/actions/park.lua',
@@ -30,11 +29,6 @@ server_scripts {
     'server/functions/functions.lua',
     'server/callbacks/callback.lua',
 }
-
--- only uncommend this if you want to have 3d waypoints.
---[[
-file 'client/waypoint/3DWaypointClient.ini'
-]]--
 
 dependencies {
     'oxmysql',
