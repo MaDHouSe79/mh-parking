@@ -122,17 +122,18 @@ end
 -- Spawn local vehicles(server data)
 function SpawnVehicles(vehicles)
     CreateThread(function()
-		while IsDeleting do Citizen.Wait(100) end
-		if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-			for i = 1, #vehicles, 1 do
-				DeleteLocalVehicle(vehicles[i].vehicle)
-				LoadEntity(vehicles[i], 'server')
-				Wait(50)
-				TableInsert(vehicleEntity, vehicles[i])
-				DoAction(action)
-				Wait(100)
-			end
-		end
+	while IsDeleting do Citizen.Wait(100) end
+	if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
+	    for i = 1, #vehicles, 1 do
+		DeleteLocalVehicle(vehicles[i].vehicle)
+		LoadEntity(vehicles[i], 'server')
+		Wait(50)
+		FreezeEntityPosition(vehicleEntity, true)
+		TableInsert(vehicleEntity, vehicles[i])
+		DoAction(action)
+		Wait(100)
+	    end
+	end
     end)
 end
 
