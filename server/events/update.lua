@@ -5,7 +5,6 @@ if Config.CheckForUpdates then
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
     end)
 end
---https://raw.githubusercontent.com/MaDHouSe79/qb-parking/master/version
 RegisterServerEvent("dp:CheckVersion") 
 AddEventHandler("dp:CheckVersion", function()
     if updateavail then
@@ -17,7 +16,6 @@ end)
 
 function checkVersion(err, responseText, headers)
     curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
-
     if responseText == nil then
         print("^1"..resourceName.." check for updates failed ^7")
         return
@@ -32,6 +30,6 @@ function checkVersion(err, responseText, headers)
         print(resourceName.." git version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!")
         print("^3----------------------------------------------------------------------------------^7")
     else
-        print("\n"..resourceName.." is up to date. (^2"..curVersion.."^7)")
+        print(resourceName.." is up to date. (^2"..curVersion.."^7)")
     end
 end
