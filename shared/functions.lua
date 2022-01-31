@@ -1,16 +1,15 @@
 -- Check if a player is allowd to park.
 function IsAllowToPark(citizenid)
-    local state = false
     if UseParkingSystem then
         if OnlyAllowVipPlayers then
             for k, v in pairs(Config.VipPlayers) do
                 if v.citizenid == citizenid then
-                    state = true
+                    return true
                 end
             end
         end
     end
-    return state
+    return false
 end
 
 function IsAdmin(citizenid)
