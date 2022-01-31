@@ -7,7 +7,6 @@ Config.useRoleplayName        = true         -- if you want to use Roleplay name
 
 Config.YourFuelExportName     = 'LegacyFuel' -- default is LegacyFuel, if you use a other fuel script, for example cc-fuel
 
-
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)

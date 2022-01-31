@@ -55,13 +55,6 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 Step 6: If you are 100% sure, you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
 
 
-
-## 💯 Included and optional
-- ✅ [3D Waypoint](https://www.gta5-mods.com/scripts/3d-waypoint)
-- ✅ if you want to add every waypoint as 3D Waypoint in world space.
-
-
-
 ## 🍀 Features
 - ✅ Easy to install and use
 - ✅ QB-Phone notifications
@@ -231,7 +224,7 @@ end
 ````
 
 ## ⚙️ If F5 is not working for you with keybinds.
-- 👉 place this code in resources/[qb]/qb-parking/client/actions/command.lua
+- 👉 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
 ```
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```

@@ -17,10 +17,8 @@ parkName               = nil
 vehicleEntity          = nil
 action                 = 'none'
 
-
 -- Server Only
 VehiclesList           = {}
-
 
 -- Shared By Server And Client
 PhoneNotification      = Config.PhoneNotification

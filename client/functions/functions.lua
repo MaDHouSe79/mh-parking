@@ -36,32 +36,32 @@ end
 
 local function DoAction(action)
     if action == 'drive' then
-	action = nil
-	if LastUsedPlate and vehicles[i].plate == LastUsedPlate then
-	    TaskWarpPedIntoVehicle(PlayerPedId(), vehicleEntity, -1)
-	    TaskLeaveVehicle(PlayerPedId(), vehicleEntity)
-	    LastUsedPlate = nil
-	end
+		action = nil
+		if LastUsedPlate and vehicles[i].plate == LastUsedPlate then
+			TaskWarpPedIntoVehicle(PlayerPedId(), vehicleEntity, -1)
+			TaskLeaveVehicle(PlayerPedId(), vehicleEntity)
+			LastUsedPlate = nil
+		end
     end
 end
 
 -- Insert Data to table
 local function TableInsert(vehicleEntity, vehicleData)
     table.insert(LocalVehicles, {
-	entity      = vehicleEntity,
-	vehicle     = vehicleData.data,
-	plate       = vehicleData.plate,
-	citizenid   = vehicleData.citizenid,
-	citizenname = vehicleData.citizenname,
-	livery      = vehicleData.vehicle.livery,
-	health      = vehicleData.vehicle.health,
-	model       = vehicleData.model,
-	location    = {
-	    x = vehicleData.vehicle.location.x,
-	    y = vehicleData.vehicle.location.y,
-	    z = vehicleData.vehicle.location.z + 0.5,
-	    w = vehicleData.vehicle.location.w
-	}
+		entity      = vehicleEntity,
+		vehicle     = vehicleData.data,
+		plate       = vehicleData.plate,
+		citizenid   = vehicleData.citizenid,
+		citizenname = vehicleData.citizenname,
+		livery      = vehicleData.vehicle.livery,
+		health      = vehicleData.vehicle.health,
+		model       = vehicleData.model,
+		location    = {
+			x = vehicleData.vehicle.location.x,
+			y = vehicleData.vehicle.location.y,
+			z = vehicleData.vehicle.location.z + 0.5,
+			w = vehicleData.vehicle.location.w
+		}
     })
 end
 
@@ -90,19 +90,19 @@ end
 
 function DisplayParkedOwnerText()
     if not HideParkedVehicleNames then -- for performes
-	local pl = GetEntityCoords(PlayerPedId())
-	local displayWhoOwnesThisCar = nil
-	for k, vehicle in pairs(LocalVehicles) do
-	    displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
-	    if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
-		if PlayerJob == "police" and onDuty == true then
-		    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+		local pl = GetEntityCoords(PlayerPedId())
+		local displayWhoOwnesThisCar = nil
+		for k, vehicle in pairs(LocalVehicles) do
+			displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
+			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
+				if PlayerJob == "police" and onDuty == true then
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+				end
+				if PlayerData.citizenid == vehicle.citizenid then
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+				end
+			end
 		end
-		if PlayerData.citizenid == vehicle.citizenid then
-		    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
-		end
-	    end
-	end
     end
 end
 
@@ -111,10 +111,10 @@ function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
     local findVehicle = false
     for i = 1, #LocalVehicles do
-	if LocalVehicles[i].entity == entity then
-	    findVehicle = LocalVehicles[i]
-	    break
-	end
+		if LocalVehicles[i].entity == entity then
+			findVehicle = LocalVehicles[i]
+			break
+		end
     end
     return findVehicle
 end
@@ -122,37 +122,37 @@ end
 -- Spawn local vehicles(server data)
 function SpawnVehicles(vehicles)
     CreateThread(function()
-	while IsDeleting do Citizen.Wait(100) end
-	if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-	    for i = 1, #vehicles, 1 do
-		DeleteLocalVehicle(vehicles[i].vehicle)
-		LoadEntity(vehicles[i], 'server')
-		Wait(50)
-		TableInsert(vehicleEntity, vehicles[i])
-                DoAction(action)
-		Wait(100)
-	    end
-	end
+		while IsDeleting do Citizen.Wait(100) end
+		if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
+			for i = 1, #vehicles, 1 do
+				DeleteLocalVehicle(vehicles[i].vehicle)
+				LoadEntity(vehicles[i], 'server')
+				Wait(50)
+				TableInsert(vehicleEntity, vehicles[i])
+				DoAction(action)
+				Wait(100)
+			end
+		end
     end)
 end
 
 -- Spawn single vehicle(client data)
 function SpawnVehicle(vehicleData)
     CreateThread(function()
-	if LocalPlayer.state.isLoggedIn then
-	    while IsDeleting do Wait(100) end
-	    DeleteLocalVehicle(vehicleData.vehicle)
-	    Wait(500)
-	    LoadEntity(vehicleData, 'client')
-	    PrepareVehicle(vehicleEntity, vehicleData)
-	    Wait(50)
-	    FreezeEntityPosition(vehicleEntity, true)
-	    if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
-		SetVehicleDoorsLocked(vehicleEntity, 2)
-	    end
-	    TableInsert(vehicleEntity, vehicleData)
-            DoAction(action)
-	end
+		if LocalPlayer.state.isLoggedIn then
+			while IsDeleting do Wait(100) end
+			DeleteLocalVehicle(vehicleData.vehicle)
+			Wait(500)
+			LoadEntity(vehicleData, 'client')
+			PrepareVehicle(vehicleEntity, vehicleData)
+			Wait(50)
+			FreezeEntityPosition(vehicleEntity, true)
+			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
+				SetVehicleDoorsLocked(vehicleEntity, 2)
+			end
+			TableInsert(vehicleEntity, vehicleData)
+			DoAction(action)
+		end
     end)
 end
 
@@ -160,41 +160,40 @@ end
 function RemoveVehicles(vehicles)
     IsDeleting = true
     if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] ~= nil then
-	for i = 1, #vehicles, 1 do
-	    local vehicle, distance = QBCore.Functions.GetClosestVehicle(vehicles[i].vehicle.location)
-	    if NetworkGetEntityIsLocal(vehicle) and distance < 1 then
-		local driver = GetPedInVehicleSeat(vehicle, -1)
-		if not DoesEntityExist(driver) or not IsPedAPlayer(driver) then
-		    local tmpModel = GetEntityModel(vehicle)
-		    SetModelAsNoLongerNeeded(tmpModel)
-		    DeleteEntity(vehicle)
-		    Citizen.Wait(300)
+		for i = 1, #vehicles, 1 do
+			local vehicle, distance = QBCore.Functions.GetClosestVehicle(vehicles[i].vehicle.location)
+			if NetworkGetEntityIsLocal(vehicle) and distance < 1 then
+				local driver = GetPedInVehicleSeat(vehicle, -1)
+				if not DoesEntityExist(driver) or not IsPedAPlayer(driver) then
+					local tmpModel = GetEntityModel(vehicle)
+					SetModelAsNoLongerNeeded(tmpModel)
+					DeleteEntity(vehicle)
+					Citizen.Wait(300)
+				end
+			end
+			-- Clean memory
+			vehicle, distance, driver, tmpModel = nil
 		end
-	    end
-	    -- Clean memory
-	    vehicle, distance, driver, tmpModel = nil
-	end
     end
-    LocalVehicles    = {}
-    IsDeleting = false
+    LocalVehicles = {}
+    IsDeleting    = false
 end
 
 -- Delete single vehicle
 function DeleteLocalVehicle(vehicle)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] ~= nil then
-	for i = 1, #LocalVehicles do
-	    if vehicle ~= nil then
-		if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
-		    if vehicle.plate == LocalVehicles[i].plate then
-			DeleteEntity(LocalVehicles[i].entity)
-			table.remove(LocalVehicles, i)
-		    end
+		for i = 1, #LocalVehicles do
+			if vehicle ~= nil then
+				if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+					if vehicle.plate == LocalVehicles[i].plate then
+						DeleteEntity(LocalVehicles[i].entity)
+						table.remove(LocalVehicles, i)
+					end
+				end
+			end
 		end
-	    end
-	end
     end
 end
-
 
 -- Just some help text
 function DisplayHelpText(text)

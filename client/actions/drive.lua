@@ -8,15 +8,15 @@ end
 local function DeleteNearByVehicle(location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(location)
     if distance <= 1 then
-	for i = 1, #LocalVehicles do
-	    if LocalVehicles[i].entity == vehicle then
-		table.remove(LocalVehicles, i)
-	    end
-	    local tmpModel = GetEntityModel(vehicle)
-	    SetModelAsNoLongerNeeded(tmpModel)
-	    DeleteEntity(vehicle)
-	    tmpModel = nil
-	end
+        for i = 1, #LocalVehicles do
+            if LocalVehicles[i].entity == vehicle then
+            table.remove(LocalVehicles, i)
+            end
+            local tmpModel = GetEntityModel(vehicle)
+            SetModelAsNoLongerNeeded(tmpModel)
+            DeleteEntity(vehicle)
+            tmpModel = nil
+        end
     end
 end
 
@@ -45,13 +45,13 @@ end
 function Drive(player, vehicle)
     action = 'drive'
     QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
-	if callback.status then
-	    DeleteVehicle(vehicle.entity)
-	    DeleteVehicle(GetVehiclePedIsIn(player))
-	    vehicle = false
-	    MakeVehicleReadyToDrive(callback.data)
-	else
-	    QBCore.Functions.Notify(callback.message, "error", 5000)
-	end
+        if callback.status then
+            DeleteVehicle(vehicle.entity)
+            DeleteVehicle(GetVehiclePedIsIn(player))
+            vehicle = false
+            MakeVehicleReadyToDrive(callback.data)
+        else
+            QBCore.Functions.Notify(callback.message, "error", 5000)
+        end
     end, vehicle)
 end

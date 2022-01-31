@@ -33,7 +33,6 @@ local Translations = {
         ["message"]             = "Hey, %{username}<br /><br />Bedankt voor het vertrouwen in onze parkeerplaats!<br /><br />Om u het niet te laten vergeten waar jij jou auto gepakeerd hebt.<br />Krijgt je hierbij ook een herinderings e-mail met kenteken en de locatie waar je jou auto ongeveer gepakeerd hebt<br /><br />Eigennaar: %{username}<br />Model: %{model}<br />Kenteken: %{plate}<br />Locatie:%{street}<br /><br/><br/>%{company}",
     },
 }
-
 Lang = Locale:new({
     phrases = Translations,
     warnOnMissing = true
