@@ -127,7 +127,7 @@ function SpawnVehicles(vehicles)
 	    for i = 1, #vehicles, 1 do
 		DeleteLocalVehicle(vehicles[i].vehicle)
 		LoadEntity(vehicles[i], 'server')
-		Wait(50)
+		Wait(100)
 		FreezeEntityPosition(vehicleEntity, true)
 		TableInsert(vehicleEntity, vehicles[i])
 		DoAction(action)
