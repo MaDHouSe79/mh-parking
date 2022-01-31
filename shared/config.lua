@@ -5,6 +5,9 @@ Config.SoundWhenCloseDoors    = false        -- if you want sound when closing v
 Config.parkingButton          = 166          -- F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- if you want to use Roleplay name above the cars (firstname lastname) set this on true
 
+Config.YourFuelExportName     = 'LegacyFuel' -- if you use a other fuel script, change this (LegacyFuel or cc-fuel)
+
+
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
