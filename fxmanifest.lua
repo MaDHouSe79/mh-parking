@@ -6,7 +6,6 @@ description 'Realistic Vehicle Parking'
 version '1.0.0'
 
 shared_scripts {
-<<<<<<< HEAD
     '@qb-core/shared/locale.lua',
     --'shared/locale.lua', -- if you use a older version of QBCore, uncommand this and command above.
     'shared/locale.lua',
