@@ -38,7 +38,7 @@ dependencies {
     'oxmysql',
     'qb-core',
     'qb-vehiclekeys'
+    'qb-vehiclekeys',
 }
 
 lua54 'yes'
-
