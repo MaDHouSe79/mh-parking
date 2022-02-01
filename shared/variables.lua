@@ -1,6 +1,7 @@
 -- Shared By Server And Client.
 QBCore                 = exports['qb-core']:GetCoreObject()
 UpdateAvailable        = false
+updateavail            = false
 -- Client Only.
 PlayerData             = {}
 PlayerJob              = {}

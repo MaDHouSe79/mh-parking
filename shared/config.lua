@@ -7,7 +7,7 @@ Config.SoundWhenCloseDoors    = false        -- 👉 If you want sound when clos
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
 
-Config.YourFuelExportName     = 'LegacyFuel' -- Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
+Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
 
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
@@ -15,7 +15,7 @@ Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is
 Config.OnlyAllowVipPlayers    = true         -- 👉 I recommend, to use this mod only for vip players.... (default true)
 Config.HideParkedVehicleNames = false        -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 
--- change rhis to your own commands
+-- 👇 change rhis to your own commands
 Config.Command = {
     park         = 'park',                   -- User/Admin permission
     parknames    = 'park-names',             -- User/Admin permission
@@ -24,7 +24,7 @@ Config.Command = {
     system       = 'park-system',            -- Admin permission
 }
 
--- vip table
+-- 👇 vip table
 Config.VipPlayers = {                        -- Add more vip plaers if you want.
     [1] = {
 	username  = "MaDHouSe",              -- Just to know who it is
@@ -44,5 +44,5 @@ Config.VipPlayers = {                        -- Add more vip plaers if you want.
     }, -- just add more here
 }
 
--- Dont change this, you will not be able to park if you change this...
+-- 👇 Dont change this, you will not be able to park if you change this...
 Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
