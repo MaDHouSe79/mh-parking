@@ -8,7 +8,7 @@ version '1.0.0'
 shared_scripts {
 <<<<<<< HEAD
     '@qb-core/shared/locale.lua',
-    --'shared/locale.lua', -- of you mis this file or have a older version of QBCore
+    --'shared/locale.lua', -- if you use a older version of QBCore, uncommand this and command above.
     'shared/locale.lua',
     'locales/en.lua',  -- change en to your language.
     'shared/config.lua',
