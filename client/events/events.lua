@@ -1,7 +1,7 @@
 -- On Player Load
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    Citizenid = PlayerData.citizenid
+    Citizenid  = PlayerData.citizenid
     PlayerJob  = PlayerData.job
 end)
 
@@ -18,7 +18,7 @@ end)
 -- QBCore Player SetPlayerData
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     PlayerData = val
-    Citizenid = PlayerData.citizenid
+    Citizenid  = PlayerData.citizenid
 end)
 
 -- Server send to client with vehicles data
@@ -48,11 +48,7 @@ end)
 -- Client site is Using Park Command
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
     if IsAllowToPark() then
-        if UpdateAvailable then
-            QBCore.Functions.Notify(Lang:t("system.update_needed"), 'error')
-        else
-            isUsingParkCommand = true
-        end
+        QBCore.Functions.Notify(Lang:t("system.update_needed"), 'error')
     end
 end)
 
@@ -68,3 +64,4 @@ RegisterNetEvent("qb-parking:client:Update", function(state)
         UpdateAvailable = state
     end
 end)
+

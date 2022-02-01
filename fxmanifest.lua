@@ -25,20 +25,20 @@ client_scripts {
     'client/threads/threads.lua',
 }
 
+
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/events/update.lua',
     'server/events/events.lua',
     'server/functions/functions.lua',
-    'server/callbacks/callback.lua',
+    'server/callbacks/callback.lua'
 }
 
 dependencies {
     'oxmysql',
     'qb-core',
-    'qb-phone',
-    'qb-garages',
-    'qb-vehiclekeys',
+    'qb-vehiclekeys'
 }
 
 lua54 'yes'
+

@@ -9,14 +9,13 @@ and you have parked your vehicle, then you never have to get your vehicle from t
 This is my second mod i make public, so please by kind to my 😁 i still have much to learn.
 
 
-
 ## This qb-parking system is a rebuild of esx_realparking 
 [esx_realparking](https://github.com/kasuganosoras/esx_realparking/) is created by [Akkariin Meiko](https://github.com/kasuganosoras/) 
 but i completely rebuild and change this system for QB-Core and i add some other features to it. 
 [Akkariin Meiko](https://github.com/kasuganosoras/) did a great job to make this mod public, 
 Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊😁👍
 
-
+## Read The Update.md for changes.
 
 ## 📸 Screenshots 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
@@ -27,11 +26,9 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 ![foto4](https://www.madirc.nl/fivem/foto8.png) 
 
 
-
 ## 🎥 Videos 👊😁👍
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
 [![Watch the video2](https://www.madirc.nl/fivem/foto1.png)](https://www.youtube.com/watch?v=bSRZpbHlDkk)
-
 
 
 ## 💪 Dependencies
@@ -40,10 +37,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
-
-
-## 😁 Optional 👊😁👍
-- ✅ if you use a other fuel script then LegacyFuel for example, cc-fuel, then change this in the config file. (Config.YourFuelExportName)
+- ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
@@ -69,7 +63,6 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 And of course you should not forget to park your vehicle 👊😁👍
 
 
-
 ## 🎮 How To Use
 - 👉 Typ "/park" to park or drive your vehicle where you are at that moment. (Users and Admins)
 - 👉 Typ "/park-names if you want to display the names ontop of the vehicle that is parked. (Users and Admins)
@@ -79,12 +72,10 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on f5 the word "park"
 
 
-
 ## ⚙️ Settings
 - 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
 - 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
 - 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
-
 
 
 ## 💯 What i recommend for using this mod
@@ -94,19 +85,16 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 To keep the server nice and clean for everyody, use this system only for vip players. 
 
 
-
 ## 💯 I tested this mod on a computer/server with the following settings
 - ✅ Prossessor: I7 12xCore
 - ✅ Memory: 16 gig memory
 - ✅ Graphics: GTX 1050 TI 4GB
 
 
-
 ## 🙏 Don't do this...
 - 👉 DO NOT park your vehicles on roofs or that kind of stuff, just don't do it, it will work, but it breaks the mod,
 - 👉 use the recommended parking spots in the world like you do in real life,
 - 👉 you can do of course just park at your own house on a parking spot to keep it nice and clean for everyone.
-
 
 
 ## 💯 Police and Mechanic Impound Trigger
@@ -120,15 +108,12 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
 
-
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
 ````
 RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
 end)
 ````
-
-
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
 ````
@@ -149,8 +134,6 @@ RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate
 end)
 ````
 
-
-
 ## 👇 To keep things nice and clean for the qb-core system and database.
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
@@ -159,7 +142,6 @@ end)
 ````
 { table = 'player_parking' },
 ````
-
 
 
 ## ⚙️ Database Table
@@ -176,7 +158,6 @@ CREATE TABLE `player_parking`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 ````
 
-
 ## 🤬 If you have issues with impound and fuel, then replace this code.
 - 👉 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
 ````
@@ -188,7 +169,7 @@ function TakeOutImpound(vehicle)
                 QBCore.Functions.SetVehicleProperties(veh, properties)
                 SetVehicleNumberPlateText(veh, vehicle.plate)
                 SetEntityHeading(veh, coords.w)
-                exports['LegacyFuel']:SetFuel(veh, vehicle.fuel)
+                exports['cc-fuel']:SetFuel(veh, vehicle.fuel)
                 doCarDamage(veh, vehicle)
                 TriggerServerEvent('police:server:TakeOutImpound',vehicle.plate)
                 closeMenuFull()
@@ -210,7 +191,7 @@ function TakeOutImpound(vehicle)
                 QBCore.Functions.SetVehicleProperties(veh, properties)
                 SetVehicleNumberPlateText(veh, vehicle.plate)
                 SetEntityHeading(veh, coords.w)
-                exports['LegacyFuel']:SetFuel(veh, 100.0)
+                exports['cc-fuel']:SetFuel(veh, 100.0)
                 doCarDamage(veh, vehicle)
                 TriggerServerEvent('police:server:TakeOutImpound',vehicle.plate)
                 closeMenuFull()
@@ -229,21 +210,18 @@ end
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
 
-
 ## ⚙️ To get a other languages.
-- 1: copy a file from the [qb]/qb-parking/locales directory
+- 1: copy a file from the resources[qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
 - 3: translate the lines in the file to your language
 - 4: you now have added a new language to the system, enjoy 😎
 
-
-
-## 🙈 Subscribe & Discord
-- [Subscribe](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+## 🙈 Youtube & Discord & Twitter
+- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
-
-
+- [Twitter](https://twitter.com/madhouse1979)
 
 ## 🐞 Any bugs issues or suggestions, let my know.
 - If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
+

@@ -1,8 +1,8 @@
 -- Main threads.
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    PlayerJob = PlayerData.job
-    Citizenid = PlayerData.citizenid
+    PlayerJob  = PlayerData.job
+    Citizenid  = PlayerData.citizenid
 end)
 
 CreateThread(function()
@@ -49,7 +49,8 @@ CreateThread(function()
 						storedVehicle = nil
 					else
 						if vehicle ~= 0 then
-							if GetEntitySpeed(vehicle) > 0 then
+							local speed = GetEntitySpeed(vehicle)
+							if speed > Config.MinSpeedToPark then
 								QBCore.Functions.Notify(Lang:t("info.stop_car"), "primary", 5000)
 							elseif IsAllowToPark(Citizenid) then
 								if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
@@ -79,3 +80,4 @@ CreateThread(function()
         Wait(0)
     end
 end)
+

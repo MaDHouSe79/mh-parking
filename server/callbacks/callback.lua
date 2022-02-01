@@ -5,11 +5,13 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 		local Player  = QBCore.Functions.GetPlayer(src)
 		if IsAllowToPark(Player.PlayerData.citizenid) then
 			local plate   = vehicleData.plate
+			local fuellvl = 0
 			local isFound = false
 			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
 				for k, v in pairs(vehicles) do
 					if type(v.plate) ~= 'nil' and plate == v.plate then
-					isFound = true
+						fuellvl = v.fuel
+						isFound = true
 					end		
 				end
 				if GetVehicleNumOfParking(vehicleData.parking) > Config.Maxcarparking then
@@ -28,7 +30,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								message = Lang:t("info.car_already_parked"),
 							})
 						else
-							SaveParkingCar(vehicleData, vehicleData.model, plate, Player.PlayerData)
+							SaveParkingCar(vehicleData, vehicleData.model, plate, fuellvl, Player.PlayerData)
 							cb({ 
 								status  = true, 
 								message = Lang:t("success.parked"),
@@ -37,6 +39,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 							TriggerClientEvent("qb-parking:client:addVehicle", -1, {
 								vehicle     = vehicleData,
 								plate       = plate, 
+								fuel        = fuellvl,
 								citizenid   = Player.PlayerData.citizenid, 
 								citizenname = Player.PlayerData.name,
 								model       = vehicleData.model,
@@ -71,10 +74,12 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 		local Player  = QBCore.Functions.GetPlayer(src)
 		if IsAllowToPark(Player.PlayerData.citizenid) then
 			local plate   = vehicleData.plate
+			local fuellvl = 0
 			local isFound = false
 			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
 				for k, v in pairs(vehicles) do
 					if type(v.plate) ~= 'nil' and plate == v.plate then
+						fuellvl = v.fuel
 						isFound = true
 					end
 				end
@@ -88,6 +93,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							cb({
 								status  = true,
 								message = Lang:t("info.has_take_the_car"),
+								fuel    = fuellvl,
 								data    = json.decode(rs[1].data),
 							})
 							TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })

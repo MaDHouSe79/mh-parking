@@ -2,6 +2,7 @@
 QBCore                 = exports['qb-core']:GetCoreObject()
 UpdateAvailable        = false
 updateavail            = false
+
 -- Client Only.
 PlayerData             = {}
 PlayerJob              = {}
@@ -18,6 +19,7 @@ parkName               = nil
 vehicleEntity          = nil
 action                 = 'none'
 
+
 -- Server Only.
 VehiclesList           = {}
 
@@ -26,3 +28,4 @@ PhoneNotification      = Config.PhoneNotification
 UseParkingSystem       = Config.UseParkingSystem
 OnlyAllowVipPlayers    = Config.OnlyAllowVipPlayers
 HideParkedVehicleNames = Config.HideParkedVehicleNames
+

@@ -1,4 +1,6 @@
-TriggerServerEvent("qb-parking:CheckVersion")
+if Config.CheckForUpdates then
+	TriggerServerEvent("qb-parking:CheckVersion")
+end
 
 -- Create display text for parked vehicle
 local function CreateParkDisPlay(vehicleData)
@@ -7,6 +9,7 @@ local function CreateParkDisPlay(vehicleData)
     local plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     return string.format("%s", model..plate..owner)
 end
+
 
 -- Prepare vehicle for use
 local function PrepareVehicle(entity, vehicleData)
@@ -19,12 +22,11 @@ local function PrepareVehicle(entity, vehicleData)
     SetVehicleLivery(entity, vehicleData.vehicle.livery)
     SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
     SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
-    SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
-    exports[Config.YourFuelExportName]:SetFuel(entity, vehicleData.vehicle.health.tank)
+	SetVehicleFuelLevel(entity, vehicleData.vehicle.health.fuel)
     SetVehRadioStation(entity, 'OFF')
     SetVehicleDirtLevel(entity, 0)
-    QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
     SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
+
 end
 
 -- Load Entity.
@@ -32,10 +34,12 @@ local function LoadEntity(vehicleData, type)
     LoadModel(vehicleData.vehicle.props["model"])
 	Wait(500)
     vehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.2, vehicleData.vehicle.location.w, false)
-	QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
     if type == 'server' then
         TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
     end
+	--SetVehicleEngineOn(--[[ Vehicle ]], value --[[ boolean ]], instantly --[[ boolean ]], disableAutoStart --[[ boolean ]])
+	SetVehicleEngineOn(vehicleEntity, false, false, true)
+	QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
 	Wait(500)
     PrepareVehicle(vehicleEntity, vehicleData)
 end
@@ -58,6 +62,7 @@ local function TableInsert(vehicleEntity, vehicleData)
 		entity      = vehicleEntity,
 		vehicle     = vehicleData.data,
 		plate       = vehicleData.plate,
+		fuel        = vehicleData.fuel,
 		citizenid   = vehicleData.citizenid,
 		citizenname = vehicleData.citizenname,
 		livery      = vehicleData.vehicle.livery,
@@ -135,10 +140,12 @@ function SpawnVehicles(vehicles)
 			for i = 1, #vehicles, 1 do
 			DeleteLocalVehicle(vehicles[i].vehicle)
 			LoadEntity(vehicles[i], 'server')
-			Wait(1500)
+			Wait(500)
 			FreezeEntityPosition(vehicleEntity, true)
+			SetVehicleEngineOn(vehicleEntity, false, false, true)
+			exports[Config.YourFuelExportName]:SetFuel(vehicleEntity, 100.0)
 			TableInsert(vehicleEntity, vehicles[i])
-			Wait(100)
+			Wait(50)
 			DoAction(action)
 			end
 		end
@@ -155,10 +162,13 @@ function SpawnVehicle(vehicleData)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(vehicleEntity, vehicleData)
 			Wait(50)
+
 			FreezeEntityPosition(vehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(vehicleEntity, 2)
 			end
+			SetVehicleEngineOn(vehicleEntity, false, false, true)
+			exports[Config.YourFuelExportName]:SetFuel(vehicleEntity, 100.0)
 			TableInsert(vehicleEntity, vehicleData)
 			Wait(100)
 			DoAction(action)
@@ -219,3 +229,4 @@ function LoadModel(model)
 		Wait(50)
 	end
 end
+

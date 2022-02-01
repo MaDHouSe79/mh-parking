@@ -1,18 +1,19 @@
 -- Save the vehicle to database.
-function SaveParkingCar(vehicleData, model, plate, PlayerData)
+function SaveParkingCar(vehicleData, model, plate, fuel, PlayerData)
     local playerName = PlayerData.name
     if Config.useRoleplayName then
 		playerName = PlayerData.charinfo.firstname ..' '.. PlayerData.charinfo.lastname
     end
-    MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
+    MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @data, @time)", {
 		["@citizenid"]   = PlayerData.citizenid,
 		["@citizenname"] = playerName,
 		["@plate"]       = plate,
+		["@fuel"]        = fuel,
 		['@model']       = model,
 		["@data"]        = json.encode(vehicleData),
 		["@time"]        = os.time(),
     })
-    MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
+    MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
 		["@plate"]       = plate,
 		["@citizenid"]   = PlayerData.citizenid
     })
@@ -51,6 +52,7 @@ function FindPlayerVehicles(citizenid, cb)
 				vehicle = json.decode(v.data),
 				plate   = v.plate,
 				model   = v.model,
+				fuel    = v.fuel,
 			})
 		end
 		cb(vehicles)
@@ -80,6 +82,7 @@ function RefreshVehicles(src)
 					citizenid   = v.citizenid,
 					citizenname = v.citizenname,
 					model       = v.model,
+					fuel        = v.fuel,
 				})
 				if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
 					TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
@@ -89,3 +92,4 @@ function RefreshVehicles(src)
 		end
     end)
 end
+

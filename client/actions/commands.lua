@@ -37,7 +37,7 @@ RegisterCommand(Config.Command.vip, function()
     end
 end, false)
 
--- Turn on and off the park system in game (Admin Only)
+-- Turn on and off the park system in game. (Admin Only)
 RegisterCommand(Config.Command.system, function()
     if IsAdmin(Citizenid) then
         UseParkingSystem = not UseParkingSystem

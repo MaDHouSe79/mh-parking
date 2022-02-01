@@ -23,4 +23,3 @@ function IsAdmin(citizenid)
     end
     return false
 end
-

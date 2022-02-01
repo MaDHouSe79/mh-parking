@@ -12,3 +12,4 @@ function ImpoundVehicle(entity)
 		end
     end
 end
+

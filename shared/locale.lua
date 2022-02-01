@@ -136,3 +136,4 @@ function Locale:delete(phraseTarget, prefix)
         end
     end
 end
+

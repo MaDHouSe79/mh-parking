@@ -27,9 +27,9 @@ local function SendMail(mail_sender, mail_subject, mail_message)
             subject = mail_subject,
             message = mail_message,
             button = {
-                enabled = true,
+                enabled     = true,
                 buttonEvent = "qb-parking:client:setParkedVecihleLocation",
-                buttonData = coords
+                buttonData  = coords
             }
         })
     end
@@ -70,7 +70,7 @@ function Save(player, vehicle)
             }),
             Lang:t('mail.message', {
                 street    = GetStreetName(),
-                    company   = Lang:t('info.companyName'),
+            company   = Lang:t('info.companyName'),
                 username  = PlayerData.charinfo.firstname,
                 model     = carModelName,
                 plate     = LastUsedPlate,
@@ -84,8 +84,10 @@ function Save(player, vehicle)
         livery      = GetVehicleLivery(vehicle),
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
+        fuel        = exports[Config.YourFuelExportName]:GetFuel(vehicle),
         model       = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
         location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
     })
 end
+
