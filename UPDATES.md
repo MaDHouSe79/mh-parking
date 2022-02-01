@@ -53,6 +53,11 @@ parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line
 parked         = "Parked Outside", -                        -- (this wil be line 22 in every language file)
 ```
 
+## 🙈 Youtube & Discord & Twitter
+- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+- [Discord](https://discord.gg/cEMSeE9dgS)
+- [Twitter](https://twitter.com/madhouse1979)
+
 
 ## - Update 1 -------------------------------------------------------------------------------------------------------
 - Lot off bugs fixed. 👊😁👍
