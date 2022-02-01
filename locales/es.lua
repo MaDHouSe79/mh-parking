@@ -10,7 +10,6 @@ local Translations = {
         ["no_permission"]       = "Sistema de parking: No tiene permiso para estacionar..",
         ["offline"]             = "El sistema de parking está desconectado",
         ["update_needed"]       = "El sistema de parking está desactualizado....",
-        ["version"]             = "Running: %{current} Github: %{githud}",
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",
