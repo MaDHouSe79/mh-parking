@@ -36,8 +36,8 @@ server_scripts {
 dependencies {
     'oxmysql',
     'qb-core',
-    'qb-phone',
-    'qb-garages',
+    --'qb-phone',
+    --'qb-garages',
     'qb-vehiclekeys',
 }
 
