@@ -155,6 +155,7 @@ function SpawnVehicle(vehicleData)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(vehicleEntity, vehicleData)
 			Wait(50)
+			FreezeEntityPosition(vehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(vehicleEntity, 2)
 			end
