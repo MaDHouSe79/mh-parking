@@ -72,7 +72,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - 👉 Typ "/park-notification" to turn on or of the phone notification (Users and Admins)
 - 👉 Typ "/park-vip" if you only want to use vip parking. (Admin Only)
 - 👉 Typ "/park-system" if you want to turn on or off the system. (Admin Only)
-- 👉 If you want to use the F5 button, you must add it to your /binds and add on f5 the word "park"
+- 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
 
 ## ⚙️ Settings
