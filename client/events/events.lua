@@ -49,7 +49,7 @@ end)
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
     if IsAllowToPark() then
         if UpdateAvailable then
-            QBCore.Functions.Notify(Lang:t("system.update_needed"), 'success')
+            QBCore.Functions.Notify(Lang:t("system.update_needed"), 'error')
         else
             isUsingParkCommand = true
         end
