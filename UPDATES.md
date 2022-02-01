@@ -10,6 +10,12 @@
 ## 🥵 You have to add more code to your qb-garage script.
 - ✔️ This to make the qb-parking work with qb-garages garage and impound menus.
 
+## 🥵 You have to update your database 
+- use this to update your player_parking table:
+```
+ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
+```
+
 ## The Update Check
 - ✔️ Keep qb-parking up to date to avoid any issues. you can turn this off in de config.lua, but this is not recommended.
 
@@ -46,7 +52,6 @@ elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 620
 parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 10 in every language file)
 parked         = "Parked Outside", -                        -- (this wil be line 22 in every language file)
 ```
-
 
 
 ## - Update 1 -------------------------------------------------------------------------------------------------------
