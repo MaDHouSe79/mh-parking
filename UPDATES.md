@@ -5,7 +5,7 @@
 - ✔️ Added: You can now only park when you vehicle is complety stopped, so 0 speed.
 - ✔️ Added: If you are using a diffrent fuel script, you can changed this in the config file. 
 - ✔️ Added: qb-parking update check, to see if your qb-parking is up to date.
-- ✔️ Added: New language, you can also easy add you one language, and make a pull reqwuest on githud.
+- ✔️ Added: New language, you can also easy add your one language, and make a pull reqwuest on githud.
 
 ## 🥵 You have to add more code to your qb-garage script.
 - ✔️ This to make the qb-parking work with qb-garages garage and impound menus.
