@@ -37,6 +37,9 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
+
+
+## 💪 Optional
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
 
 
