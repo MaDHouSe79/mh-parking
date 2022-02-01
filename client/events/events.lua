@@ -64,5 +64,7 @@ end)
 
 -- for Update checks
 RegisterNetEvent("qb-parking:client:Update", function(state)
-    UpdateAvailable = state
+    if Config.CheckForUpdates then
+        UpdateAvailable = state
+    end
 end)
