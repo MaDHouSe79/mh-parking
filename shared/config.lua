@@ -6,7 +6,7 @@ Config.DisplayDistance        = 50           -- 👉 Distence to see text above 
 Config.SoundWhenCloseDoors    = false        -- 👉 If you want sound when closing vehicles doors
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
-Config.YourFuelExportName     = 'LegacyFuel'    -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
+Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
 Config.UseStopSpeedForPark    = true         -- 👉 Default true
 Config.MinSpeedToPark         = 1            -- 👉 Default 0 
 
@@ -18,7 +18,7 @@ Config.OnlyAllowVipPlayers    = true         -- 👉 I recommend, to use this mo
 Config.HideParkedVehicleNames = false        -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 
 
--- 👇 change rhis to your own commands
+-- 👇 change this to your own commands
 Config.Command = {
     park         = 'park',                   -- User/Admin permission
     parknames    = 'park-names',             -- User/Admin permission
