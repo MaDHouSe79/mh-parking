@@ -107,19 +107,19 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ The Polices and Mechanics client side trigger event, for the police or mechanic to impount a vehicle correctly. 
 - ✅ You MUST add this to your police and or mechanic impound trigger event.
 - 💥 DON'T FORGET THIS PART BELOW, OR PLAYERS CAN GET THERE VEHICLE AT THE GARAGE BACK FOR FREE WHEN REJOIN .
-````
+````lua
 TriggerEvent('qb-parking:client:impoundVehicle', vehicle)
 ````
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-````
+````lua
 RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
 end)
 ````
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
-````
+````lua
 RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     if VehicleList then
         local val = VehicleList[plate]
@@ -142,7 +142,7 @@ end)
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
 - ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
 ## resources[qb]/qb-core/server/player.lua Line:506
-````
+````lua
 { table = 'player_parking' },
 ````
 
@@ -164,7 +164,7 @@ CREATE TABLE `player_parking`  (
 
 ## 🤬 If you have issues with impound and fuel, then replace this code.
 - 👉 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
-````
+````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
     if coords then
@@ -186,7 +186,7 @@ function TakeOutImpound(vehicle)
 end
 ````
 -- 👇 Change it with this code
-````
+````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
     if coords then
@@ -210,7 +210,7 @@ end
 
 ## ⚙️ If F5 is not working for you with keybinds.
 - 👉 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
-```
+```lua
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
 
