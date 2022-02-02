@@ -12,7 +12,7 @@
 
 ## 🥵 You have to update your database 
 - use this to update your player_parking table:
-```
+```lua
 ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
 ```
 
