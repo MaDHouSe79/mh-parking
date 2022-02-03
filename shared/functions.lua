@@ -1,3 +1,17 @@
+--Get Player username
+function GetPlayerName(player)
+    local tmpName = PlayerData.name
+    if Config.useRoleplayName then
+		tmpName = player.PlayerData.charinfo.firstname ..' '.. player.PlayerData.charinfo.lastname
+    end
+	return tmpName
+end
+
+--Get Player citizenid
+function GetCitizenid(player)
+	  return  player.PlayerData.citizenid
+end
+
 -- Check if a player is allowd to park.
 function IsAllowToPark(citizenid)
     if UseParkingSystem then
