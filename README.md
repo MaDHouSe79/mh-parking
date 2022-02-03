@@ -17,18 +17,12 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 ## Read The Update.md for changes.
 
-## 📸 Screenshots 👊😁👍
+## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
-![foto2](https://www.madirc.nl/fivem/foto2.png)
-![foto3](https://www.madirc.nl/fivem/foto3.png) 
-![foto4](https://www.madirc.nl/fivem/foto5.png) 
-![foto4](https://www.madirc.nl/fivem/foto6.png) 
-![foto4](https://www.madirc.nl/fivem/foto8.png) 
 
 
-## 🎥 Videos 👊😁👍
+## 🎥 Video 👊😁👍
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
-[![Watch the video2](https://www.madirc.nl/fivem/foto1.png)](https://www.youtube.com/watch?v=bSRZpbHlDkk)
 
 
 ## 💪 Dependencies
