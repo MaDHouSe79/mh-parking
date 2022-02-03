@@ -41,7 +41,6 @@ RegisterNetEvent("qb-parking:client:stolenVehicle",  function(vehicle)
     StolenVehicle(vehicle)
 end)
 
-
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
     if IsAllowToPark() then
         isUsingParkCommand = true
@@ -52,4 +51,3 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
-

@@ -164,18 +164,18 @@ end)
 
 -- When vehicle gets stolen by other player
 QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb, vehicleData)
-    local src     = source
-    local plate   = vehicleData.plate
+    local src    = source
+    local plate  = vehicleData.plate
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
-				["@plate"]     = plate,
+				["@plate"] = plate,
 			})
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
-				["@plate"]     = plate,
+				["@plate"] = plate,
 			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })

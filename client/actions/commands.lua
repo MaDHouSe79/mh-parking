@@ -49,3 +49,4 @@ RegisterCommand(Config.Command.system, function()
         QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
     end
 end, false)
+

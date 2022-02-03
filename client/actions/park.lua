@@ -61,20 +61,20 @@ function Save(player, vehicle)
         if callback.status then
             DeleteVehicle(vehicle)
             SendMail(
-            Lang:t('mail.sender' , {
-                company   = Lang:t('info.companyName'),
-            }),
-            Lang:t('mail.subject', {
-                model     = carModelName,
-                plate     = LastUsedPlate,
-            }),
-            Lang:t('mail.message', {
-                street    = GetStreetName(),
+                Lang:t('mail.sender' , {
                     company   = Lang:t('info.companyName'),
-                username  = PlayerData.charinfo.firstname,
-                model     = carModelName,
-                plate     = LastUsedPlate,
-            })
+                }),
+                Lang:t('mail.subject', {
+                    model     = carModelName,
+                    plate     = LastUsedPlate,
+                }),
+                Lang:t('mail.message', {
+                    street    = GetStreetName(),
+                    company   = Lang:t('info.companyName'),
+                    username  = PlayerData.charinfo.firstname,
+                    model     = carModelName,
+                    plate     = LastUsedPlate,
+                })
             )
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
@@ -89,4 +89,3 @@ function Save(player, vehicle)
         location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
     })
 end
-

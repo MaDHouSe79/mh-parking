@@ -36,6 +36,7 @@ local function LoadEntity(vehicleData, type)
     PrepareVehicle(vehicleEntity, vehicleData)
 end
 
+-- this achtion olny runs when you park the vehicle.
 local function DoAction(action)
     if action == 'drive' then
 		action = nil
@@ -90,6 +91,7 @@ local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
+--Display Parked Owner Text
 function DisplayParkedOwnerText()
     if not HideParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())

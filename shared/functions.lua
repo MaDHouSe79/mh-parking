@@ -1,5 +1,4 @@
---Get Player username
--- Save the car to database.
+-- Get Player username
 function GetUsername(player)
 	local tmpName = player.PlayerData.name
 	if Config.useRoleplayName then
@@ -8,6 +7,7 @@ function GetUsername(player)
     return tmpName
 end
 
+-- Get Citizenid
 function GetCitizenid(player)
 	return player.PlayerData.citizenid
 end
@@ -37,4 +37,3 @@ function IsAdmin(citizenid)
     end
     return false
 end
-

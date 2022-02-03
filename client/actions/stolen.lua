@@ -11,3 +11,4 @@ function StolenVehicle(entity)
 		end
     end
 end
+

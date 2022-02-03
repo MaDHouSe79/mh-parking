@@ -40,4 +40,3 @@ Lang = Locale:new({
     phrases = Translations,
     warnOnMissing = true
 })
-

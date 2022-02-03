@@ -176,6 +176,7 @@ function TakeOutImpound(vehicle)
     end
 end
 ````
+
 - Replace 👇
 ````lua
 function TakeOutImpound(vehicle)
@@ -231,6 +232,7 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     end
 end)
 ````
+
 - Replace 👇
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
