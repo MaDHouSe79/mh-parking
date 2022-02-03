@@ -213,8 +213,11 @@ RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5')
 
 ## Police impound trigger for qb-parking
 - Go to resources\[qb]\qb-policejob\client.lua line 332
-- find the trigger: RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-- Change this code
+- Find: 
+```lua 
+RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
+```
+- And change this code
 ````lua
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
