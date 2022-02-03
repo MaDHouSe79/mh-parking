@@ -281,20 +281,19 @@ parked         = "Parked Outside",                          -- (this wil be line
 ```
 
 
-
-
 ## ⚙️ To get a other languages.
 - 1: copy a file from the resources[qb]/qb-parking/locales directory
 - 2: rename this file for example fr.lua or sp.lua
 - 3: translate the lines in the file to your language
 - 4: you now have added a new language to the system, enjoy 😎
 
-## 🙈 Youtube & Discord & Twitter
-- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
-- [Discord](https://discord.gg/cEMSeE9dgS)
-- [Twitter](https://twitter.com/madhouse1979)
 
 ## 🐞 Any bugs issues or suggestions, let my know.
 - If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
 
+
+## 🙈 Youtube & Discord & Twitter
+- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+- [Discord](https://discord.gg/cEMSeE9dgS)
+- [Twitter](https://twitter.com/madhouse1979)
