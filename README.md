@@ -15,7 +15,7 @@ but i completely rebuild and change this system for QB-Core and i add some other
 [Akkariin Meiko](https://github.com/kasuganosoras/) did a great job to make this mod public, 
 Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊😁👍
 
-## Read The Update.md for changes.
+## Read The Updates.md for updates and changes.
 
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
