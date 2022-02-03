@@ -205,12 +205,6 @@ end
 TriggerEvent('qb-parking:client:stolenVehicle', vehicle)
 ```
 
-## ⚙️ If F5 is not working for you with keybinds.
-- 👇 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
-```lua
-RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
-```
-
 ## 👮‍♂️ Impound trigger
 - Go to resources\[qb]\qb-policejob\client.lua line 332
 - Find 👇 
