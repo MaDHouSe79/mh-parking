@@ -1,4 +1,4 @@
-## QB-Parking recreated by MaDHouSe
+## QB-Parking
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house, or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place, you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
