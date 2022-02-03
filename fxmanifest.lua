@@ -16,22 +16,21 @@ shared_scripts {
 }
 
 client_scripts {
-    'client/functions/functions.lua',
+    'client/functions.lua',
     'client/actions/drive.lua',
     'client/actions/park.lua',
     'client/actions/impound.lua',
     'client/actions/commands.lua',
-    'client/events/events.lua',
-    'client/threads/threads.lua',
+    'client/events.lua',
+    'client/threads.lua',
 }
 
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'server/events/update.lua',
-    'server/events/events.lua',
-    'server/functions/functions.lua',
-    'server/callbacks/callback.lua'
+    'server/events.lua',
+    'server/functions.lua',
+    'server/callback.lua'
 }
 
 dependencies {
