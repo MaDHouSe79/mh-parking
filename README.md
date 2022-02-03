@@ -182,7 +182,7 @@ function TakeOutImpound(vehicle)
     end
 end
 ````
--- Replace 👇
+- Replace 👇
 ````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
