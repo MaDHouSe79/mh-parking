@@ -45,6 +45,11 @@ RegisterNetEvent("qb-parking:client:impoundVehicle",  function(vehicle)
     ImpoundVehicle(vehicle)
 end)
 
+-- vehicle is stolen
+RegisterNetEvent("qb-parking:client:stolen",  function(vehicle)
+    VehicleTheft(vehicle)
+end)
+
 -- Client site is Using Park Command
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
     if IsAllowToPark() then
