@@ -20,6 +20,7 @@ local function PrepareVehicle(entity, vehicleData)
     SetVehRadioStation(entity, 'OFF')
     SetVehicleDirtLevel(entity, 0)
     QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
+    SetVehicleEngineOn(entity, false, false, true)
     SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
 end
 
