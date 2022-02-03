@@ -3,11 +3,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
     if UseParkingSystem then
 		local src     = source
 		local Player  = QBCore.Functions.GetPlayer(src)
-		if IsAllowToPark(GetCitizenid(Player)) then
+		if IsAllowToPark(Player.PlayerData.citizenid) then
 			local plate   = vehicleData.plate
 			local fuellvl = 0
 			local isFound = false
-			FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
+			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
 				for k, v in pairs(vehicles) do
 					if type(v.plate) ~= 'nil' and plate == v.plate then
 						fuellvl = v.fuel
@@ -21,7 +21,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 					})
 				elseif isFound then
 					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-						['@citizenid'] = GetCitizenid(Player),
+						['@citizenid'] = Player.PlayerData.citizenid,
 						['@plate']     = plate
 					}, function(rs)
 						if type(rs) == 'table' and #rs > 0 then
@@ -32,11 +32,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 						else
 							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = plate,
-								["@citizenid"] = GetCitizenid(Player)
+								["@citizenid"] = Player.PlayerData.citizenid
     							})
     							MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = plate,
-								["@citizenid"] = GetCitizenid(Player)
+								["@citizenid"] = Player.PlayerData.citizenid
    							})
 							cb({ 
 								status  = true, 
@@ -47,7 +47,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								vehicle     = vehicleData,
 								plate       = plate, 
 								fuel        = fuellvl,
-								citizenid   = GetCitizenid(Player), 
+								citizenid   = Player.PlayerData.citizenid, 
 								citizenname = GetPlayerName(Player),
 								model       = vehicleData.model,
 							})
@@ -98,11 +98,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
 							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = plate,
-								["@citizenid"] = GetCitizenid(Player)
+								["@citizenid"] = Player.PlayerData.citizenid
 						        })
 						        MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = plate,
-								["@citizenid"] = GetCitizenid(Player)
+								["@citizenid"] = Player.PlayerData.citizenid
 						        })
 							cb({
 								status  = true,
