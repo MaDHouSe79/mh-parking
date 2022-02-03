@@ -10,6 +10,8 @@ Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if y
 Config.UseStopSpeedForPark    = true         -- 👉 Default true
 Config.MinSpeedToPark         = 1            -- 👉 Default 0 
 
+Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
+
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
@@ -25,12 +27,11 @@ Config.Command = {
     system       = 'park-system',            -- Admin permission
 }
 
-
 -- 👇 vip table
 Config.VipPlayers = {                        -- Add more vip plaers if you want.
     [1] = {
-        username  = "MaDHouSe",                  -- Just to know who it is
-        citizenid = "TAD48182",                  -- you gen cet this from the databse players table copy citizenid and add this here
+        username  = "MaDHouSe",              -- Just to know who it is
+        citizenid = "TAD48182",              -- you gen cet this from the databse players table copy citizenid and add this here
         isAdmin   = true,
     },
 

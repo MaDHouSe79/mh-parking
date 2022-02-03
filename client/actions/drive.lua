@@ -10,7 +10,7 @@ local function DeleteNearByVehicle(location)
     if distance <= 1 then
         for i = 1, #LocalVehicles do
             if LocalVehicles[i].entity == vehicle then
-            table.remove(LocalVehicles, i)
+                table.remove(LocalVehicles, i)
             end
             local tmpModel = GetEntityModel(vehicle)
             SetModelAsNoLongerNeeded(tmpModel)

@@ -47,8 +47,10 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(vehicleEntity, false, false, true)
     if type == 'server' then
-        TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
-    end
+		if not Config.ImUsingOtherKeyScript then
+        	TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
+		end
+	end
     PrepareVehicle(vehicleEntity, vehicleData)
 end
 
