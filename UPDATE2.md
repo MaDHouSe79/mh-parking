@@ -34,7 +34,7 @@ ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
 - This code has to be at lines 467 to 468 
 - Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,
 ```lua
-elseif v.state == 3 then -- this has to be on line 467
+elseif v.state == 3 then                                                   -- this has to be on line 467
     v.state = Lang:t("info.parked")                                        -- this has to be on line 468
 ```
 
