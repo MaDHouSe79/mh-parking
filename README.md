@@ -35,6 +35,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 
 ## 💪 Optional
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
+- ✅ you can also use other vehiclekey scripts, change this in the config file.
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
