@@ -20,4 +20,3 @@ end)
 RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName)
     RefreshVehicles(source)
 end)
-

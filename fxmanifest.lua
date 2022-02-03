@@ -20,6 +20,7 @@ client_scripts {
     'client/actions/park.lua',
     'client/actions/impound.lua',
     'client/actions/commands.lua',
+    'client/actions/stolen.lua',
     'client/events.lua',
     'client/threads.lua',
 }
