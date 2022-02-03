@@ -35,21 +35,21 @@ ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
 - Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,
 ```lua
 elseif v.state == 3 then -- this has to be on line 467
-    v.state = Lang:t("info.parked") -- this has to be on line 468
+    v.state = Lang:t("info.parked")                                        -- this has to be on line 468
 ```
 
 - This code has to be at lines 621 to 622
 - Go to resources/[qb]/qb-garages/client/main.lua line 619 and at the end of this line press enter,
 ```lua
-elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 621
+elseif vehicle.state == Lang:t("info.parked") then                         -- this has to be on line 621
     QBCore.Functions.Notify(Lang:t("error.parked_outsite"), "error", 4000) -- this has to be on line 622
 ```
 
 - Important!! add the language, go to resources/[qb]/qb-garages/locales/
 - place this in al the languages files, or the language that you use at the moment.
 ```lua
-parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 11 in every language file)
-parked         = "Parked Outside",                          -- (this wil be line 23 in every language file)
+parked_outsite = "You have parked your vecihle outsite...",                -- this wil be line 11 in every language file
+parked         = "Parked Outside",                                         -- this wil be line 23 in every language file
 ```
 
 ## 🙈 Youtube & Discord & Twitter 👊😉👍
