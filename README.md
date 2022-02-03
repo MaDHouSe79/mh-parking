@@ -215,19 +215,18 @@ RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5')
 ```
 
 ## To Fix The qb-garages garage and impound menus
-- This code has to be at lines 469 to 470 
+- This code has to be at lines 467 to 468
 - Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,
 ```lua
-elseif v.state == 3 then -- this has to be on line 469
-    v.state = Lang:t("info.parked") -- this has to be on line 470
+elseif v.state == 3 then -- this has to be on line 467
+    v.state = Lang:t("info.parked") -- this has to be on line 468
 ```
 
-- This code has to be at lines 620 to 621
+- This code has to be at lines 621 to 622
 - Go to resources/[qb]/qb-garages/client/main.lua line 619 and at the end of this line press enter,
 ```lua
-elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 620
-    QBCore.Functions.Notify(Lang:t("error.parked_outsite"), "error", 4000) -- this has to be on line 621
-
+elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 621
+    QBCore.Functions.Notify(Lang:t("error.parked_outsite"), "error", 4000) -- this has to be on line 622
 ```
 
 - Important!! add the language, go to resources/[qb]/qb-garages/locales/
