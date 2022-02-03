@@ -203,9 +203,6 @@ end
 ```lua
 TriggerEvent('qb-parking:client:stolenVehicle', vehicle)
 ```
-```lua
-qb-parking:server:stolen
-```
 
 ## ⚙️ If F5 is not working for you with keybinds.
 - 👇 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
