@@ -3,6 +3,7 @@
 - ✔️ Added: Trigger for if you are using a cartief or picklock script
 - ✔️ Changes: i change the directories and added a few functions.
 - ✔️ Major cleanup and code improvement, speed up the parking, instance spawn after you get out of the vehicle after parking.
+- ✔️ Added Animation when parking the vehicle, remote control animation and sound.
 ## ---------------------------------------------Updates------------------------------------------------
 
 ## Added 👊😉👍 2-2-2022
