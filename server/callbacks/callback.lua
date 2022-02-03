@@ -120,7 +120,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
     end
 end)
 
--- When the police impound the car, support for esx_policejob
+-- When the police impound the car
 QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb, vehicleData)
     local src     = source
     local plate   = vehicleData.plate
@@ -130,6 +130,36 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
 		if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			SaveToImpound(plate, rs[1].citizenid)
+			cb({ status  = true })
+			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
+		else
+			cb({
+				status  = false,
+				message = Lang:t("info.car_not_found"),
+			})
+			print(Lang:t("error"))
+		end
+    end)
+end)
+
+
+-- When a vehicle gets stolen by other player. We need this to unpark the vehicle.
+QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb, vehicleData)
+    local src     = source
+    local plate   = vehicleData.plate
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
+		['@plate'] = plate
+    }, function(rs)
+		if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
+			print("A Player has stolen a vehicle: ", vehicleData.plate, rs[1].citizenid)
+			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
+				["@plate"]     = plate,
+				["@citizenid"] = rs[1].citizenid
+			})
+			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
+				["@plate"]     = plate,
+				["@citizenid"] = rs[1].citizenid
+			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
