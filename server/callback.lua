@@ -173,7 +173,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb,
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"]     = plate,
-			  })
+			})
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
 				["@plate"]     = plate,
 			})
