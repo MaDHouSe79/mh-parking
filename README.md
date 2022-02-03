@@ -159,7 +159,8 @@ CREATE TABLE `player_parking`  (
 ````
 
 ## 🤬 If you have issues with impound and fuel, then replace this code.
-- 👇 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
+- Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
+- Find 👇
 ````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
@@ -181,7 +182,7 @@ function TakeOutImpound(vehicle)
     end
 end
 ````
--- 👇 Change it with this code
+-- Change it with 👇
 ````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
@@ -191,7 +192,7 @@ function TakeOutImpound(vehicle)
                 QBCore.Functions.SetVehicleProperties(veh, properties)
                 SetVehicleNumberPlateText(veh, vehicle.plate)
                 SetEntityHeading(veh, coords.w)
-                exports['LegacyFuel']:SetFuel(veh, 100.0)
+                exports['LegacyFuel']:SetFuel(veh, 100.0) -- The Change
                 doCarDamage(veh, vehicle)
                 TriggerServerEvent('police:server:TakeOutImpound',vehicle.plate)
                 closeMenuFull()
@@ -212,11 +213,11 @@ RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5')
 
 ## Police impound trigger for qb-parking
 - Go to resources\[qb]\qb-policejob\client.lua line 332
-- 👇 Find: 
+- Find 👇 
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 ```
-- 👇 And change this code
+- Change it with 👇
 ````lua
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
@@ -235,7 +236,7 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     end
 end)
 ````
-- 👇 For this code
+- For 👇
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
