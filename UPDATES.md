@@ -16,7 +16,7 @@
 - ✔️ This to make the qb-parking work with qb-garages garage and impound menus.
 
 ## 🥵 You have to update your database 
-- use this to update your player_parking table:
+- 👇 Use this to update your player_parking table
 ```php
 ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
 ```
