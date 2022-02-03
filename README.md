@@ -182,7 +182,7 @@ function TakeOutImpound(vehicle)
     end
 end
 ````
--- Change it with 👇
+-- Replace 👇
 ````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
@@ -214,10 +214,6 @@ RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5')
 ## 👮‍♂️ Impound trigger
 - Go to resources\[qb]\qb-policejob\client.lua line 332
 - Find 👇 
-```lua 
-RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-```
-- Change it with 👇
 ````lua
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
@@ -236,7 +232,7 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     end
 end)
 ````
-- For 👇
+- Replace 👇
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
