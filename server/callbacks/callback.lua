@@ -143,7 +143,14 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
-			SaveToImpound(plate, rs[1].citizenid)
+			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
+				["@plate"]     = plate,
+				["@citizenid"] = rs[1].citizenid
+			})
+			MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
+				["@plate"]     = plate,
+				["@citizenid"] = rs[1].citizenid
+			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
