@@ -199,7 +199,7 @@ function TakeOutImpound(vehicle)
 end
 ````
 
-## 🦹‍♂️ if you use a picklock or dar thief sscript you must use this trigger
+## 🦹‍♂️ if you use a picklock or car thief script you must use this trigger
 ```lua
 TriggerEvent('qb-parking:client:stolenVehicle', vehicle)
 ```
