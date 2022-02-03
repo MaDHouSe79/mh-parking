@@ -28,7 +28,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								message = Lang:t("info.car_already_parked"),
 							})
 						else
-							
 							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
 								["@citizenid"]   = GetCitizenid(Player),
 								["@citizenname"] = GetUsername(Player),
@@ -99,11 +98,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = plate,
 								["@citizenid"] = GetCitizenid(Player)
-							  })
-							  MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
-								["@plate"]     = plate,
-								["@citizenid"] = GetCitizenid(Player)
-							  })
+							})
+							MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
+							    ["@plate"]     = plate,
+							    ["@citizenid"] = GetCitizenid(Player)
+							})
 							cb({
 								status  = true,
 								message = Lang:t("info.has_take_the_car"),
@@ -145,11 +144,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 				["@plate"]     = plate,
 				["@citizenid"] = rs[1].citizenid
-			  })
-			  MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
-				["@plate"]     = plate,
+			})
+			MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
+			    ["@plate"]     = plate,
 				["@citizenid"] = rs[1].citizenid
-			  })
+			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
@@ -174,11 +173,9 @@ QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb,
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"]     = plate,
-				["@citizenid"] = rs[1].citizenid
 			  })
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
 				["@plate"]     = plate,
-				["@citizenid"] = rs[1].citizenid
 			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
