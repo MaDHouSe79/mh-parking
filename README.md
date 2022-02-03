@@ -105,53 +105,7 @@ Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊
 - ✅ You can give a fine, and then if you want, you can still impound this vehicle.
 - ✅ If a player as police, if they can enable the hud to see the name and plate of this persons parked vehicle, by using /park-names.
 - ✅ The Polices and Mechanics client side trigger event, for the police or mechanic to impount a vehicle correctly. 
-- ✅ You MUST add this to your police and or mechanic impound trigger event.
-- 💥 DON'T FORGET THIS PART BELOW, OR PLAYERS CAN GET THERE VEHICLE AT THE GARAGE BACK FOR FREE WHEN REJOIN .
-
-
-## Police impound trigger
-- Go to resources\[qb]\qb-policejob\client.lua line 332
-- find the trigger: RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-- Change this code
-````lua
-RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-    local vehicle = QBCore.Functions.GetClosestVehicle()
-    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
-    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
-    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
-    if vehicle ~= 0 and vehicle then
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local vehpos = GetEntityCoords(vehicle)
-        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
-        end
-    end
-end)
-````
-- For this code
-```lua 
-RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-    local vehicle = QBCore.Functions.GetClosestVehicle()
-    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
-    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
-    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
-    if vehicle ~= 0 and vehicle then
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local vehpos = GetEntityCoords(vehicle)
-        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerEvent('qb-parking:client:impoundVehicle', vehicle) -- <--- impound qb-parking trigger
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
-        end
-    end
-end)
-```
-
+- ✅ You MUST add this to your police impound trigger event.
 
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
@@ -256,6 +210,50 @@ end
 ```lua
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
+
+## Police impound trigger for qb-parking
+- Go to resources\[qb]\qb-policejob\client.lua line 332
+- find the trigger: RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
+- Change this code
+````lua
+RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
+    local vehicle = QBCore.Functions.GetClosestVehicle()
+    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
+    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
+    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
+    if vehicle ~= 0 and vehicle then
+        local ped = PlayerPedId()
+        local pos = GetEntityCoords(ped)
+        local vehpos = GetEntityCoords(vehicle)
+        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
+            local plate = QBCore.Functions.GetPlate(vehicle)
+            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+            QBCore.Functions.DeleteVehicle(vehicle)
+        end
+    end
+end)
+````
+- For this code
+```lua 
+RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
+    local vehicle = QBCore.Functions.GetClosestVehicle()
+    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
+    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
+    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
+    if vehicle ~= 0 and vehicle then
+        local ped = PlayerPedId()
+        local pos = GetEntityCoords(ped)
+        local vehpos = GetEntityCoords(vehicle)
+        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
+            local plate = QBCore.Functions.GetPlate(vehicle)
+            TriggerEvent('qb-parking:client:impoundVehicle', vehicle) -- <--- impound qb-parking trigger
+            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+            QBCore.Functions.DeleteVehicle(vehicle)
+        end
+    end
+end)
+```
+
 
 ## To Fix The qb-garages garage and impound menus
 - This code has to be at lines 467 to 468
