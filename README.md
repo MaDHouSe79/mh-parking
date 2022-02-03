@@ -159,7 +159,7 @@ CREATE TABLE `player_parking`  (
 ````
 
 ## 🤬 If you have issues with impound and fuel, then replace this code.
-- 👉 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
+- 👇 Go to resources[qb]/qb-policejob/client/job.lua go to line 122.
 ````lua
 function TakeOutImpound(vehicle)
     local coords = Config.Locations["impound"][currentGarage]
@@ -205,18 +205,18 @@ end
 ````
 
 ## ⚙️ If F5 is not working for you with keybinds.
-- 👉 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
+- 👇 place this code in resources/[qb]/qb-parking/client/actions/commands.lua
 ```lua
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 ```
 
 ## Police impound trigger for qb-parking
 - Go to resources\[qb]\qb-policejob\client.lua line 332
-- Find: 
+- 👇 Find: 
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 ```
-- And change this code
+- 👇 And change this code
 ````lua
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
@@ -235,7 +235,7 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     end
 end)
 ````
-- For this code
+- 👇 For this code
 ```lua 
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
@@ -257,7 +257,7 @@ end)
 ```
 
 
-## To Fix The qb-garages garage and impound menus
+## 👇 To Fix The qb-garages garage and impound menus
 - This code has to be at lines 467 to 468
 - Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,
 ```lua
@@ -266,14 +266,14 @@ elseif v.state == 3 then -- this has to be on line 467
 ```
 
 - This code has to be at lines 621 to 622
-- Go to resources/[qb]/qb-garages/client/main.lua line 619 and at the end of this line press enter,
+- 👇 Go to resources/[qb]/qb-garages/client/main.lua line 619 and at the end of this line press enter,
 ```lua
 elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 621
     QBCore.Functions.Notify(Lang:t("error.parked_outsite"), "error", 4000) -- this has to be on line 622
 ```
 
 - Important!! add the language, go to resources/[qb]/qb-garages/locales/
-- place this in al the languages files, or the language that you use at the moment.
+- 👇 place this in al the languages files, or the language that you use at the moment.
 ```lua
 parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 11 in every language file)
 parked         = "Parked Outside",                          -- (this wil be line 23 in every language file)
