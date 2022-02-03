@@ -36,9 +36,6 @@ server_scripts {
 dependencies {
     'oxmysql',
     'qb-core',
-    'qb-phone',
-    'qb-garages',
-    'qb-vehiclekeys',
 }
 
 lua54 'yes'

@@ -42,9 +42,10 @@ end
 
 -- Load Entity
 local function LoadEntity(vehicleData, type)
-    LoadModel(vehicleData.vehicle.props["model"])
+	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     vehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicleData.vehicle.props)
+	exports[Config.YourFuelExportName]:SetFuel(vehicleEntity, vehicleData.vehicle.health.tank)
     SetVehicleEngineOn(vehicleEntity, false, false, true)
     if type == 'server' then
 		if not Config.ImUsingOtherKeyScript then
@@ -149,12 +150,10 @@ function SpawnVehicles(vehicles)
 			for i = 1, #vehicles, 1 do
 				DeleteLocalVehicle(vehicles[i].vehicle)
 				LoadEntity(vehicles[i], 'server')
-				Wait(50)
 				SetVehicleEngineOn(vehicleEntity, false, false, true)
 				FreezeEntityPosition(vehicleEntity, true)
 				TableInsert(vehicleEntity, vehicles[i])
 				DoAction(action)
-				Wait(100)
 			end
 		end
     end)
@@ -166,10 +165,8 @@ function SpawnVehicle(vehicleData)
 		if LocalPlayer.state.isLoggedIn then
 			while IsDeleting do Wait(100) end
 			DeleteLocalVehicle(vehicleData.vehicle)
-			Wait(500)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(vehicleEntity, vehicleData)
-			Wait(100)
 			SetVehicleEngineOn(vehicleEntity, false, false, true)
 			FreezeEntityPosition(vehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
@@ -227,10 +224,3 @@ function DisplayHelpText(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
--- Load car model
-function LoadModel(model)
-    RequestModel(model)
-    while not HasModelLoaded(model) do
-        Wait(0)
-    end
-end

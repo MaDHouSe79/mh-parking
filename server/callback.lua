@@ -44,7 +44,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								status  = true, 
 								message = Lang:t("success.parked"),
 							})
-							Wait(100)
+							--Wait(10)
 							TriggerClientEvent("qb-parking:client:addVehicle", -1, {
 								vehicle     = vehicleData,
 								plate       = plate, 

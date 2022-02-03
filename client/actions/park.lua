@@ -59,7 +59,7 @@ function Save(player, vehicle)
     LastUsedPlate      = vehicleProps.plate
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
         if callback.status then
-            DeleteVehicle(vehicle)
+            QBCore.Functions.DeleteVehicle(vehicle)
             SendMail(
                 Lang:t('mail.sender' , {
                     company   = Lang:t('info.companyName'),

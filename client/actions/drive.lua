@@ -1,6 +1,6 @@
 -- Create Vehicle Entity
 local function CreateVehicleEntity(vehicle)
-    LoadModel(vehicle.props["model"])
+    QBCore.Functions.LoadModel(vehicle.props["model"])
     return CreateVehicle(vehicle.props["model"], vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
 end
 
@@ -24,7 +24,6 @@ end
 local function MakeVehicleReadyToDrive(vehicle)
     -- Delete the local entity first
     DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
-    LoadModel(vehicle.props["model"])
     local vehicleEntity = CreateVehicleEntity(vehicle)
     TaskWarpPedIntoVehicle(PlayerPedId(), vehicleEntity, -1)
     QBCore.Functions.SetVehicleProperties(vehicleEntity, vehicle.props)
@@ -46,8 +45,8 @@ function Drive(player, vehicle)
     action = 'drive'
     QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
         if callback.status then
-            DeleteVehicle(vehicle.entity)
-            DeleteVehicle(GetVehiclePedIsIn(player))
+            QBCore.Functions.DeleteVehicle(vehicle.entity)
+            QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
             vehicle = false
             MakeVehicleReadyToDrive(callback.data)
         else
