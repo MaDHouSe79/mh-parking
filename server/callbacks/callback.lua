@@ -96,7 +96,14 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						['@plate']     = plate
 					}, function(rs)
 						if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil then
-							RestoreParkingCar(plate, Player.PlayerData)
+							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
+								["@plate"]     = plate,
+								["@citizenid"] = Player.PlayerData.citizenid
+						        })
+						        MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
+								["@plate"]     = plate,
+								["@citizenid"] = Player.PlayerData.citizenid
+						        })
 							cb({
 								status  = true,
 								message = Lang:t("info.has_take_the_car"),
