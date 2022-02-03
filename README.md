@@ -232,8 +232,8 @@ elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 621
 - Important!! add the language, go to resources/[qb]/qb-garages/locales/
 - place this in al the languages files, or the language that you use at the moment.
 ```lua
-parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 10 in every language file)
-parked         = "Parked Outside", -                        -- (this wil be line 22 in every language file)
+parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 11 in every language file)
+parked         = "Parked Outside", -                        -- (this wil be line 23 in every language file)
 ```
 
 
