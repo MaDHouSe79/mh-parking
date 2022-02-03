@@ -30,7 +30,14 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								message = Lang:t("info.car_already_parked"),
 							})
 						else
-							SaveParkingCar(vehicleData, vehicleData.model, plate, fuellvl, Player.PlayerData)
+							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
+								["@plate"]     = plate,
+								["@citizenid"] = Player.PlayerData.citizenid
+    							})
+    							MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
+								["@plate"]     = plate,
+								["@citizenid"] = Player.PlayerData.citizenid
+   							})
 							cb({ 
 								status  = true, 
 								message = Lang:t("success.parked"),
