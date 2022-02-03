@@ -1,18 +1,18 @@
-UpdateAvailable        = false
-PlayerData             = {}
-PlayerJob              = {}
-LocalVehiclesList      = {}
-GlobalVehiclesList     = {}
-SpawnedVehicles        = false
-isUsingParkCommand     = false
-IsDeleting             = false
-onDuty                 = false
-inParking              = false
-Citizenid              = nil
-LastUsedPlate          = nil
-parkName               = nil
-vehicleEntity          = nil
-action                 = 'none'
+UpdateAvailable    = false
+PlayerData         = {}
+PlayerJob          = {}
+LocalVehiclesList  = {}
+GlobalVehiclesList = {}
+SpawnedVehicles    = false
+isUsingParkCommand = false
+IsDeleting         = false
+onDuty             = false
+inParking          = false
+Citizenid          = nil
+LastUsedPlate      = nil
+parkName           = nil
+vehicleEntity      = nil
+action             = 'none'
 
 local function CreateParkDisPlay(vehicleData)
     local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
