@@ -138,7 +138,7 @@ end)
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
 - ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
-## resources[qb]/qb-core/server/player.lua Line:506
+- ✅ Go to resources[qb]/qb-core/server/player.lua Line:506
 ````lua
 { table = 'player_parking' },
 ````
