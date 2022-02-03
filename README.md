@@ -1,4 +1,4 @@
-## QB-Parking Recreated for QB-Core by MaDHouSe
+## QB-Parking
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house, or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place, you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
@@ -15,7 +15,7 @@ but i completely rebuild and change this system for QB-Core and i add some other
 [Akkariin Meiko](https://github.com/kasuganosoras/) did a great job to make this mod public, 
 Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊😁👍
 
-## Read The Update.md for changes.
+## Read The Updates.md for updates and changes.
 
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
@@ -199,7 +199,7 @@ function TakeOutImpound(vehicle)
 end
 ````
 
-## 🦹‍♂️ if you use a picklock or dar thief sscript you must use this trigger
+## 🦹‍♂️ if you use a picklock or car thief script you must use this trigger
 ```lua
 TriggerEvent('qb-parking:client:stolenVehicle', vehicle)
 ```
