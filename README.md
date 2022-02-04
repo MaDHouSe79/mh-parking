@@ -39,7 +39,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
 - 👉 Step 6: Add your self as admin in the config and you can use the command: /park-addvid [id]
 - 👉 Step 7: Start your server. 
-- 👉 Step 8: Most importent step -> Enjoy 👊😎👍
+- 👉 Step 8: Most important step -> Enjoy 👊😎👍
 
 
 ## 🍀 Features
