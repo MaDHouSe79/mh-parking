@@ -481,7 +481,7 @@ end, false)
 
 
 -- Add Vip (Admin Only)
-RegisterCommand(Config.Command.addvid, function(source, args)
+RegisterCommand(Config.Command.addvip, function(source, args)
     if IsAdmin(Citizenid) then
         if args[1] and tonumber(args[1]) > 0 then
             QBCore.Functions.TriggerCallback("qb-parking:server:AddVip", function(cb)
@@ -500,7 +500,7 @@ end, false)
 
 -- Add Remove Vip if user online,
 -- if not you have to remove it from the database. (Admin Only)
-RegisterCommand(Config.Command.removevid, function(source, args)
+RegisterCommand(Config.Command.removevip, function(source, args)
     if IsAdmin(Citizenid) then
         if args[1] and tonumber(args[1]) > 0 then
             QBCore.Functions.TriggerCallback("qb-parking:server:RemoveVip", function(cb)
