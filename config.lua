@@ -25,8 +25,8 @@ Config.Command = {
     notification = 'park-notification',      -- User/Admin permission
     vip          = 'park-vip',               -- Admin permission
     system       = 'park-system',            -- Admin permission
-    addvip       = 'park-addvip',               -- Admin permission
-    removevip    = 'park-removevip'             -- Admin permission
+    addvid       = 'park-addvid',               -- Admin permission
+    removevid    = 'park-removevid'             -- Admin permission
 }
 
 -- 👇 vip table
