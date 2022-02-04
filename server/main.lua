@@ -320,7 +320,7 @@ end)
 QBCore.Functions.CreateCallback("qb-parking:server:RemoveVip", function(source, cb, id)
 	for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local player = QBCore.Functions.GetPlayer(v)
-		if tonumber(player.PlayerData.cid) == tonumber(id) then
+		if tonumber(player.PlayerData.source) == tonumber(id) then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = GetCitizenid(player),
 			}, function(rs)
