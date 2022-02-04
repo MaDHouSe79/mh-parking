@@ -1,6 +1,6 @@
 local Translations = {
     error = {
-        ["citizenid_error"]     = "[ERROR] Error al conseguir jugador ciudadano!",
+        ["citizenid_error"]     = "[ERROR] Error al conseguir la id del ciudadano!",
     },
     system = {
         ['enable']              = "Sistema de parking %{type} ahora esta habilitado",
@@ -10,14 +10,14 @@ local Translations = {
         ["no_permission"]       = "Sistema de parking: No tiene permiso para estacionar..",
         ["offline"]             = "El sistema de parking está desconectado",
         ["update_needed"]       = "El sistema de parking está desactualizado....",
-        ["already_vip"]         = "Player is already a vip!",
-        ["vip_not_found"]       = "Player not found!",
-        ["vip_add"]             = "Player %{username} is added as vip!",
-        ["vip_remove"]          = "Player %{username} is removed as vip!",
+        ["already_vip"]         = "El jugador ya es vip!",
+        ["vip_not_found"]       = "Jugador no encontrado!",
+        ["vip_add"]             = "El jugador %{username} se agrega como vip!",
+        ["vip_remove"]          = "El jugador %{username} se elimina como vip!",
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",
-        ["route_has_been_set"]  = "Hay un punto de referencia en la carpeta donde su vehículo está canalizado..",
+        ["route_has_been_set"]  = "Hay un punto de referencia en la carpeta donde su vehículo está estacionado..",
     },
     info = {
         ["companyName"]         = "Beunhaas BV",
