@@ -19,9 +19,6 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/main.lua',
-    'server/events.lua',
-    'server/functions.lua',
-    'server/callback.lua',
 }
 
 dependencies {
