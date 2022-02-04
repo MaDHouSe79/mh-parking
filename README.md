@@ -32,12 +32,14 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
-- 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it 😁
+- 👉 Step 1: First stop your server. 😁
 - 👉 Step 2: Copy the directory qb-parking to resources/[qb]/
-- 👉 Step 3: Add the player_parking.sql to your correct database.
-- 👉 Step 4: Add your vip players to the VipPlayer table in qb-parking/shared/config.lua there is an example how to do this.
-- 👉 Step 5: Add any recommended extra code what I say you should add.
-- 👉 Step 6: If you are 100% sure, you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
+- 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
+- 👉 Step 4: Add any recommended extra code what I say you should add.
+- 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
+- 👉 Step 6: Add your self as admin in the config and you can use the command: /park-addvid [id]
+- 👉 Step 7: Start your server. 
+- 👉 Step 8: Most importent step -> Enjoy 👊😎👍
 
 
 ## 🍀 Features
@@ -59,7 +61,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - 👉 Typ "/park-names if you want to display the names ontop of the vehicle that is parked. (Users and Admins)
 - 👉 Typ "/park-notification" to turn on or of the phone notification (Users and Admins)
 - 👉 Typ "/park-system" if you want to turn on or off the system. (Admin Only)
-- 👉 Typ "/park-addvip [id]" if you want to add a vip. (Admin Only)
+- 👉 Typ "/park-addvid [id]" if you want to add a vip. (Admin Only)
 - 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 

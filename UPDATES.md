@@ -17,12 +17,12 @@ CREATE TABLE IF NOT EXISTS `player_parking_vips` (
 - ✔️ When unparked the player is unable to park again and he must use the garage to store his vehicle.
 
 ## New commands
-- /park-addvip [id] to add a online player as vip       (Admin Only)
+- /park-addvid [id] to add a online player as vip       (Admin Only)
 - /park-removevip [id] to remove a online player ad vip (Admin Only)
 
 ## Extra info
 - The id is not the citizenid but the ingame player id,
-- so if this user had the is 2 you use the 2 as id to add this player as vip,
+- so if this user had the id 2 you use the 2 as id to add this player as vip,
 - the same for removeing this player, but this player has to be online or you have to remove it by hand from the database,
 - 👉👉👉 DONT FOTGET TO ADD YOUR SELF AS VIP, or you can't park 😉👍
 Enjoy 👊😉👍
