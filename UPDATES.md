@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `player_parking_vips` (
 
 ## Extra info
 - The id is not the citizenid but the ingame player id,
-- so if this user had the is 2 you use the 2 as id to add this player as vip,
+- so if this user had the id 2 you use the 2 as id to add this player as vip,
 - the same for removeing this player, but this player has to be online or you have to remove it by hand from the database,
 - 👉👉👉 DONT FOTGET TO ADD YOUR SELF AS VIP, or you can't park 😉👍
 Enjoy 👊😉👍
