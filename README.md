@@ -34,10 +34,11 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server, cause it will restart anyway if you use the 3D waypoint, if not also stop it 😁
 - 👉 Step 2: Copy the directory qb-parking to resources/[qb]/
-- 👉 Step 3: Add the player_parking.sql to your correct database.
-- 👉 Step 4: Add your vip players to the VipPlayer table in qb-parking/shared/config.lua there is an example.
-- 👉 Step 5: Add any recommended extra code what I say you should add.
-- 👉 Step 6: If you are 100% sure, you have done all 5 steps correctly, start the server, and enjoy 👊😎👍
+- 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
+- 👉 Step 4: Add any recommended extra code what I say you should add.
+- 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, start the server.
+- 👉 Step 6: Add your self as Vip to be able to park, add your self as admin in the config and use the command: /park-addvip [id]
+- 👉 Step 7: Most importent step -> Enjoy 👊😎👍
 
 
 ## 🍀 Features
