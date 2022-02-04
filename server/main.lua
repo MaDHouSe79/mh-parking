@@ -350,12 +350,11 @@ if Config.CheckForUpdates then
 end
 
 -- version check
-RegisterServerEvent("dp:CheckVersion") 
-AddEventHandler("dp:CheckVersion", function()
+RegisterServerEvent("qb-parking:server:CheckVersion", function()
     if updateavail then
-        TriggerClientEvent("dp:Update", source, true)
+        TriggerClientEvent("qb-parking:client:GetUpdate", source, true)
     else
-        TriggerClientEvent("dp:Update", source, false)
+        TriggerClientEvent("qb-parking:client:GetUpdate", source, false)
     end
 end)
 

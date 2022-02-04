@@ -3,6 +3,7 @@ local PlayerData         = {}
 local PlayerJob          = {}
 local LocalVehicles      = {}
 local GlobalVehicles     = {}
+local UpdateAvailable    = false
 local SpawnedVehicles    = false
 local isUsingParkCommand = false
 local IsDeleting         = false
@@ -572,6 +573,14 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
+
+RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
+    UpdateAvailable = state
+    if UpdateAvailable then
+        print("There is a update for qb-parking")
+    end
+end)
+
 -------------------------------------------------------------------------------------------------------
 
 
