@@ -12,8 +12,8 @@ local Translations = {
         ["update_needed"]       = "El sistema de parking está desactualizado....",
         ["already_vip"]         = "El jugador ya es vip!",
         ["vip_not_found"]       = "Jugador no encontrado!",
-        ["vip_add"]             = "El jugador %{username} es agrego como vip!",
-        ["vip_remove"]          = "El jugador %{username} es removido del vip!",
+        ["vip_add"]             = "El jugador %{username} se agrego como vip!",
+        ["vip_remove"]          = "El jugador %{username} es removido del vip!"
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",
