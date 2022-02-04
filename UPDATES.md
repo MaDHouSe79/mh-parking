@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS `player_parking_vips` (
 - /park-removevip [id] to remove a online player ad vip (Admin Only)
 
 ## Extra info
-- the id is not the citizenid but the ingame player id.
-- so if this user had the is 2 you use the 2 as id to add this player as vip
-- the same for removeing this player, but this player has to be online or you have to remove it by hand from the database.
-
+- The id is not the citizenid but the ingame player id,
+- so if this user had the is 2 you use the 2 as id to add this player as vip,
+- the same for removeing this player, but this player has to be online or you have to remove it by hand from the database,
+- 👉👉👉 Ow and dont forget to add your self as vip or you cant not park 😉👍
 Enjoy 👊😉👍
 
 
