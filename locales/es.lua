@@ -13,7 +13,7 @@ local Translations = {
         ["already_vip"]         = "El jugador ya es vip!",
         ["vip_not_found"]       = "Jugador no encontrado!",
         ["vip_add"]             = "El jugador %{username} se agrego como vip!",
-        ["vip_remove"]          = "El jugador %{username} es removido del vip!",
+        ["vip_remove"]          = "El jugador %{username} se removido del vip!"
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",
