@@ -307,7 +307,6 @@ local function ParkCar(player, vehicle)
     end
     RequestAnimSet("anim@mp_player_intmenu@key_fob@")
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
-    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.3)
     Wait(2000)
     ClearPedTasks(player)
     SetVehicleDoorsLocked(vehicle, 2)
@@ -318,6 +317,7 @@ local function ParkCar(player, vehicle)
     SetVehicleLights(vehicle, 2)
     Wait(150)
     SetVehicleLights(vehicle, 0)
+    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.3)
 end
 
 -- Send Email to the player phone
