@@ -10,6 +10,10 @@ local Translations = {
         ["no_permission"]       = "Sistema de parking: No tiene permiso para estacionar..",
         ["offline"]             = "El sistema de parking está desconectado",
         ["update_needed"]       = "El sistema de parking está desactualizado....",
+        ["already_vip"]         = "Player is already a vip!",
+        ["vip_not_found"]       = "Player not found!",
+        ["vip_add"]             = "Player %{username} is added as vip!",
+        ["vip_remove"]          = "Player %{username} is removed as vip!",
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",

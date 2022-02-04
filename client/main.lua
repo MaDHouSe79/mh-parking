@@ -299,12 +299,7 @@ end
 
 local function ParkCar(player, vehicle)
     TaskLeaveVehicle(player, vehicle)
-    for i = 0, 5 do
-        SetVehicleDoorShut(vehicle, i, false) -- will close all doors from 0-5
-        if Config.SoundWhenCloseDoors then
-            PlayVehicleDoorCloseSound(vehicle, i)
-        end
-    end
+
     RequestAnimSet("anim@mp_player_intmenu@key_fob@")
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
     Wait(2000)
@@ -458,19 +453,6 @@ RegisterCommand(Config.Command.notification, function()
     end
 end, false)
 
--- Admin Only
-RegisterCommand(Config.Command.vip, function()
-    if IsAdmin(Citizenid) then
-        OnlyAllowVipPlayers = not OnlyAllowVipPlayers
-        if OnlyAllowVipPlayers then
-            QBCore.Functions.Notify(Lang:t('system.parkvip', {type = "vip"}), "primary", 1500)
-        else
-            QBCore.Functions.Notify(Lang:t('system.freeforall', {type = "freeforall"}), "primary", 1500)
-        end
-    else
-        QBCore.Functions.Notify(Lang:t('system.no_permission'), "primary", 1500)
-    end
-end, false)
 
 -- Admin Only
 RegisterCommand(Config.Command.system, function()
@@ -480,6 +462,43 @@ RegisterCommand(Config.Command.system, function()
             QBCore.Functions.Notify(Lang:t('system.enable', {type = "system"}), "primary", 1500)
         else
             QBCore.Functions.Notify(Lang:t('system.disable', {type = "system"}), "primary", 1500)
+        end
+    else
+        QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
+    end
+end, false)
+
+
+-- Add Vip (Admin Only)
+RegisterCommand(Config.Command.addvip, function(source, args)
+    if IsAdmin(Citizenid) then
+        if args[1] and tonumber(args[1]) > 0 then
+            QBCore.Functions.TriggerCallback("qb-parking:server:AddVip", function(cb)
+                if cb.status then
+                    QBCore.Functions.Notify(cb.message, "primary", 1500)
+                else
+                    QBCore.Functions.Notify(cb.message, "error", 1500)
+                end
+            end, tonumber(args[1]))
+        end
+    else
+        QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
+    end
+end, false)
+
+
+-- Add Remove Vip if user online,
+-- if not you have to remove it from the database. (Admin Only)
+RegisterCommand(Config.Command.removevip, function(source, args)
+    if IsAdmin(Citizenid) then
+        if args[1] and tonumber(args[1]) > 0 then
+            QBCore.Functions.TriggerCallback("qb-parking:server:RemoveVip", function(cb)
+                if cb.status then
+                    QBCore.Functions.Notify(cb.message, "primary", 1500)
+                else
+                    QBCore.Functions.Notify(cb.message, "error", 1500)
+                end
+            end, tonumber(args[1]))
         end
     else
         QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
@@ -535,9 +554,7 @@ RegisterNetEvent("qb-parking:client:stolenVehicle",  function(vehicle)
 end)
 
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
-    if IsAllowToPark() then
-        isUsingParkCommand = true
-    end
+    isUsingParkCommand = true
 end)
 
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
@@ -587,7 +604,7 @@ CreateThread(function()
 			if InParking and IsPedInAnyVehicle(player) then
 				local storedVehicle = GetPlayerInStoredCar(player)
 				local vehicle = GetVehiclePedIsIn(player)
-				if storedVehicle ~= false and IsAllowToPark(Citizenid) then
+				if storedVehicle ~= false then
 					DisplayHelpText(Lang:t("info.press_drive_car"))
 					if IsControlJustReleased(0, Config.parkingButton) then
 						isUsingParkCommand = true
@@ -599,15 +616,11 @@ CreateThread(function()
 						Drive(player, storedVehicle)
 					else
 						if vehicle then
-							if IsAllowToPark(Citizenid) then
-								if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
-									Save(player, vehicle)
-								else
-									QBCore.Functions.Notify(Lang:t("info.only_cars_allowd"), "primary", 5000)
-								end
+							if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
+								Save(player, vehicle)
 							else
-								QBCore.Functions.Notify(Lang:t("system.no_permission"), "error", 5000)
-							end
+								QBCore.Functions.Notify(Lang:t("info.only_cars_allowd"), "primary", 5000)
+							end						
 						end
 					end
 				end

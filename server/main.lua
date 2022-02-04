@@ -1,5 +1,5 @@
-local QBCore           = exports['qb-core']:GetCoreObject()
-local updateavail      = false
+local QBCore = exports['qb-core']:GetCoreObject()
+local updateavail = false
 
 -------------------------------------------Local Function----------------------------------------
 
@@ -83,71 +83,70 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
     if UseParkingSystem then
 		local src     = source
 		local Player  = QBCore.Functions.GetPlayer(src)
-		if IsAllowToPark(Player.PlayerData.citizenid) then
-			local plate   = vehicleData.plate
-			local isFound = false
-			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
-				for k, v in pairs(vehicles) do
-					if type(v.plate) and plate == v.plate then
-					isFound = true
-					end		
-				end
-				if GetVehicleNumOfParking(vehicleData.parking) > Config.Maxcarparking then
-					cb({
-						status  = false,
-						message = Lang:t("maximum_cars", {value = Config.Maxcarparking}),
-					})
-				elseif isFound then
-					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-						['@citizenid'] = GetCitizenid(Player),
-						['@plate']     = plate
-					}, function(rs)
-						if type(rs) == 'table' and #rs > 0 then
-							cb({
-								status  = false,
-								message = Lang:t("info.car_already_parked"),
-							})
-						else
-							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
-								["@citizenid"]   = GetCitizenid(Player),
-								["@citizenname"] = GetUsername(Player),
-								["@plate"]       = plate,
-								['@model']       = vehicleData.model,
-								["@data"]        = json.encode(vehicleData),
-								["@time"]        = os.time(),
-							})
-							MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
-								["@plate"]       = plate,
-								["@citizenid"]   = GetCitizenid(Player)
-							})
-							cb({ 
-								status  = true, 
-								message = Lang:t("success.parked"),
-							})
-							--Wait(10)
-							TriggerClientEvent("qb-parking:client:addVehicle", -1, {
-								vehicle     = vehicleData,
-								plate       = plate, 
-								citizenid   = GetCitizenid(Player), 
-								citizenname = GetUsername(Player),
-								model       = vehicleData.model,
-							})
-						end
-					end)
-				else
-					cb({
-						status  = false,
-						message = Lang:t("info.must_own_car"),
-					})
-				end
-			end)
-		else
-			cb({
-				status  = false,
-				message = Lang:t("system.no_permission"),
-			})
-		end
-    else 
+		local plate   = vehicleData.plate
+		local isFound = false
+		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+			['@citizenid'] = Player.PlayerData.citizenid,
+		}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+				FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
+					for k, v in pairs(vehicles) do
+						if type(v.plate) and plate == v.plate then
+						isFound = true
+						end		
+					end
+					if isFound then
+						MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
+							['@citizenid'] = Player.PlayerData.citizenid,
+							['@plate']     = plate
+						}, function(rs)
+							if type(rs) == 'table' and #rs > 0 then
+								cb({
+									status  = false,
+									message = Lang:t("info.car_already_parked"),
+								})
+							else
+								MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
+									["@citizenid"]   = Player.PlayerData.citizenid,
+									["@citizenname"] = GetUsername(Player),
+									["@plate"]       = plate,
+									['@model']       = vehicleData.model,
+									["@data"]        = json.encode(vehicleData),
+									["@time"]        = os.time(),
+								})
+								MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
+									["@plate"]       = plate,
+									["@citizenid"]   = Player.PlayerData.citizenid
+								})
+								cb({ 
+									status  = true, 
+									message = Lang:t("success.parked"),
+								})
+								--Wait(10)
+								TriggerClientEvent("qb-parking:client:addVehicle", -1, {
+									vehicle     = vehicleData,
+									plate       = plate, 
+									citizenid   = Player.PlayerData.citizenid, 
+									citizenname = GetUsername(Player),
+									model       = vehicleData.model,
+								})
+							end
+						end)	
+					else 
+						cb({
+							status  = false,
+							message = Lang:t("info.must_own_car"),
+						})
+					end
+				end)
+			else
+				cb({
+					status  = false,
+					message = Lang:t("system.no_permission"),
+				})
+			end
+		end)
+	else 
 		cb({
 			status  = false,
 			message = Lang:t("system.offline"),
@@ -160,50 +159,43 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
     if UseParkingSystem then
 		local src = source
 		local Player = QBCore.Functions.GetPlayer(src)
-		if IsAllowToPark(Player.PlayerData.citizenid) then
-			local plate = vehicleData.plate
-			local isFound = false
-			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
-				for k, v in pairs(vehicles) do
-					if type(v.plate) and plate == v.plate then
-						isFound = true
+		local plate = vehicleData.plate
+		local isFound = false
+		FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
+			for k, v in pairs(vehicles) do
+				if type(v.plate) and plate == v.plate then
+					isFound = true
+				end
+			end
+			if isFound then
+				MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
+					['@citizenid'] = Player.PlayerData.citizenid,
+					['@plate'] = plate
+				}, function(rs)
+					if type(rs) == 'table' and #rs > 0 and rs[1] then
+						MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
+							["@plate"] = plate,
+							["@citizenid"] = Player.PlayerData.citizenid
+						})
+						MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
+						    ["@plate"] = plate,
+						    ["@citizenid"] = Player.PlayerData.citizenid
+						})
+						cb({
+							status = true,
+							message = Lang:t("info.has_take_the_car"),
+							data = json.decode(rs[1].data),
+						})
+						TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 					end
-				end
-				if isFound then
-					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-						['@citizenid'] = GetCitizenid(Player),
-						['@plate'] = plate
-					}, function(rs)
-						if type(rs) == 'table' and #rs > 0 and rs[1] then
-							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
-								["@plate"] = plate,
-								["@citizenid"] = GetCitizenid(Player)
-							})
-							MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
-							    ["@plate"] = plate,
-							    ["@citizenid"] = GetCitizenid(Player)
-							})
-							cb({
-								status = true,
-								message = Lang:t("info.has_take_the_car"),
-								data = json.decode(rs[1].data),
-							})
-							TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
-						end
-					end)
-				else
-					cb({
-						status = false,
-						message = Lang:t("info.must_own_car"),
-					})
-				end
-			end)
-		else
-			cb({
-				status = false,
-				message = Lang:t("system.no_permission"),
-			})
-		end
+				end)
+			else
+				cb({
+					status = false,
+					message = Lang:t("info.must_own_car"),
+				})
+			end
+		end)
     else 
 		cb({
 			status = false,
@@ -268,6 +260,67 @@ QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb,
 		end
     end)
 end)
+
+
+-- Save vip player to database
+QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb, id)
+	for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        local player = QBCore.Functions.GetPlayer(v)
+		if tonumber(player.PlayerData.cid) == tonumber(id) then
+			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+				['@citizenid'] = player.PlayerData.citizenid,
+			}, function(rs)
+				if type(rs) == 'table' and #rs > 0 then
+					cb({
+						status  = false,
+						message = Lang:t('system.already_vip')
+					})
+				else
+					MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname) VALUES (@citizenid, @citizenname)", {
+						["@citizenid"]   = player.PlayerData.citizenid,
+						["@citizenname"] = GetUsername(player),
+					})
+					cb({ 
+						status  = true, 
+						message = Lang:t('system.vip_add', {username = GetUsername(player)}),
+					})
+				end
+			end)
+		else
+			cb({
+				status = false,
+				message = Lang:t('system.vip_not_found')
+			})
+		end
+	end
+end)
+
+QBCore.Functions.CreateCallback("qb-parking:server:RemoveVip", function(source, cb, id)
+	for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        local player = QBCore.Functions.GetPlayer(v)
+		if tonumber(player.PlayerData.cid) == tonumber(id) then
+			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+				['@citizenid'] = player.PlayerData.citizenid,
+			}, function(rs)
+				if type(rs) == 'table' and #rs > 0 then
+					MySQL.Async.execute('DELETE FROM player_parking_vips WHERE citizenid = @citizenid', {
+						["@citizenid"] = player.PlayerData.citizenid,
+					})
+					cb({ 
+						status  = true, 
+						message = Lang:t('system.vip_remove', {username = GetUsername(player)}),
+					})
+				else
+					cb({
+						status  = false,
+						message = Lang:t('system.vip_not_found')
+					})
+				end
+			end)
+		end
+	end
+end)
+
 -------------------------------------------------------------------------------------------------
 
 

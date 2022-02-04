@@ -10,6 +10,11 @@ local Translations = {
         ["no_permission"]       = "Park systeem: Je hebt geen rechten om te mogen parkeren.",
         ["offline"]             = "Park Systeen is offline",
         ["update_needed"]       = "Park System is verouderd....",
+        ["already_vip"]         = "Player is al een vip!",
+        ["vip_not_found"]       = "Player niet gevonden!",
+        ["vip_add"]             = "Player %{username} is toegevoegd als vip!",
+        ["vip_remove"]          = "Player %{username} is toegevoegd als vip!",
+
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",

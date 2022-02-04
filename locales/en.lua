@@ -10,6 +10,10 @@ local Translations = {
         ["no_permission"]       = "Park system: You do not have permission to park.",
         ["offline"]             = "Park System is offline",
         ["update_needed"]       = "Park System is outdated....",
+        ["already_vip"]         = "Player is already a vip!",
+        ["vip_not_found"]       = "Player not found!",
+        ["vip_add"]             = "Player %{username} is added as vip!",
+        ["vip_remove"]          = "Player %{username} is removed as vip!",
     },
     success = {
         ["parked"]              = "Your car is packed",

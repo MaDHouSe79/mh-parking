@@ -1,4 +1,34 @@
 ## ---------------------------------------------Updates------------------------------------------------
+
+## You have to add a new Database Table to your database
+```php
+CREATE TABLE IF NOT EXISTS `player_parking_vips` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `citizenid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `citizenname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+```
+## Added 👊😉👍 4-2-2022
+- ✔️ You can now add/remove a player as vip by command.
+- ✔️ A player can park right after you have add this player as vip.
+- ✔️ If the player is not online, you have to remove it from the database (player_parking_vips) yourself.
+- ✔️ Aslong this player don't unpart this vehicle the vehicle stays parked, untill the player unpark it.
+- ✔️ When unparked the player is unable to park again and he must use the garage to store his vehicle.
+
+## New commands
+- /park-addvip [id] to add a online player as vip       (Admin Only)
+- /park-removevip [id] to remove a online player ad vip (Admin Only)
+
+## Extra info
+- the id is not the citizenid but the ingame player id.
+- so if this user had the is 2 you use the 2 as id to add this player as vip
+- the same for removeing this player, but this player has to be online or you have to remove it by hand from the database.
+
+Enjoy 👊😉👍
+
+
+## ---------------------------------------------Updates------------------------------------------------
 ## Added 👊😉👍 3-2-2022
 - ✔️ Added: Trigger for if you are using a cartief or picklock script
 - ✔️ Changes: i change the directories and added a few functions.

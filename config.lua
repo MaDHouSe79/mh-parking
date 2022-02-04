@@ -3,7 +3,7 @@ Config                        = {}
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 50           -- 👉 Distence to see text above parked vehicles (player dependent)
-Config.SoundWhenCloseDoors    = false        -- 👉 If you want sound when closing vehicles doors
+
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
 Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
@@ -25,6 +25,8 @@ Config.Command = {
     notification = 'park-notification',      -- User/Admin permission
     vip          = 'park-vip',               -- Admin permission
     system       = 'park-system',            -- Admin permission
+    addvip       = 'park-addvip',               -- Admin permission
+    removevip    = 'park-removevip'             -- Admin permission
 }
 
 -- 👇 vip table
