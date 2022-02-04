@@ -8,13 +8,6 @@ and you have parked your vehicle, then you never have to get your vehicle from t
 
 This is my second mod i make public, so please by kind to my 😁 i still have much to learn.
 
-
-## This qb-parking system is a rebuild of esx_realparking 
-[esx_realparking](https://github.com/kasuganosoras/esx_realparking/) is created by [Akkariin Meiko](https://github.com/kasuganosoras/) 
-but i completely rebuild and change this system for QB-Core and i add some other features to it. 
-[Akkariin Meiko](https://github.com/kasuganosoras/) did a great job to make this mod public, 
-Thanks [Akkariin Meiko](https://github.com/kasuganosoras/) you're awesome!! 👊😁👍
-
 ## Read The Updates.md for updates and changes.
 
 ## 📸 Screenshot 👊😁👍
