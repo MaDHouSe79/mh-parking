@@ -425,6 +425,17 @@ end
 -------------------------------------------------------------------------------------------------------
 
 
+-----------------------------------------------Stolen Vehicle------------------------------------------
+-- Check if a citizenid is an admin.
+local function IsAdmin(citizenid)
+    for k, v in pairs(Config.AdminPlayers) do
+        if v.citizenid == citizenid and v.isAdmin then
+            return true
+        end
+    end
+    return false
+end
+-------------------------------------------------------------------------------------------------------
 
 
 

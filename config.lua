@@ -30,7 +30,7 @@ Config.Command = {
 }
 
 -- 👇 vip table
-Config.VipPlayers = {                        -- Add more vip plaers if you want.
+Config.AdminPlayers = {                        -- Add more vip plaers if you want.
     [1] = {
         username  = "MaDHouSe",              -- Just to know who it is
         citizenid = "TAD48182",              -- you gen cet this from the databse players table copy citizenid and add this here

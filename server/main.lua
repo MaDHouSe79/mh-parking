@@ -1,7 +1,21 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+local QBCore      = exports['qb-core']:GetCoreObject()
 local updateavail = false
 
 -------------------------------------------Local Function----------------------------------------
+-- Get Player username
+local function GetUsername(player)
+	local tmpName = player.PlayerData.name
+	if Config.useRoleplayName then
+		tmpName = player.PlayerData.charinfo.firstname ..' '.. player.PlayerData.charinfo.lastname
+	end
+    return tmpName
+end
+
+-- Get Citizenid
+local function GetCitizenid(player)
+	return player.PlayerData.citizenid
+end
+
 
 -- Get all vehicles the player owned.
 local function FindPlayerVehicles(citizenid, cb)
@@ -72,6 +86,8 @@ local function checkVersion(err, responseText, headers)
         print("\n"..resourceName.." is up to date. (^2"..curVersion.."^7)")
     end
 end
+
+
 -------------------------------------------------------------------------------------------------
 
 
@@ -86,10 +102,10 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 		local plate   = vehicleData.plate
 		local isFound = false
 		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
-			['@citizenid'] = Player.PlayerData.citizenid,
+			['@citizenid'] = GetCitizenid(Player),
 		}, function(rs)
 			if type(rs) == 'table' and #rs > 0 then
-				FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
+				FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
 					for k, v in pairs(vehicles) do
 						if type(v.plate) and plate == v.plate then
 						isFound = true
@@ -97,7 +113,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 					end
 					if isFound then
 						MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-							['@citizenid'] = Player.PlayerData.citizenid,
+							['@citizenid'] = GetCitizenid(Player),
 							['@plate']     = plate
 						}, function(rs)
 							if type(rs) == 'table' and #rs > 0 then
@@ -107,7 +123,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								})
 							else
 								MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
-									["@citizenid"]   = Player.PlayerData.citizenid,
+									["@citizenid"]   = GetCitizenid(Player),
 									["@citizenname"] = GetUsername(Player),
 									["@plate"]       = plate,
 									['@model']       = vehicleData.model,
@@ -116,7 +132,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								})
 								MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
 									["@plate"]       = plate,
-									["@citizenid"]   = Player.PlayerData.citizenid
+									["@citizenid"]   = GetCitizenid(Player)
 								})
 								cb({ 
 									status  = true, 
@@ -126,7 +142,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								TriggerClientEvent("qb-parking:client:addVehicle", -1, {
 									vehicle     = vehicleData,
 									plate       = plate, 
-									citizenid   = Player.PlayerData.citizenid, 
+									citizenid   = GetCitizenid(Player), 
 									citizenname = GetUsername(Player),
 									model       = vehicleData.model,
 								})
@@ -161,7 +177,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 		local Player = QBCore.Functions.GetPlayer(src)
 		local plate = vehicleData.plate
 		local isFound = false
-		FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
+		FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
 			for k, v in pairs(vehicles) do
 				if type(v.plate) and plate == v.plate then
 					isFound = true
@@ -169,36 +185,36 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 			end
 			if isFound then
 				MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-					['@citizenid'] = Player.PlayerData.citizenid,
+					['@citizenid'] = GetCitizenid(Player),
 					['@plate'] = plate
 				}, function(rs)
 					if type(rs) == 'table' and #rs > 0 and rs[1] then
 						MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 							["@plate"] = plate,
-							["@citizenid"] = Player.PlayerData.citizenid
+							["@citizenid"] = GetCitizenid(Player)
 						})
 						MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
 						    ["@plate"] = plate,
-						    ["@citizenid"] = Player.PlayerData.citizenid
+						    ["@citizenid"] = GetCitizenid(Player)
 						})
 						cb({
-							status = true,
+							status  = true,
 							message = Lang:t("info.has_take_the_car"),
-							data = json.decode(rs[1].data),
+							data    = json.decode(rs[1].data),
 						})
 						TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 					end
 				end)
 			else
 				cb({
-					status = false,
+					status  = false,
 					message = Lang:t("info.must_own_car"),
 				})
 			end
 		end)
     else 
 		cb({
-			status = false,
+			status  = false,
 			message = Lang:t("system.offline"),
 		})
     end
@@ -214,7 +230,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
 			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
-				["@plate"] = plate,
+				["@plate"]     = plate,
 				["@citizenid"] = rs[1].citizenid
 			})
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
@@ -225,7 +241,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
 			cb({
-				status = false,
+				status  = false,
 				message = Lang:t("info.car_not_found"),
 			})
 			print(Lang:t("error"))
@@ -268,7 +284,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
         local player = QBCore.Functions.GetPlayer(v)
 		if tonumber(player.PlayerData.cid) == tonumber(id) then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
-				['@citizenid'] = player.PlayerData.citizenid,
+				['@citizenid'] = GetCitizenid(player),
 			}, function(rs)
 				if type(rs) == 'table' and #rs > 0 then
 					cb({
@@ -277,7 +293,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
 					})
 				else
 					MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname) VALUES (@citizenid, @citizenname)", {
-						["@citizenid"]   = player.PlayerData.citizenid,
+						["@citizenid"]   = GetCitizenid(player),
 						["@citizenname"] = GetUsername(player),
 					})
 					cb({ 
@@ -288,7 +304,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
 			end)
 		else
 			cb({
-				status = false,
+				status  = false,
 				message = Lang:t('system.vip_not_found')
 			})
 		end
@@ -300,11 +316,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:RemoveVip", function(source, 
         local player = QBCore.Functions.GetPlayer(v)
 		if tonumber(player.PlayerData.cid) == tonumber(id) then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
-				['@citizenid'] = player.PlayerData.citizenid,
+				['@citizenid'] = GetCitizenid(player),
 			}, function(rs)
 				if type(rs) == 'table' and #rs > 0 then
 					MySQL.Async.execute('DELETE FROM player_parking_vips WHERE citizenid = @citizenid', {
-						["@citizenid"] = player.PlayerData.citizenid,
+						["@citizenid"] = GetCitizenid(player),
 					})
 					cb({ 
 						status  = true, 
@@ -327,7 +343,7 @@ end)
 
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
-        updatePath = "/MaDHouSe79/qb-parking"
+        updatePath   = "/MaDHouSe79/qb-parking"
         resourceName = "qb-parking ("..GetCurrentResourceName()..")"
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
     end)
