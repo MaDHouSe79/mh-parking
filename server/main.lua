@@ -280,13 +280,9 @@ end)
 
 -- Save vip player to database
 QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb, id)
-
 	for k, v in pairs(QBCore.Functions.GetPlayers()) do
-
         local player = QBCore.Functions.GetPlayer(v)
-
 		if tonumber(player.PlayerData.cid) == tonumber(id) then
-
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = GetCitizenid(player),
 			}, function(rs)
@@ -306,7 +302,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
 					})
 				end
 			end)
-			
 		else
 			cb({
 				status  = false,
@@ -314,7 +309,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
 			})
 		end
 	end
-
 end)
 
 QBCore.Functions.CreateCallback("qb-parking:server:RemoveVip", function(source, cb, id)
