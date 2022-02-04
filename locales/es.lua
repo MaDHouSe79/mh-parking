@@ -3,7 +3,7 @@ local Translations = {
         ["citizenid_error"]     = "[ERROR] Error al conseguir la id del ciudadano!",
     },
     system = {
-        ['enable']              = "Sistema de parking %{type} ahora esta habilitado",
+        ["enable"]              = "Sistema de parking %{type} ahora esta habilitado",
         ["disable"]             = "Sistema de parking %{type} se ha deshabilitado",
         ["freeforall"]          = "Sistema de parking: ahora está habilitado para todos los jugadores..",
         ["parkvip"]             = "Sistema de parking: ahora solo está habilitado para VIP.",

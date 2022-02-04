@@ -14,7 +14,6 @@ local Translations = {
         ["vip_not_found"]       = "Player niet gevonden!",
         ["vip_add"]             = "Player %{username} is toegevoegd als vip!",
         ["vip_remove"]          = "Player %{username} is toegevoegd als vip!",
-
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",
