@@ -295,8 +295,15 @@ end
 
 
 --------------------------------------------------Park-------------------------------------------------
+local function loadAnimDict(dict)
+    while (not HasAnimDictLoaded(dict)) do
+        RequestAnimDict(dict)
+        Wait(5)
+    end
+end
 
 local function ParkCar(player, vehicle)
+    loadAnimDict('anim@mp_player_intmenu@key_fob@')
     TaskLeaveVehicle(player, vehicle)
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
     Wait(2000)
