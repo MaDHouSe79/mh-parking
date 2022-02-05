@@ -1,5 +1,22 @@
 ## ---------------------------------------------Updates------------------------------------------------
 
+## Added 👊😉👍 5-2-2022
+- ✔️ Config file is sorter, no Vip or Admin config anymore, everting works with the database now.
+- ✔️ When you give a player a vip, you now also can give a max amount of parking vehicles that is allowed for each player.
+- ✔️ Use: /park-addvid [id] [amount]
+
+## 🥵 You have to update your database 
+- 👇 Use this to update your player_parking_vips table.
+```sql
+ALTER TABLE `player_parking_vips` ADD `maxparking` int(5) NOT NULL DEFAULT 0
+ALTER TABLE `player_parking_vips` ADD `hasparked` int(5) NOT NULL DEFAULT 0 
+```
+
+
+
+
+## ---------------------------------------------Updates------------------------------------------------
+
 ## You have to add a new Database Table to your database
 ```sql
 CREATE TABLE IF NOT EXISTS `player_parking_vips` (
@@ -51,7 +68,7 @@ Enjoy 👊😉👍
 
 ## 🥵 You have to update your database 
 - 👇 Use this to update your player_parking table
-```php
+```sql
 ALTER TABLE `player_parking` ADD `fuel` int(15) NOT NULL DEFAULT 0
 ```
 

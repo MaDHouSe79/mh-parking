@@ -1,6 +1,12 @@
 local Translations = {
     error = {
         ["citizenid_error"]     = "[ERROR] Error al conseguir la id del ciudadano!",
+        ["mis_id"]              = "[Error] Se requiere una identificación de jugador.",
+        ["mis_amount"]          = "[Error] No hay una cantidad de vehículos que este jugador pueda estacionar con anticipación.",
+    },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
     },
     system = {
         ["enable"]              = "Sistema de parking %{type} ahora esta habilitado",
@@ -14,6 +20,7 @@ local Translations = {
         ["vip_not_found"]       = "Jugador no encontrado!",
         ["vip_add"]             = "El jugador %{username} se agrego como vip!",
         ["vip_remove"]          = "El jugador %{username} es removido del vip!",
+        ["max_allow_reached"]   = "El número máximo de vehículos embalados para usted es %{max}",
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",

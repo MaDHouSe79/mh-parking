@@ -105,56 +105,69 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 			['@citizenid'] = GetCitizenid(Player),
 		}, function(rs)
 			if type(rs) == 'table' and #rs > 0 then
-				FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
-					for k, v in pairs(vehicles) do
-						if type(v.plate) and plate == v.plate then
-						isFound = true
-						end		
-					end
-					if isFound then
-						MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-							['@citizenid'] = GetCitizenid(Player),
-							['@plate']     = plate
-						}, function(rs)
-							if type(rs) == 'table' and #rs > 0 then
-								cb({
-									status  = false,
-									message = Lang:t("info.car_already_parked"),
-								})
-							else
-								MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
-									["@citizenid"]   = GetCitizenid(Player),
-									["@citizenname"] = GetUsername(Player),
-									["@plate"]       = plate,
-									['@model']       = vehicleData.model,
-									["@data"]        = json.encode(vehicleData),
-									["@time"]        = os.time(),
-								})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
-									["@plate"]       = plate,
-									["@citizenid"]   = GetCitizenid(Player)
-								})
-								cb({ 
-									status  = true, 
-									message = Lang:t("success.parked"),
-								})
-								--Wait(10)
-								TriggerClientEvent("qb-parking:client:addVehicle", -1, {
-									vehicle     = vehicleData,
-									plate       = plate, 
-									citizenid   = GetCitizenid(Player), 
-									citizenname = GetUsername(Player),
-									model       = vehicleData.model,
-								})
-							end
-						end)	
-					else 
-						cb({
-							status  = false,
-							message = Lang:t("info.must_own_car"),
-						})
-					end
-				end)
+
+				local hasparked = rs[1].hasparked
+				if hasparked < 0 then hasparked = 1 end
+
+				if hasparked < rs[1].maxparking then
+					FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
+						for k, v in pairs(vehicles) do
+							if type(v.plate) and plate == v.plate then
+							isFound = true
+							end		
+						end
+						if isFound then
+							MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
+								['@citizenid'] = GetCitizenid(Player),
+								['@plate']     = plate
+							}, function(rs)
+								if type(rs) == 'table' and #rs > 0 then
+									cb({
+										status  = false,
+										message = Lang:t("info.car_already_parked"),
+									})
+								else
+									MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, model, data, time) VALUES (@citizenid, @citizenname, @plate, @model, @data, @time)", {
+										["@citizenid"]   = GetCitizenid(Player),
+										["@citizenname"] = GetUsername(Player),
+										["@plate"]       = plate,
+										['@model']       = vehicleData.model,
+										["@data"]        = json.encode(vehicleData),
+										["@time"]        = os.time(),
+									})
+									MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
+										["@plate"]       = plate,
+										["@citizenid"]   = GetCitizenid(Player)
+									})
+									MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked + 1 WHERE citizenid = @citizenid', {
+										["@citizenid"] = GetCitizenid(Player)
+									})
+									cb({ 
+										status  = true, 
+										message = Lang:t("success.parked"),
+									})
+									TriggerClientEvent("qb-parking:client:addVehicle", -1, {
+										vehicle     = vehicleData,
+										plate       = plate, 
+										citizenid   = GetCitizenid(Player), 
+										citizenname = GetUsername(Player),
+										model       = vehicleData.model,
+									})
+								end
+							end)	
+						else 
+							cb({
+								status  = false,
+								message = Lang:t("info.must_own_car"),
+							})
+						end
+					end)
+				else
+					cb({
+						status  = false,
+						message = Lang:t("system.max_allow_reached", { max = rs[1].maxparking}),
+					})
+				end
 			else
 				cb({
 					status  = false,
@@ -197,6 +210,19 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						    ["@plate"] = plate,
 						    ["@citizenid"] = GetCitizenid(Player)
 						})
+
+						MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+							['@citizenid'] = GetCitizenid(Player),
+						}, function(rs)
+							if type(rs) == 'table' and #rs > 0 then
+								local hasparked = rs[1].hasparked - 1
+								if hasparked < 0 then hasparked = 0 end
+								MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = @hasparked WHERE citizenid = @citizenid', {
+									["@citizenid"] = GetCitizenid(Player),
+									["@hasparked"] = hasparked
+								})
+							end
+						end)
 						cb({
 							status  = true,
 							message = Lang:t("info.has_take_the_car"),
@@ -237,6 +263,9 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
 			    ["@plate"] = plate,
 				["@citizenid"] = rs[1].citizenid
 			})
+			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
+				["@citizenid"] = rs[1].citizenid
+			})
 			cb({ status = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
@@ -265,6 +294,9 @@ QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb,
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
 				["@plate"] = plate,
 			})
+			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
+				["@citizenid"] = rs[1].citizenid
+			})
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
@@ -279,10 +311,10 @@ end)
 
 
 -- Save vip player to database
-QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb, id)
+QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb, id, amount)
 	for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local player = QBCore.Functions.GetPlayer(v)
-		if tonumber(player.PlayerData.cid) == tonumber(id) then
+		if tonumber(player.PlayerData.source) == tonumber(id) then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = GetCitizenid(player),
 			}, function(rs)
@@ -292,9 +324,10 @@ QBCore.Functions.CreateCallback("qb-parking:server:AddVip", function(source, cb,
 						message = Lang:t('system.already_vip')
 					})
 				else
-					MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname) VALUES (@citizenid, @citizenname)", {
+					MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname, maxparking) VALUES (@citizenid, @citizenname, @maxparking)", {
 						["@citizenid"]   = GetCitizenid(player),
 						["@citizenname"] = GetUsername(player),
+						["@maxparking"]  = amount 
 					})
 					cb({ 
 						status  = true, 
@@ -336,8 +369,69 @@ QBCore.Functions.CreateCallback("qb-parking:server:RemoveVip", function(source, 
 		end
 	end
 end)
+---------------------------------------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------------------------
+
+
+
+----------------------------------------------Server Admin Commands---------------------------------------------
+
+QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}, {name='Amount', help='The max vehicles amount a player can park'}}, true, function(source, args)
+	if args[1] and tonumber(args[1]) > 0 then
+		local amount = 0 
+		if args[2] and tonumber(args[2]) > 0 then
+			amount = args[2]
+		end
+		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+			['@citizenid'] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+		}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.already_vip'), "error")
+			else
+				MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname, maxparking) VALUES (@citizenid, @citizenname, @maxparking)", {
+					["@citizenid"]   = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+					["@citizenname"] = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+					["@maxparking"]  = amount 
+				})
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_add', {username = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))}), "success")
+			end
+		end)
+	end
+end, 'admin')
+
+QBCore.Commands.Add(Config.Command.removevip, Lang:t("commands.removevip"), {{name='ID', help='The id of the player you want to remove.'}}, true, function(source, args)
+	if args[1] and tonumber(args[1]) > 0 then
+		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+			['@citizenid'] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+		}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+				MySQL.Async.execute('DELETE FROM player_parking_vips WHERE citizenid = @citizenid', {
+					["@citizenid"] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+				})
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_remove', {username = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))}), "success")
+			else
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_not_found'), "error")
+			end
+		end)
+	end
+end, 'admin')
+
+QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, false, function(source, args)
+	if args[1] == "On" then
+		UseParkingSystem = true
+	else
+		UseParkingSystem = false
+	end
+	if UseParkingSystem then
+		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.enable', {type = "system"}), "success")
+	else
+		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.disable', {type = "system"}), "error")
+	end
+end, 'admin')
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 

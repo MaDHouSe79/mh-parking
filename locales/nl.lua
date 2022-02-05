@@ -1,6 +1,12 @@
 local Translations = {
     error = {
         ["citizenid_error"]     = "[ERROR] Failed to get player citizenid!",
+        ["mis_id"]              = "[Error] Er is een speler id nodig.",
+        ["mis_amount"]          = "[Error] Er is geen aantal voertuigen dat deze speler kan parkeren ingevored.",
+    },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
     },
     system = {
         ['enable']              = "Park systeen %{type} is nu enable",
@@ -14,6 +20,7 @@ local Translations = {
         ["vip_not_found"]       = "Player niet gevonden!",
         ["vip_add"]             = "Player %{username} is toegevoegd als vip!",
         ["vip_remove"]          = "Player %{username} is toegevoegd als vip!",
+        ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",

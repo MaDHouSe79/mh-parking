@@ -424,22 +424,12 @@ end
 -------------------------------------------------------------------------------------------------------
 
 
------------------------------------------------Stolen Vehicle------------------------------------------
--- Check if a citizenid is an admin.
-local function IsAdmin(citizenid)
-    for k, v in pairs(Config.AdminPlayers) do
-        if v.citizenid == citizenid and v.isAdmin then
-            return true
-        end
-    end
-    return false
-end
--------------------------------------------------------------------------------------------------------
+
 
 
 
 ------------------------------------------------Commands-----------------------------------------------
-RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
+RegisterKeyMapping('park', 'Park or Drive', 'keyboard', Config.KeyBindButton) 
 
 RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
@@ -448,72 +438,21 @@ end, false)
 RegisterCommand(Config.Command.parknames, function()
     HideParkedVehicleNames = not HideParkedVehicleNames
     if HideParkedVehicleNames then
-        QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "primary", 1500)
+        QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "primary", 5000)
     else
-        QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "primary", 1500)
+        QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "primary", 5000)
     end
 end, false)
 
 RegisterCommand(Config.Command.notification, function()
     PhoneNotification = not PhoneNotification
     if PhoneNotification then
-        QBCore.Functions.Notify(Lang:t('system.enable', {type = "notifications"}), "primary", 1500)
+        QBCore.Functions.Notify(Lang:t('system.enable', {type = "notifications"}), "primary", 5000)
     else
-        QBCore.Functions.Notify(Lang:t('system.disable', {type = "notifications"}), "primary", 1500)
+        QBCore.Functions.Notify(Lang:t('system.disable', {type = "notifications"}), "primary", 5000)
     end
 end, false)
 
-
--- Admin Only
-RegisterCommand(Config.Command.system, function()
-    if IsAdmin(Citizenid) then
-        UseParkingSystem = not UseParkingSystem
-        if UseParkingSystem then
-            QBCore.Functions.Notify(Lang:t('system.enable', {type = "system"}), "primary", 1500)
-        else
-            QBCore.Functions.Notify(Lang:t('system.disable', {type = "system"}), "primary", 1500)
-        end
-    else
-        QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
-    end
-end, false)
-
-
--- Add Vip (Admin Only)
-RegisterCommand(Config.Command.addvip, function(source, args)
-    if IsAdmin(Citizenid) then
-        if args[1] and tonumber(args[1]) > 0 then
-            QBCore.Functions.TriggerCallback("qb-parking:server:AddVip", function(cb)
-                if cb.status then
-                    QBCore.Functions.Notify(cb.message, "primary", 1500)
-                else
-                    QBCore.Functions.Notify(cb.message, "error", 1500)
-                end
-            end, tonumber(args[1]))
-        end
-    else
-        QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
-    end
-end, false)
-
-
--- Add Remove Vip if user online,
--- if not you have to remove it from the database. (Admin Only)
-RegisterCommand(Config.Command.removevip, function(source, args)
-    if IsAdmin(Citizenid) then
-        if args[1] and tonumber(args[1]) > 0 then
-            QBCore.Functions.TriggerCallback("qb-parking:server:RemoveVip", function(cb)
-                if cb.status then
-                    QBCore.Functions.Notify(cb.message, "primary", 1500)
-                else
-                    QBCore.Functions.Notify(cb.message, "error", 1500)
-                end
-            end, tonumber(args[1]))
-        end
-    else
-        QBCore.Functions.Notify(Lang:t('system.no_permission'), "error", 1500)
-    end
-end, false)
 -------------------------------------------------------------------------------------------------------
 
 
