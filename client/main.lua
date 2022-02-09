@@ -116,7 +116,7 @@ end
 
 --Display Parked Owner Text
 local function DisplayParkedOwnerText()
-    if not HideParkedVehicleNames then -- for performes
+    if HideParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
 		for k, vehicle in pairs(LocalVehicles) do
