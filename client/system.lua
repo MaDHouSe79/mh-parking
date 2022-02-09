@@ -267,9 +267,10 @@ local Vehicle = function()
         self.DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
         self.SetVehicle(vehicle)
         self.entity = self.Create(vehicle)
-        self.WarpIntoVehicle(PlayerPedId())
+        QBCore.Functions.SetVehicleProperties(self.entity, vehicle.props)
         self.SetProperties()
         self.SetOnGroundProperly()
+        self.WarpIntoVehicle(PlayerPedId())
         self.Freeze(false)
         self.SetLivery()
         self.SetEngineHealth()
@@ -278,14 +279,17 @@ local Vehicle = function()
         self.SetRadioStatio(false)
         self.SetDirtLevel(0)
         self.SetLocked(true)
+        self.SetEngine(false)
         self.ModelNoLongerNeeded()
     end
 
     self.Spawn = function(vehicleData, type)
         self.LoadModel(vehicleData.vehicle.props["model"])
         self.entity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+        
         QBCore.Functions.SetVehicleProperties(self.entity, vehicleData.vehicle.props)
         exports[Config.YourFuelExportName]:SetFuel(self.entity, vehicleData.vehicle.health.tank)
+        
         SetVehicleEngineOn(self.entity, false, false, true)
         if type == 'server' then
             if not Config.ImUsingOtherKeyScript then
