@@ -250,12 +250,6 @@ local function DisplayHelpText(text)
     AddTextComponentString(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
--------------------------------------------------------------------------------------------------------
-
-
-
-
-
 
 
 ---------------------------------------------------Drive-----------------------------------------------
@@ -315,11 +309,6 @@ local function Drive(player, vehicle)
         end
     end, vehicle)
 end
--------------------------------------------------------------------------------------------------------
-
-
-
-
 
 --------------------------------------------------Park-------------------------------------------------
 
@@ -411,10 +400,6 @@ local function Save(player, vehicle)
         location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
     })
 end
--------------------------------------------------------------------------------------------------------
-
-
-
 
 -----------------------------------------------Impount-------------------------------------------------
 local function ImpoundVehicle(entity)
@@ -424,15 +409,12 @@ local function ImpoundVehicle(entity)
 				if callback.status then
 					FreezeEntityPosition(LocalVehicles[i].entity, false)
 					DeleteEntity(LocalVehicles[i].entity)
-					table.remove(LocalVehicles, i)
+                    LocalVehicles[i] = nil
 				end
 			end, LocalVehicles[i])
 		end
     end
 end
--------------------------------------------------------------------------------------------------------
-
-
 
 -----------------------------------------------Stolen Vehicle------------------------------------------
 local function StolenVehicle(entity)
@@ -441,16 +423,29 @@ local function StolenVehicle(entity)
 			QBCore.Functions.TriggerCallback("qb-parking:server:stolen", function(callback)
 				if callback.status then
 					FreezeEntityPosition(LocalVehicles[i].entity, false)
-					table.remove(LocalVehicles, i)
+                    LocalVehicles[i] = nil
+
 				end
 			end, LocalVehicles[i])
 		end
     end
 end
--------------------------------------------------------------------------------------------------------
-
 
 -----------------------------------------------Stolen Vehicle------------------------------------------
+local function UnParkVehicle(entity)
+    for i = 1, #LocalVehicles do
+		if entity == LocalVehicles[i].entity then
+			QBCore.Functions.TriggerCallback("qb-parking:server:unpark", function(callback)
+				if callback.status then
+					FreezeEntityPosition(LocalVehicles[i].entity, false)
+                    LocalVehicles[i] = nil
+				end
+			end, LocalVehicles[i])
+		end
+    end
+end
+
+-----------------------------------------------Admin Check------------------------------------------
 -- Check if a citizenid is an admin.
 local function IsAdmin(citizenid)
     for k, v in pairs(Config.AdminPlayers) do
@@ -460,7 +455,7 @@ local function IsAdmin(citizenid)
     end
     return false
 end
--------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -515,12 +510,16 @@ RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
     DeleteLocalVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:impoundVehicle",  function(vehicle)
+RegisterNetEvent("qb-parking:client:impound",  function(vehicle)
     ImpoundVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:stolenVehicle",  function(vehicle)
+RegisterNetEvent("qb-parking:client:stolen",  function(vehicle)
     StolenVehicle(vehicle)
+end)
+
+RegisterNetEvent("qb-parking:client:unpark", function(vehicle)
+    UnParkVehicle(vehicle)
 end)
 
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()

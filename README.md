@@ -257,7 +257,6 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 end)
 ```
 
-
 ## 👇 To Fix The qb-garages garage and impound menus
 - This code has to be at lines 467 to 468
 - Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,

@@ -87,13 +87,7 @@ local function checkVersion(err, responseText, headers)
     end
 end
 
-
--------------------------------------------------------------------------------------------------
-
-
-
 --------------------------------------------Callbacks--------------------------------------------
-
 -- Save the car to database
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
     if UseParkingSystem then
@@ -244,15 +238,15 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
     end
 end)
 
+-- use this TriggerServerEvent("qb-parking:server:impound', vehicle) 
 -- When the police impound the car
-QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb, vehicleData)
+QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb, vehicle)
     local src   = source
-    local plate = vehicleData.plate
+    local plate = vehicle.plate
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			print("Police impound the vehicle: ", vehicleData.plate, rs[1].citizenid)
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 				["@plate"]     = plate,
 				["@citizenid"] = rs[1].citizenid
@@ -276,16 +270,45 @@ QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb
     end)
 end)
 
+-- use this TriggerServerEvent("qb-parking:server:stolen', vehicle) 
 -- When vehicle gets stolen by other player
--- When vehicle gets stolen by other player
-QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb, vehicleData)
+QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb, vehicle)
     local src    = source
-    local plate  = vehicleData.plate
+    local plate  = vehicl.plate
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			print("Someone stole this vehicle: ", vehicleData.plate, rs[1].citizenid)
+			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
+				["@plate"] = plate,
+			})
+			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
+				["@plate"] = plate,
+			})
+			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
+				["@citizenid"] = rs[1].citizenid
+			})
+			cb({ status  = true })
+			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
+		else
+			cb({
+				status  = false,
+				message = Lang:t("info.car_not_found"),
+			})
+			print(Lang:t("error"))
+		end
+    end)
+end)
+
+-- use this TriggerServerEvent("qb-parking:server:unpark', vehicle) 
+-- When vehicle gets stounpark by other garages scripts, you need this trigger
+QBCore.Functions.CreateCallback("qb-parking:server:unpark", function(source, cb, vehicle)
+    local src    = source
+    local plate  = vehicle.plate
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
+		['@plate'] = plate
+    }, function(rs)
+		if type(rs) == 'table' and #rs > 0 and rs[1] then
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
 			})
@@ -360,7 +383,6 @@ QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, true, funct
 end, 'admin')
 
 -------------------------------------------------------------------------------------------------
-
 
 
 if Config.CheckForUpdates then
