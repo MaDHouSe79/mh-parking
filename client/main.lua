@@ -445,20 +445,6 @@ local function UnParkVehicle(entity)
     end
 end
 
------------------------------------------------Admin Check------------------------------------------
--- Check if a citizenid is an admin.
-local function IsAdmin(citizenid)
-    for k, v in pairs(Config.AdminPlayers) do
-        if v.citizenid == citizenid and v.isAdmin then
-            return true
-        end
-    end
-    return false
-end
-
-
-
-
 ------------------------------------------------Commands-----------------------------------------------
 RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
 
