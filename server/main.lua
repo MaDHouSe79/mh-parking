@@ -350,7 +350,7 @@ QBCore.Commands.Add(Config.Command.removevip, Lang:t("commands.removevip"), {{na
 end, 'admin')
 
 
-QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {{name='ID', help='The id of the player you want to remove.'}}, true, function(source, args)
+QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, true, function(source)
 	UseParkingSystem = not UseParkingSystem
 	if UseParkingSystem then
 		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.enable', {type = "system"}), "success")
