@@ -147,10 +147,10 @@ ParkServer = function()
 
     self.FindVehicle = function(plate, vehicles)
         for k, v in pairs(vehicles) do
-			if type(v.plate) and plate == v.plate then
-				return  true
-			end
-		end
+	    if type(v.plate) and plate == v.plate then
+	        return  true
+	    end
+        end
         return false
     end
 
