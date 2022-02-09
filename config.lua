@@ -1,5 +1,4 @@
 Config                        = {}
-
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 50           -- 👉 Distence to see text above parked vehicles (player dependent)
@@ -14,7 +13,7 @@ Config.MinSpeedToPark         = 1            -- 👉 Default 0
 Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
 
 -- 👇 Base config when the server start, this is the default settings
-Config.PhoneNotification      = true         -- 👉 Auto turn on when server is starting. (default true)
+Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.HideParkedVehicleNames = false        -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 

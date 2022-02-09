@@ -1,4 +1,16 @@
 ## ---------------------------------------------Updates------------------------------------------------
+## Added Nothing 👊😉👍 8-2-2022
+- The only thing i did is I have change the entire code. 
+- This time you don't have to do anyting, just update and go.
+- I hope the issues are fixed, if not please let my know.
+- Let my know if it is better now, Thanks! 👊😉👍
+
+## Fixes
+- ✔️ Car is now locked for everyone, you have to onlock it with [L] button
+- ✔️ I did this because you alse lock it with you [/park] or use [F5] and park your vehicle, it locks the vehcile.
+- ✔️ i hope the flaoting is away, cause i don't have it on my end.
+
+## ---------------------------------------------Updates------------------------------------------------
 
 ## Added 👊😉👍 5-2-2022
 - ✔️ Config file is sorter, no Vip or Admin config anymore, everting works with the database now.
@@ -11,9 +23,6 @@
 ALTER TABLE `player_parking_vips` ADD `maxparking` int(5) NOT NULL DEFAULT 0
 ALTER TABLE `player_parking_vips` ADD `hasparked` int(5) NOT NULL DEFAULT 0 
 ```
-
-
-
 
 ## ---------------------------------------------Updates------------------------------------------------
 
