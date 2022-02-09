@@ -257,7 +257,7 @@ end, 'admin')
 
 ----------------------------------------------Update Check---------------------------------------------
 local function checkVersion(err, responseText, headers)
-    server.CheckVersion(err, responseText, headers)
+    serverSystem.CheckVersion(err, responseText, headers)
 end
 
 if Config.CheckForUpdates then
