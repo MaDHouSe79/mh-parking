@@ -48,11 +48,13 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
 	exports[Config.YourFuelExportName]:SetFuel(VehicleEntity, vehicleData.vehicle.health.tank)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
+    SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
 		if not Config.ImUsingOtherKeyScript then
         	TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
 		end
 	end
+
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -303,7 +305,6 @@ local function ParkCar(player, vehicle)
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
     Wait(2000)
     ClearPedTasks(player)
-    SetVehicleDoorsLocked(vehicle, 2)
     SetVehicleLights(vehicle, 2)
     Wait(150)
     SetVehicleLights(vehicle, 0)
