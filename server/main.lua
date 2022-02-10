@@ -238,56 +238,34 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
     end
 end)
 
--- use this TriggerServerEvent("qb-parking:server:impound', vehicle) 
--- When the police impound the car
-QBCore.Functions.CreateCallback("qb-parking:server:impound", function(source, cb, vehicle)
-    local src   = source
-    local plate = vehicle.plate
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
-		['@plate'] = plate
-    }, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
-				["@plate"]     = plate,
-				["@citizenid"] = rs[1].citizenid
-			})
-			MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
-			    ["@plate"]     = plate,
-				["@citizenid"] = rs[1].citizenid
-			})
-			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
-				["@citizenid"] = rs[1].citizenid
-			})
-			cb({ status = true })
-			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
-		else
-			cb({
-				status  = false,
-				message = Lang:t("info.car_not_found"),
-			})
-			print(Lang:t("error"))
-		end
-    end)
-end)
 
--- use this TriggerServerEvent("qb-parking:server:stolen', vehicle) 
--- When vehicle gets stolen by other player
-QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb, vehicle)
-    local src    = source
-    local plate  = vehicl.plate
+QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(source, cb, plate, action)
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
+			
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
-			})
-			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
-				["@plate"] = plate,
-			})
+			})	
+
+			if action == 'impound' then
+				MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
+					["@plate"]     = plate,
+					["@citizenid"] = rs[1].citizenid
+				})
+			end
+
+			if action ~= 'impound' then
+				MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
+					["@plate"] = plate,
+				})
+			end
+
 			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
 				["@citizenid"] = rs[1].citizenid
 			})
+
 			cb({ status  = true })
 			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 		else
@@ -299,37 +277,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:stolen", function(source, cb,
 		end
     end)
 end)
-
--- use this TriggerServerEvent("qb-parking:server:unpark', vehicle) 
--- When vehicle gets stounpark by other garages scripts, you need this trigger
-QBCore.Functions.CreateCallback("qb-parking:server:unpark", function(source, cb, vehicle)
-    local src    = source
-    local plate  = vehicle.plate
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
-		['@plate'] = plate
-    }, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
-				["@plate"] = plate,
-			})
-			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
-				["@plate"] = plate,
-			})
-			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
-				["@citizenid"] = rs[1].citizenid
-			})
-			cb({ status  = true })
-			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
-		else
-			cb({
-				status  = false,
-				message = Lang:t("info.car_not_found"),
-			})
-			print(Lang:t("error"))
-		end
-    end)
-end)
-
 
 -- Save vip player to database
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}, {name='Amount', help='The max vehicles amount a player can park'}}, true, function(source, args)

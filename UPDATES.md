@@ -1,4 +1,26 @@
 ## ---------------------------------------------Updates------------------------------------------------
+- ✔️ Triggers:  Added a trigger for other scripts, to unpark the vehicles if needed.
+- ✔️ Change: I change from entity to plate.
+
+if you are using a other version or you had already one of this triggers below running,
+you must change the vehicle to plate, cause we olny use the plate now and not the hole entity.
+
+## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
+```lua
+ TriggerEvent("qb-parking:client:stolen', plate) 
+```
+
+## Impound Trigger, to unpark the vehicle.
+```lua
+ TriggerEvent("qb-parking:client:impound', plate) 
+```
+
+## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
+```lua
+ TriggerEvent("qb-parking:client:unpark', plate) 
+```
+
+## ---------------------------------------------Updates------------------------------------------------
 ## Added And Fixes 👊😉👍 9-2-2022
 - ✔️ Triggers:  Added a trigger for other scripts, to unpark the vehicles if needed.
 - ✔️ Lock:      You have to unlock the vehicle with [L], cause you alse lock it when you park the vehicle.
@@ -10,17 +32,17 @@
 
 ## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
 ```lua
- TriggerEvent("qb-parking:client:stolen', vehicle) 
+ TriggerEvent("qb-parking:client:stolen', plate) 
 ```
 
 ## Impound Trigger, to unpark the vehicle.
 ```lua
- TriggerEvent("qb-parking:client:impound', vehicle) 
+ TriggerEvent("qb-parking:client:impound', plate) 
 ```
 
 ## Unpark Trigger, to unpark the vehicle, just for other script if needed.
 ```lua
- TriggerEvent("qb-parking:client:unpark', vehicle) 
+ TriggerEvent("qb-parking:client:unpark', plate) 
 ```
 
 ## ---------------------------------------------Updates------------------------------------------------

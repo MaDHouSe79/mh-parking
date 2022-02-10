@@ -401,47 +401,21 @@ local function Save(player, vehicle)
     })
 end
 
------------------------------------------------Impount-------------------------------------------------
-local function ImpoundVehicle(entity)
-    for i = 1, #LocalVehicles do
-		if entity == LocalVehicles[i].entity then
-			QBCore.Functions.TriggerCallback("qb-parking:server:impound", function(callback)
-				if callback.status then
-					FreezeEntityPosition(LocalVehicles[i].entity, false)
-					DeleteEntity(LocalVehicles[i].entity)
-                    LocalVehicles[i] = nil
-				end
-			end, LocalVehicles[i])
-		end
-    end
-end
+---------------------------------------Impound/Stolen/UnPark-------------------------------------------
 
------------------------------------------------Stolen Vehicle------------------------------------------
-local function StolenVehicle(entity)
-    for i = 1, #LocalVehicles do
-		if entity == LocalVehicles[i].entity then
-			QBCore.Functions.TriggerCallback("qb-parking:server:stolen", function(callback)
-				if callback.status then
-					FreezeEntityPosition(LocalVehicles[i].entity, false)
-                    LocalVehicles[i] = nil
 
-				end
-			end, LocalVehicles[i])
-		end
-    end
-end
 
------------------------------------------------Stolen Vehicle------------------------------------------
-local function UnParkVehicle(entity)
+local function ActionVehicle(plate, action)
     for i = 1, #LocalVehicles do
-		if entity == LocalVehicles[i].entity then
-			QBCore.Functions.TriggerCallback("qb-parking:server:unpark", function(callback)
-				if callback.status then
-					FreezeEntityPosition(LocalVehicles[i].entity, false)
+        if LocalVehicles[i].plate == plate then
+            QBCore.Functions.TriggerCallback("qb-parking:server:vehicle_action", function(callback)
+                if callback.status then
+                    FreezeEntityPosition(LocalVehicles[i].entity, false)
+                    DeleteEntity(LocalVehicles[i].entity)
                     LocalVehicles[i] = nil
-				end
-			end, LocalVehicles[i])
-		end
+                end
+            end, LocalVehicles[i].plate, action)
+        end
     end
 end
 
@@ -472,14 +446,9 @@ RegisterCommand(Config.Command.notification, function()
     end
 end, false)
 
--------------------------------------------------------------------------------------------------------
-
-
 
 
 ---------------------------------------------------Events----------------------------------------------
-
-
 RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
     GlobalVehicles = vehicles
     RemoveVehicles(vehicles)
@@ -496,16 +465,16 @@ RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
     DeleteLocalVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:impound",  function(vehicle)
-    ImpoundVehicle(vehicle)
+RegisterNetEvent("qb-parking:client:impound",  function(plate)
+    ActionVehicle(plate, 'impound')
 end)
 
-RegisterNetEvent("qb-parking:client:stolen",  function(vehicle)
-    StolenVehicle(vehicle)
+RegisterNetEvent("qb-parking:client:stolen",  function(plate)
+    ActionVehicle(plate, 'stolen')
 end)
 
-RegisterNetEvent("qb-parking:client:unpark", function(vehicle)
-    UnParkVehicle(vehicle)
+RegisterNetEvent("qb-parking:client:unpark", function(plate)
+    ActionVehicle(plate, 'unpark')
 end)
 
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
@@ -525,7 +494,6 @@ RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
 end)
 
 -------------------------------------------------------------------------------------------------------
-
 
 
 
