@@ -21,6 +21,7 @@ local Translations = {
         ["vip_add"]             = "Player %{username} is toegevoegd als vip!",
         ["vip_remove"]          = "Player %{username} is toegevoegd als vip!",
         ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
+        ["park_or_drive"]       = "Park or Drive",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",

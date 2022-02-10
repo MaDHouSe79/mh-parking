@@ -420,7 +420,7 @@ local function ActionVehicle(plate, action)
 end
 
 ------------------------------------------------Commands-----------------------------------------------
-RegisterKeyMapping('park', 'Park or Drive', 'keyboard', 'F5') 
+RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
 
 RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
