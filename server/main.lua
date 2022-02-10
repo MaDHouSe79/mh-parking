@@ -81,6 +81,7 @@ local function checkVersion(err, responseText, headers)
     elseif tonumber(curVersion) > tonumber(responseText) then
         print("\n^3----------------------------------------------------------------------------------^7")
         print(resourceName.." git version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!")
+		print("READ THE UPDATES.md to see if you have to make any changes!!")
         print("^3----------------------------------------------------------------------------------^7")
     else
         print("\n"..resourceName.." is up to date. (^2"..curVersion.."^7)")
@@ -244,7 +245,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			
+
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
 			})	
