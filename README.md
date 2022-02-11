@@ -257,28 +257,6 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 end)
 ```
 
-## 👇 To Fix The qb-garages garage and impound menus
-- This code has to be at lines 467 to 468
-- Go to resources/[qb]/qb-garages/client/main.lua line 468 and at the end of this line press enter,
-```lua
-elseif v.state == 3 then -- this has to be on line 467
-    v.state = Lang:t("info.parked") -- this has to be on line 468
-```
-
-- This code has to be at lines 621 to 622
-- 👇 Go to resources/[qb]/qb-garages/client/main.lua line 619 and at the end of this line press enter,
-```lua
-elseif vehicle.state == Lang:t("info.parked") then -- this has to be on line 621
-    QBCore.Functions.Notify(Lang:t("error.parked_outsite"), "error", 4000) -- this has to be on line 622
-```
-
-- Important!! add the language, go to resources/[qb]/qb-garages/locales/
-- 👇 place this in al the languages files, or the language that you use at the moment.
-```lua
-parked_outsite = "You have parked your vecihle outsite...", -- (this wil be line 11 in every language file)
-parked         = "Parked Outside",                          -- (this wil be line 23 in every language file)
-```
-
 
 ## ⚙️ To get a other languages.
 - 1: copy a file from the resources[qb]/qb-parking/locales directory
