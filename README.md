@@ -22,7 +22,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
-- ✅ [qb-garages](https://github.com/qbcore-framework/qb-garages)
+- ✅ [qb-garages](https://github.com/MaDHouSe79/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
 
