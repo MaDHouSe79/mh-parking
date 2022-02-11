@@ -209,9 +209,19 @@ function TakeOutImpound(vehicle)
 end
 ````
 
-## 🦹‍♂️ if you use a picklock or car thief script you must use this trigger
+## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
 ```lua
-TriggerEvent('qb-parking:client:stolenVehicle', vehicle)
+ TriggerEvent("qb-parking:client:stolen', plate) 
+```
+
+## Impound Trigger, to unpark the vehicle.
+```lua
+ TriggerEvent("qb-parking:client:impound', plate) 
+```
+
+## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
+```lua
+ TriggerEvent("qb-parking:client:unpark', plate) 
 ```
 
 ## 👮‍♂️ Impound trigger
