@@ -7,17 +7,17 @@ you must change the vehicle to plate, cause we olny use the plate now and not th
 
 ## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
 ```lua
- TriggerEvent("qb-parking:client:stolen', plate) 
+ TriggerEvent("qb-parking:client:stolen", plate) 
 ```
 
 ## Impound Trigger, to unpark the vehicle.
 ```lua
- TriggerEvent("qb-parking:client:impound', plate) 
+ TriggerEvent("qb-parking:client:impound", plate) 
 ```
 
 ## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
 ```lua
- TriggerEvent("qb-parking:client:unpark', plate) 
+ TriggerEvent("qb-parking:client:unpark", plate) 
 ```
 
 ## ---------------------------------------------Updates------------------------------------------------
