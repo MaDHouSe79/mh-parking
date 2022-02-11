@@ -15,7 +15,9 @@ Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have 
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
-Config.UseParkedVehicleNames  = true        -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
+Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
+
+Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 
 -- 👇 change this to your own commands
 Config.Command = {

@@ -29,19 +29,26 @@ end)
 
 --------------------------------------------Local Functions--------------------------------------------
 local function CreateParkDisPlay(vehicleData, type)
-    local info = nil
+    local info, model, owner, plate = nil
     if type == 'police' then
-        local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-        local model = Lang:t('info.police_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        local plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
-        info = string.format("%s", model..plate..owner)
+        owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
+        if Config.DisplayPlayerAndPolice then
+            model = Lang:t('info.police_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+        else
+            model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+        end
+        plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     end
     if type == 'citizen' then
-        local owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-        local model = Lang:t('info.citizen_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        local plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
-        info = string.format("%s", model..plate..owner)
+        owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
+        if Config.DisplayPlayerAndPolice then
+            model = Lang:t('info.citizen_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+        else
+            model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+        end
+        plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     end
+    info = string.format("%s", model..plate..owner)
     return info
 end
 
