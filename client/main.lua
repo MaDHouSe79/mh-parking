@@ -12,6 +12,7 @@ local LastUsedPlate      = nil
 local VehicleEntity      = nil
 local action             = 'none'
 
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
 end)
@@ -24,6 +25,7 @@ end)
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
+
 
 --------------------------------------------Local Functions--------------------------------------------
 local function CreateParkDisPlay(vehicleData, type)
@@ -75,7 +77,6 @@ local function LoadEntity(vehicleData, type)
         	TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
 		end
 	end
-
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -137,7 +138,7 @@ end
 
 --Display Parked Owner Text
 local function DisplayParkedOwnerText()
-    if HideParkedVehicleNames then -- for performes
+    if UseParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
 		for k, vehicle in pairs(LocalVehicles) do
@@ -252,6 +253,7 @@ local function DisplayHelpText(text)
 end
 
 
+
 ---------------------------------------------------Drive-----------------------------------------------
 -- Create Vehicle Entity
 local function CreateVehicleEntity(vehicle)
@@ -303,6 +305,8 @@ local function Drive(player, vehicle)
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
             vehicle = false
+            print(json.encode(callback.data, {indent = true})) 
+            exports['LegacyFuel']:SetFuel(callback.data, callback.data.health.fuel)
             MakeVehicleReadyToDrive(callback.data)
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
@@ -310,12 +314,12 @@ local function Drive(player, vehicle)
     end, vehicle)
 end
 
---------------------------------------------------Park-------------------------------------------------
 
+
+--------------------------------------------------Park-------------------------------------------------
 local function ParkCar(player, vehicle)
     SetVehicleEngineOn(vehicle, false, false, true)
     TaskLeaveVehicle(player, vehicle)
-
     RequestAnimSet("anim@mp_player_intmenu@key_fob@")
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
     Wait(2000)
@@ -402,10 +406,9 @@ local function Save(player, vehicle)
     })
 end
 
+
+
 ---------------------------------------Impound/Stolen/UnPark-------------------------------------------
-
-
-
 local function ActionVehicle(plate, action)
     for i = 1, #LocalVehicles do
         if LocalVehicles[i].plate == plate then
@@ -419,6 +422,7 @@ local function ActionVehicle(plate, action)
         end
     end
 end
+
 
 ------------------------------------------------Commands-----------------------------------------------
 RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
@@ -494,8 +498,6 @@ RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
     end
 end)
 
--------------------------------------------------------------------------------------------------------
-
 
 
 -------------------------------------------------Thread-------------------------------------------------
@@ -570,4 +572,4 @@ CreateThread(function()
         end
     end
 end)
--------------------------------------------------------------------------------------------------------
+
