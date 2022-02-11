@@ -313,6 +313,7 @@ end
 --------------------------------------------------Park-------------------------------------------------
 
 local function ParkCar(player, vehicle)
+    SetVehicleEngineOn(vehicle, false, false, true)
     TaskLeaveVehicle(player, vehicle)
 
     RequestAnimSet("anim@mp_player_intmenu@key_fob@")
