@@ -225,7 +225,7 @@ end
 ```
 
 ## 👮‍♂️ Impound trigger
-- Go to resources\[qb]\qb-policejob\client.lua line 332
+- Go to resources\[qb]\qb-policejob\client\job.lua line 332
 - Find 👇 
 ````lua
 RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
