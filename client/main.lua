@@ -175,7 +175,7 @@ end
 local function DeleteLocalVehicle(vehicle)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
 		for i = 1, #LocalVehicles do
-			if vehicle then
+            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
 				if vehicle.plate == LocalVehicles[i].plate then
 					DeleteEntity(LocalVehicles[i].entity)
 					table.remove(LocalVehicles, i)
