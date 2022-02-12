@@ -135,8 +135,8 @@ end)
 
 
 ## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
+- Added below -> TriggerEvent("qb-parking:client:stolen", lockpickedPlate)
 ```lua
- TriggerEvent("qb-parking:client:stolen", lockpickedPlate) 
 
 -- resources/[qb]/qb-vehiclekeys/client.lua line 165 change it with this code.
 local function lockpickFinish(success)
