@@ -200,13 +200,15 @@ end
 local function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
     local findVehicle = false
-    for i = 1, #LocalVehicles do
-		if LocalVehicles[i].entity == entity then
-			findVehicle = LocalVehicles[i]
-			break
-		end
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
+        for i = 1, #LocalVehicles do
+            if LocalVehicles[i].entity == entity then
+                findVehicle = LocalVehicles[i]
+                break
+            end
+        end
+        return findVehicle
     end
-    return findVehicle
 end
 
 -- Delete single vehicle
