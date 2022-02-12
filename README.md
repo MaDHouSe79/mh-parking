@@ -250,11 +250,6 @@ end
  TriggerEvent("qb-parking:client:impound", plate) 
 ```
 
-## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
-```lua
- TriggerEvent("qb-parking:client:unpark", plate) 
-```
-
 ## 👮‍♂️ Impound trigger
 - Go to resources\[qb]\qb-policejob\client\job.lua line 332
 - Find 👇 
@@ -298,6 +293,10 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 end)
 ```
 
+## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
+```lua
+ TriggerEvent("qb-parking:client:unpark", plate) 
+```
 
 ## ⚙️ To get a other languages.
 - 1: copy a file from the resources[qb]/qb-parking/locales directory
