@@ -94,6 +94,9 @@ local function PrepareVehicle(entity, vehicleData)
     SetEntityInvincible(entity, true)
     SetEntityHeading(vehicle, vehicleData.vehicle.location.w)
     SetVehicleLivery(entity, vehicleData.vehicle.livery)
+    SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
+    SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
+    SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
     SetVehRadioStation(entity, 'OFF')
     SetVehicleDirtLevel(entity, 0)
     QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
@@ -197,15 +200,13 @@ end
 local function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
     local findVehicle = false
-    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 then
-        for i = 1, #LocalVehicles do
-            if LocalVehicles[i].entity == entity then
-                findVehicle = LocalVehicles[i]
-                break
-            end
-        end
-        return findVehicle
+    for i = 1, #LocalVehicles do
+		if LocalVehicles[i].entity == entity then
+			findVehicle = LocalVehicles[i]
+			break
+		end
     end
+    return findVehicle
 end
 
 -- Delete single vehicle
@@ -231,8 +232,8 @@ local function SpawnVehicles(vehicles)
 				DeleteLocalVehicle(vehicles[i].vehicle)
 				LoadEntity(vehicles[i], 'server')
 				SetVehicleEngineOn(VehicleEntity, false, false, true)
+				doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
 				FreezeEntityPosition(VehicleEntity, true)
-                doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
 				TableInsert(VehicleEntity, vehicles[i])
 				DoAction(action)
 			end
@@ -249,7 +250,7 @@ local function SpawnVehicle(vehicleData)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(VehicleEntity, vehicleData)
 			SetVehicleEngineOn(VehicleEntity, false, false, true)
-            doCarDamage(VehicleEntity, vehicleData.vehicle.health)
+			doCarDamage(VehicleEntity, vehicleData.vehicle.health)
 			FreezeEntityPosition(VehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -290,6 +291,8 @@ local function DisplayHelpText(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
+
+
 ---------------------------------------------------Drive-----------------------------------------------
 -- Create Vehicle Entity
 local function CreateVehicleEntity(vehicle)
@@ -315,19 +318,22 @@ end
 
 -- Make vehicle ready to drive
 local function MakeVehicleReadyToDrive(vehicle)
+    -- Delete the local entity first
     DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
     local VehicleEntity = CreateVehicleEntity(vehicle)
     TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicle.props)
+    -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicle.location.x, vehicle.location.y, vehicle.location.z)
     SetVehicleOnGroundProperly(VehicleEntity)
     FreezeEntityPosition(VehicleEntity, false)
     SetVehicleLivery(VehicleEntity, vehicle.livery)
     SetVehRadioStation(VehicleEntity, 'OFF')
     SetVehicleDirtLevel(VehicleEntity, 0)
-    SetFuel(VehicleEntity, vehicle.fuel)
-    doCarDamage(VehicleEntity, vehicle.health)
+    SetVehicleFuelLevel(VehicleEntity, vehicle.fuel)
     SetModelAsNoLongerNeeded(vehicle.props["model"])
+	doCarDamage(VehicleEntity, vehicle.health)
+	SetFuel(VehicleEntity, vehicle.fuel)
 end
 
 -- Drive 
@@ -536,24 +542,27 @@ end)
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
 end)
+
 CreateThread(function()
-    while not IsDeleting do
-        if #LocalVehicles ~= 0 then
-            for i = 1, #LocalVehicles do
+	while not IsDeleting do
+		if #LocalVehicles ~= 0 then
+			for i = 1, #LocalVehicles do
                 if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
                     if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
-                        if #(GetEntityCoords(PlayerPedId()) - vector3(LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)) < Config.PlaceOnGroundRadius then
+		                if #(GetEntityCoords(PlayerPedId()) - vector3(LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)) < Config.PlaceOnGroundRadius then
                             SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
                             SetVehicleOnGroundProperly(LocalVehicles[i].entity)
+                            SetVehicleFuelLevel(LocalVehicles[i].entity)
                             LocalVehicles[i].isGrounded = true
                         end
                     end
                 end
             end
-        end
-        Wait(1000)
-    end
+		end
+		Wait(1000)
+	end
 end)
+
 CreateThread(function()
     while true do
 		local pl = GetEntityCoords(PlayerPedId())
