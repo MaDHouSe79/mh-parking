@@ -233,10 +233,10 @@ local function SpawnVehicles(vehicles)
 				LoadEntity(vehicles[i], 'server')
 				SetVehicleEngineOn(VehicleEntity, false, false, true)
 				doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
-                Wait(500)
-				FreezeEntityPosition(VehicleEntity, true)
 				TableInsert(VehicleEntity, vehicles[i])
 				DoAction(action)
+                Wait(750)
+				FreezeEntityPosition(VehicleEntity, true)
 			end
 		end
     end)
@@ -250,15 +250,15 @@ local function SpawnVehicle(vehicleData)
 			DeleteLocalVehicle(vehicleData.vehicle)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(VehicleEntity, vehicleData)
-            Wait(500)
 			SetVehicleEngineOn(VehicleEntity, false, false, true)
 			doCarDamage(VehicleEntity, vehicleData.vehicle.health)
-			FreezeEntityPosition(VehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(VehicleEntity, 2)
 			end
 			TableInsert(VehicleEntity, vehicleData)
 			DoAction(action)
+            Wait(750)
+			FreezeEntityPosition(VehicleEntity, true)
 		end
     end)
 end
