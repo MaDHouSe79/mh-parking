@@ -345,14 +345,21 @@ AddEventHandler('onResourceStart', function(resource)
 				for _, vehicle in pairs(vehicles) do
 					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 						['@plate'] = vehicle.plate
-					}, function(parked)
-						if type(parked) == 'table' and #parked > 0 then
-							for _, v in pairs(parked) do
+					}, function(rs)
+						if type(rs) == 'table' and #rs > 0 then
+							for _, v in pairs(rs) do
 								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {["@plate"] = vehicle.plate})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {
-									["@state"] = Config.ResetState, 
-									["@plate"] = vehicle.plate
-								})
+								MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+									['@citizenid'] = vehicle.citizenid,
+								}, function(park)
+									if type(park) == 'table' and #park[1] then
+										local hasparked = park[1].hasparked
+										hasparked = hasparked - 1
+										if hasparked < 0 then hasparked = 0 end
+										MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = @hasparked WHERE citizenid = @citizenid', {["@hasparked"] = hasparked, ["@citizenid"] = vehicle.citizenid})	
+									end
+								end)	
+								MySQL.Async.execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {["@state"] = Config.ResetState, ["@plate"] = vehicle.plate})					
 							end
 						end
 					end)
