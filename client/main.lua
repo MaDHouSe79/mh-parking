@@ -290,26 +290,6 @@ local function DisplayHelpText(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
-
-local function CheckVehicleIsGrounded() 
-    while not IsDeleting do
-        if #LocalVehicles ~= 0 then
-            for i = 1, #LocalVehicles do
-                if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
-                    if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
-                        if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.PlaceOnGroundRadius then
-                            SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
-                            SetVehicleOnGroundProperly(LocalVehicles[i].entity)
-                            LocalVehicles[i].isGrounded = true
-                        end
-                    end
-                end
-            end
-        end
-        Wait(1000)
-    end
-end
-
 ---------------------------------------------------Drive-----------------------------------------------
 -- Create Vehicle Entity
 local function CreateVehicleEntity(vehicle)
@@ -555,9 +535,25 @@ end)
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    CheckVehicleIsGrounded()
 end)
-
+CreateThread(function()
+    while not IsDeleting do
+        if #LocalVehicles ~= 0 then
+            for i = 1, #LocalVehicles do
+                if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
+                    if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
+                        if #(GetEntityCoords(PlayerPedId()) - vector3(LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)) < Config.PlaceOnGroundRadius then
+                            SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
+                            SetVehicleOnGroundProperly(LocalVehicles[i].entity)
+                            LocalVehicles[i].isGrounded = true
+                        end
+                    end
+                end
+            end
+        end
+        Wait(1000)
+    end
+end)
 CreateThread(function()
     while true do
 		local pl = GetEntityCoords(PlayerPedId())
