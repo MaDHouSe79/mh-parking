@@ -2,7 +2,7 @@
 ## Add And Fix 👊😉👍 12-2-2022
 - ✔️ Add Reset State: on server start, vehicles that are not parked and are added to the parking database will be removed now.
 - ✔️ Fix Floating Vehicles: it can happen, that you see that the vehicle get placed on the ground. (the radius is 100 for this event)
-- ✔️ Vehicle are now spawn with damage, if you park it with damage.
+- ✔️ Vehicles are now spawn with damage, if you park it with damage.
 
 ## 🤬 Not fixed yet.
 - ❌ The Fuel is still an issue, it does not matter how much i force it to be a full tank, it keeps random.
