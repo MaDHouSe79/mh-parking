@@ -9,6 +9,7 @@
 ✔️ Again this time you don't have to do anything, just update qb-parking, and you ready to go 👊😉👍
 
 ## 😎 Special thanks for helping me with testing 👊😉👍
+- 💪 Jazerra
 - 💪 ameN
 - 💪 MulGirtab
 - 💪 DannyJ
