@@ -3,9 +3,7 @@
 - ✔️ Add Reset State: on server start, vehicles that are not parked and are added to the parking database will be removed now.
 - ✔️ Fix Floating Vehicles: it can happen, that you see that the vehicle get placed on the ground. (the radius is 100 for this event)
 - ✔️ Vehicles are now spawn with damage, if you park it with damage.
-
-## 🤬 Not fixed yet.
-- ❌ The Fuel is still an issue, it does not matter how much i force it to be a full tank, it keeps random.
+- ✔️ Finally i fixed the fuel.
 
 
 ✔️ Again this time you don't have to do anything, just update qb-parking, and you ready to go 👊😉👍
