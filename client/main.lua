@@ -572,7 +572,6 @@ CreateThread(function()
 				SpawnedVehicles = true
 				Wait(2000)
 			end
-            CheckVehicleIsGrounded()
 		else
 			if SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)
