@@ -231,7 +231,7 @@ local function SpawnVehicles(vehicles)
 			for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
-                Wait(500)
+                Wait(200)
 
 				DeleteLocalVehicle(vehicles[i].vehicle)
 				LoadEntity(vehicles[i], 'server')
@@ -254,7 +254,7 @@ local function SpawnVehicle(vehicleData)
 			while IsDeleting do Wait(100) end
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
-            Wait(500)
+            Wait(200)
 
 			DeleteLocalVehicle(vehicleData.vehicle)
 			LoadEntity(vehicleData, 'client')
