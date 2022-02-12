@@ -16,17 +16,19 @@ local function GetCitizenid(player)
 	return player.PlayerData.citizenid
 end
 
-
 -- Get all vehicles the player owned.
 local function FindPlayerVehicles(citizenid, cb)
     local vehicles = {}
     MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
         for k, v in pairs(rs) do
-            vehicles[#vehicles+1] = {
-                vehicle = json.decode(v.data),
-                plate   = v.plate,
-                model   = v.model,
-            }
+			vehicles[#vehicles+1] = {
+				vehicle     = json.decode(v.data),
+				plate       = v.plate,
+				citizenid   = v.citizenid,
+				citizenname = v.citizenname,
+				model       = v.model,
+				fuel        = v.fuel,
+			}
         end
         cb(vehicles)
     end)
@@ -55,6 +57,7 @@ local function RefreshVehicles(src)
                     citizenid   = v.citizenid,
                     citizenname = v.citizenname,
                     model       = v.model,
+					fuel        = v.fuel,
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
                     if not Config.ImUsingOtherKeyScript then
@@ -223,6 +226,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							status  = true,
 							message = Lang:t("info.has_take_the_car"),
 							data    = json.decode(rs[1].data),
+							fuel    = rs[1].fuel,
 						})
 						TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 					end
@@ -248,24 +252,20 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
-
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
 			})	
-
 			if action == 'impound' then
 				MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
 					["@plate"]     = plate,
 					["@citizenid"] = rs[1].citizenid
 				})
 			end
-
 			if action ~= 'impound' then
 				MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
 					["@plate"] = plate,
 				})
 			end
-
 			MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
 				["@citizenid"] = rs[1].citizenid
 			})
@@ -335,6 +335,7 @@ end, 'admin')
 
 -------------------------------------------------------------------------------------------------
 
+-- Reset state and counting to stay in sync.
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         Wait(2000)

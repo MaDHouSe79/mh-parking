@@ -40,6 +40,14 @@ local function CreateParkDisPlay(vehicleData, type)
     return info
 end
 
+
+local function SetFuel(vehicle, fuel)
+	if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
+		SetVehicleFuelLevel(vehicle, fuel + 0.0)
+		DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
+	end
+end
+
 local function PrepareVehicle(entity, vehicleData)
     -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
@@ -154,13 +162,15 @@ end
 local function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
     local findVehicle = false
-    for i = 1, #LocalVehicles do
-		if LocalVehicles[i].entity == entity then
-			findVehicle = LocalVehicles[i]
-			break
-		end
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 then
+        for i = 1, #LocalVehicles do
+            if LocalVehicles[i].entity == entity then
+                findVehicle = LocalVehicles[i]
+                break
+            end
+        end
+        return findVehicle
     end
-    return findVehicle
 end
 
 -- Delete single vehicle
@@ -244,6 +254,24 @@ local function DisplayHelpText(text)
 end
 
 
+local function CheckVehicleIsGrounded() 
+    while not IsDeleting do
+        if #LocalVehicles ~= 0 then
+            for i = 1, #LocalVehicles do
+                if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
+                    if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
+                        if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.PlaceOnGroundRadius then
+                            SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
+                            SetVehicleOnGroundProperly(LocalVehicles[i].entity)
+                            LocalVehicles[i].isGrounded = true
+                        end
+                    end
+                end
+            end
+        end
+        Wait(1000)
+    end
+end
 
 ---------------------------------------------------Drive-----------------------------------------------
 -- Create Vehicle Entity
@@ -270,12 +298,10 @@ end
 
 -- Make vehicle ready to drive
 local function MakeVehicleReadyToDrive(vehicle)
-    -- Delete the local entity first
     DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
     local VehicleEntity = CreateVehicleEntity(vehicle)
     TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicle.props)
-    -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicle.location.x, vehicle.location.y, vehicle.location.z)
     SetVehicleOnGroundProperly(VehicleEntity)
     FreezeEntityPosition(VehicleEntity, false)
@@ -285,8 +311,7 @@ local function MakeVehicleReadyToDrive(vehicle)
     SetVehiclePetrolTankHealth(VehicleEntity, vehicle.health.tank)
     SetVehRadioStation(VehicleEntity, 'OFF')
     SetVehicleDirtLevel(VehicleEntity, 0)
-    print(json.encode(vehicle, {indent = true})) 
-    SetVehicleFuelLevel(VehicleEntity, vehicle.fue)
+    SetFuel(VehicleEntity, vehicle.fuel)
     SetModelAsNoLongerNeeded(vehicle.props["model"])
 end
 
@@ -495,26 +520,7 @@ end)
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
-end)
-
-CreateThread(function()
-	while not IsDeleting do
-		if #LocalVehicles ~= 0 then
-			for i = 1, #LocalVehicles do
-                if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
-                    if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
-		                if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < 100.0 then
-                            SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
-                            SetVehicleOnGroundProperly(LocalVehicles[i].entity)
-                            SetVehicleFuelLevel(LocalVehicles[i].entity)
-                            LocalVehicles[i].isGrounded = true
-                        end
-                    end
-                end
-            end
-		end
-		Wait(1000)
-	end
+    CheckVehicleIsGrounded()
 end)
 
 CreateThread(function()
@@ -531,6 +537,7 @@ CreateThread(function()
 				SpawnedVehicles = true
 				Wait(2000)
 			end
+            CheckVehicleIsGrounded()
 		else
 			if SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)

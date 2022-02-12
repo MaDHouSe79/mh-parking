@@ -7,13 +7,14 @@ Config.KeyBindButton          = "F5"         -- 👉 If you want to change the d
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
 Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
+
 Config.UseStopSpeedForPark    = true         -- 👉 Default true
-Config.MinSpeedToPark         = 1            -- 👉 Default 0 
+Config.MinSpeedToPark         = 1            -- 👉 Default 1 the min speed to park
 
 Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
 
-
 -- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state      
+Config.PlaceOnGroundRadius    = 100.0        -- 👉 lower wil limit the distance of placeing vehicles on the ground.
 Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is police impound. 
 
 -- 👇 Base config when the server start, this is the default settings
@@ -25,13 +26,13 @@ Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the poli
 
 -- 👇 change this to your own commands
 Config.Command = {
-    park         = 'park',                   -- User/Admin permission
-    parknames    = 'park-names',             -- User/Admin permission
-    notification = 'park-notification',      -- User/Admin permission
-    vip          = 'park-vip',               -- Admin permission
-    system       = 'park-system',            -- Admin permission
-    addvip       = 'park-addvip',            -- Admin permission (/park-addvip [id] [amount])
-    removevip    = 'park-removevip'          -- Admin permission
+    park         = 'park',                   -- 👉 User/Admin permission
+    parknames    = 'park-names',             -- 👉 User/Admin permission
+    notification = 'park-notification',      -- 👉 User/Admin permission
+    vip          = 'park-vip',               -- 👉 Admin permission
+    system       = 'park-system',            -- 👉 Admin permission
+    addvip       = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])
+    removevip    = 'park-removevip'          -- 👉 Admin permission
 }
 
 -- 👇 Dont change this, you will not be able to park if you change this...
