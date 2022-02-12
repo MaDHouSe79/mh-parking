@@ -40,6 +40,44 @@ local function CreateParkDisPlay(vehicleData, type)
     return info
 end
 
+local function doCarDamage(vehicle, health)
+	local engine = health.engine + 0.0
+	local body = health.body + 0.0
+    Wait(100)
+    if body < 900.0 then
+		SmashVehicleWindow(vehicle, 0)
+		SmashVehicleWindow(vehicle, 1)
+		SmashVehicleWindow(vehicle, 2)
+		SmashVehicleWindow(vehicle, 3)
+		SmashVehicleWindow(vehicle, 4)
+		SmashVehicleWindow(vehicle, 5)
+		SmashVehicleWindow(vehicle, 6)
+		SmashVehicleWindow(vehicle, 7)
+	end
+	if body < 700.0 then
+		SetVehicleDoorBroken(vehicle, 0, true)
+		SetVehicleDoorBroken(vehicle, 1, true)
+		SetVehicleDoorBroken(vehicle, 2, true)
+		SetVehicleDoorBroken(vehicle, 3, true)
+		SetVehicleDoorBroken(vehicle, 4, true)
+		SetVehicleDoorBroken(vehicle, 5, true)
+		SetVehicleDoorBroken(vehicle, 6, true)
+	end
+	if engine < 600.0 then
+		SetVehicleTyreBurst(vehicle, 1, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 2, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 3, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 4, false, 990.0)
+	end
+	if engine < 400.0 then
+		SetVehicleTyreBurst(vehicle, 0, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 5, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 6, false, 990.0)
+		SetVehicleTyreBurst(vehicle, 7, false, 990.0)
+	end
+    SetVehicleEngineHealth(vehicle, engine)
+    SetVehicleBodyHealth(vehicle, body)
+end
 
 local function SetFuel(vehicle, fuel)
 	if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
@@ -56,9 +94,6 @@ local function PrepareVehicle(entity, vehicleData)
     SetEntityInvincible(entity, true)
     SetEntityHeading(vehicle, vehicleData.vehicle.location.w)
     SetVehicleLivery(entity, vehicleData.vehicle.livery)
-    SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
-    SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
-    SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
     SetVehRadioStation(entity, 'OFF')
     SetVehicleDirtLevel(entity, 0)
     QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
@@ -197,6 +232,7 @@ local function SpawnVehicles(vehicles)
 				LoadEntity(vehicles[i], 'server')
 				SetVehicleEngineOn(VehicleEntity, false, false, true)
 				FreezeEntityPosition(VehicleEntity, true)
+                doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
 				TableInsert(VehicleEntity, vehicles[i])
 				DoAction(action)
 			end
@@ -213,6 +249,7 @@ local function SpawnVehicle(vehicleData)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(VehicleEntity, vehicleData)
 			SetVehicleEngineOn(VehicleEntity, false, false, true)
+            doCarDamage(VehicleEntity, vehicleData.vehicle.health)
 			FreezeEntityPosition(VehicleEntity, true)
 			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
 				SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -306,12 +343,10 @@ local function MakeVehicleReadyToDrive(vehicle)
     SetVehicleOnGroundProperly(VehicleEntity)
     FreezeEntityPosition(VehicleEntity, false)
     SetVehicleLivery(VehicleEntity, vehicle.livery)
-    SetVehicleEngineHealth(VehicleEntity, vehicle.health.engine)
-    SetVehicleBodyHealth(VehicleEntity, vehicle.health.body)
-    SetVehiclePetrolTankHealth(VehicleEntity, vehicle.health.tank)
     SetVehRadioStation(VehicleEntity, 'OFF')
     SetVehicleDirtLevel(VehicleEntity, 0)
     SetFuel(VehicleEntity, vehicle.fuel)
+    doCarDamage(VehicleEntity, vehicle.health)
     SetModelAsNoLongerNeeded(vehicle.props["model"])
 end
 
