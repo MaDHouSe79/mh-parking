@@ -1,10 +1,24 @@
 ## ---------------------------------------------Updates------------------------------------------------
+## Needed fix 👊😉👍 12-2-2022
+
+# 👇 Sometime the vehicle spawn on top of each other, and to avoid this you can use this time delay below in de condig.lua.
+- Config.UseSpawnDelay -- 👉 Default false, if your vehicles spawn on each other, set this to true
+- Config.DeleteDelay   -- 👉 Default 500, a delay for deleting a vehicle. (works only if Config.UseSpawnDelay = true)
+- Config.FreezeDelay   -- 👉 Default 10, a delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+
+just play around with it until your fine with it.
+
+## 😎 Special thanks for helping me with testing this 👊😉👍
+- 💪 Jazerra
+
+
+
+## ---------------------------------------------Updates------------------------------------------------
 ## Add And Fix 👊😉👍 12-2-2022
 - ✔️ Add Reset State: on server start, vehicles that are not parked and are added to the parking database will be removed now.
 - ✔️ Fix Floating Vehicles: it can happen, that you see that the vehicle get placed on the ground. (the radius is 100 for this event)
 - ✔️ Vehicles are now spawn with damage, if you park it with damage.
 - ✔️ Finally i fixed the fuel.
-
 
 ✔️ Again this time you don't have to do anything, just update qb-parking, and you ready to go 👊😉👍
 

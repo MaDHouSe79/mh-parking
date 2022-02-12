@@ -1,4 +1,11 @@
 Config                        = {}
+
+-- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
+Config.UseSpawnDelay          = false        -- 👉 Default false, if your vehicles spawn on each other, set this to true
+Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for deleting a vehicle. (works only if Config.UseSpawnDelay = true)
+Config.FreezeDelay            = 10           -- 👉 Default 10, a delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+
+
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
