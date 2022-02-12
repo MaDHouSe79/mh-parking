@@ -1,7 +1,7 @@
 ## ---------------------------------------------Updates------------------------------------------------
 ## Needed fix 👊😉👍 12-2-2022
 
-# 👇 Sometime the vehicle spawn on top of each other, and to avoid this you can use this time delay below in de condig.lua.
+# 👇 Sometime the vehicle spawn on top of each other, and to avoid this you can use this time delay below in de config.lua.
 - Config.UseSpawnDelay -- 👉 Default false, if your vehicles spawn on each other, set this to true
 - Config.DeleteDelay   -- 👉 Default 500, a delay for deleting a vehicle. (works only if Config.UseSpawnDelay = true)
 - Config.FreezeDelay   -- 👉 Default 10, a delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
