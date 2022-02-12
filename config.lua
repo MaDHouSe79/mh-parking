@@ -1,7 +1,7 @@
 Config                        = {}
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
-Config.DisplayDistance        = 50           -- 👉 Distence to see text above parked vehicles (player dependent)
+Config.DisplayDistance        = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 
 Config.KeyBindButton          = "F5"         -- 👉 If you want to change the drive and park button. (you must use /binds for this)
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
@@ -11,6 +11,10 @@ Config.UseStopSpeedForPark    = true         -- 👉 Default true
 Config.MinSpeedToPark         = 1            -- 👉 Default 0 
 
 Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
+
+
+-- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state      
+Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is police impound. 
 
 -- 👇 Base config when the server start, this is the default settings
 Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)

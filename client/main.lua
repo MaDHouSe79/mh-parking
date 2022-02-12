@@ -30,25 +30,13 @@ end)
 --------------------------------------------Local Functions--------------------------------------------
 local function CreateParkDisPlay(vehicleData, type)
     local info, model, owner, plate = nil
-    if type == 'police' then
-        owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-        if Config.DisplayPlayerAndPolice then
-            model = Lang:t('info.police_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        else
-            model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        end
-        plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
-    end
-    if type == 'citizen' then
-        owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-        if Config.DisplayPlayerAndPolice then
-            model = Lang:t('info.citizen_info')..string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        else
-            model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
-        end
-        plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
-    end
-    info = string.format("%s", model..plate..owner)
+    local viewType = ""
+    if type == 'police'  then if Config.DisplayPlayerAndPolice then viewType = Lang:t('info.police_info')..'\n'  end end
+    if type == 'citizen' then if Config.DisplayPlayerAndPolice then viewType = Lang:t('info.citizen_info')..'\n' end end
+    owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
+    model = viewType .. string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+    plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
+    info  = string.format("%s", model..plate..owner)
     return info
 end
 
@@ -63,7 +51,6 @@ local function PrepareVehicle(entity, vehicleData)
     SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
     SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
     SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
-    exports[Config.YourFuelExportName]:SetFuel(entity, vehicleData.vehicle.health.tank)
     SetVehRadioStation(entity, 'OFF')
     SetVehicleDirtLevel(entity, 0)
     QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
@@ -76,7 +63,6 @@ local function LoadEntity(vehicleData, type)
 	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
-	exports[Config.YourFuelExportName]:SetFuel(VehicleEntity, vehicleData.vehicle.health.tank)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
@@ -101,11 +87,11 @@ end
 
 -- Insert Data to table
 local function TableInsert(VehicleEntity, vehicleData)
-	--LocalVehicles[#LocalVehicles+1] =
     LocalVehicles[#LocalVehicles+1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
 		plate       = vehicleData.plate,
+        fuel        = vehicleData.fuel,
 		citizenid   = vehicleData.citizenid,
 		citizenname = vehicleData.citizenname,
 		livery      = vehicleData.vehicle.livery,
@@ -149,9 +135,7 @@ local function DisplayParkedOwnerText()
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
 		for k, vehicle in pairs(LocalVehicles) do
-			
 			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
-
 				if PlayerData.job.name == "police" and PlayerData.job.onduty then
                     displayWhoOwnesThisCar = CreateParkDisPlay(vehicle, 'police')
 					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
@@ -186,7 +170,7 @@ local function DeleteLocalVehicle(vehicle)
             if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
 				if vehicle.plate == LocalVehicles[i].plate then
 					DeleteEntity(LocalVehicles[i].entity)
-					table.remove(LocalVehicles, i)
+                    LocalVehicles[i] = nil
 				end
 			end
 		end
@@ -274,7 +258,7 @@ local function DeleteNearByVehicle(location)
     if distance <= 1 then
         for i = 1, #LocalVehicles do
             if LocalVehicles[i].entity == vehicle then
-                table.remove(LocalVehicles, i)
+                LocalVehicles[i] = nil
             end
             local tmpModel = GetEntityModel(vehicle)
             SetModelAsNoLongerNeeded(tmpModel)
@@ -301,6 +285,8 @@ local function MakeVehicleReadyToDrive(vehicle)
     SetVehiclePetrolTankHealth(VehicleEntity, vehicle.health.tank)
     SetVehRadioStation(VehicleEntity, 'OFF')
     SetVehicleDirtLevel(VehicleEntity, 0)
+    print(json.encode(vehicle, {indent = true})) 
+    SetVehicleFuelLevel(VehicleEntity, vehicle.fue)
     SetModelAsNoLongerNeeded(vehicle.props["model"])
 end
 
@@ -312,8 +298,6 @@ local function Drive(player, vehicle)
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
             vehicle = false
-            print(json.encode(callback.data, {indent = true})) 
-            exports['LegacyFuel']:SetFuel(callback.data, callback.data.health.fuel)
             MakeVehicleReadyToDrive(callback.data)
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
@@ -407,6 +391,7 @@ local function Save(player, vehicle)
         livery      = GetVehicleLivery(vehicle),
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
+        fuel        = GetVehicleFuelLevel(vehicle),
         model       = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
         location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
@@ -510,6 +495,26 @@ end)
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
+end)
+
+CreateThread(function()
+	while not IsDeleting do
+		if #LocalVehicles ~= 0 then
+			for i = 1, #LocalVehicles do
+                if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
+                    if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
+		                if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < 100.0 then
+                            SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
+                            SetVehicleOnGroundProperly(LocalVehicles[i].entity)
+                            SetVehicleFuelLevel(LocalVehicles[i].entity)
+                            LocalVehicles[i].isGrounded = true
+                        end
+                    end
+                end
+            end
+		end
+		Wait(1000)
+	end
 end)
 
 CreateThread(function()
