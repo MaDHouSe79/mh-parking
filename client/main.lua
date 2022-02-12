@@ -216,7 +216,7 @@ local function DeleteLocalVehicle(vehicle)
             if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
 				if vehicle.plate == LocalVehicles[i].plate then
 					DeleteEntity(LocalVehicles[i].entity)
-                    LocalVehicles[i] = nil
+                    table.remove(LocalVehicles, i)
 				end
 			end
 		end
@@ -306,7 +306,7 @@ local function DeleteNearByVehicle(location)
     if distance <= 1 then
         for i = 1, #LocalVehicles do
             if LocalVehicles[i].entity == vehicle then
-                LocalVehicles[i] = nil
+                table.remove(LocalVehicles, i)
             end
             local tmpModel = GetEntityModel(vehicle)
             SetModelAsNoLongerNeeded(tmpModel)
@@ -454,7 +454,7 @@ local function ActionVehicle(plate, action)
                 if callback.status then
                     FreezeEntityPosition(LocalVehicles[i].entity, false)
                     DeleteEntity(LocalVehicles[i].entity)
-                    LocalVehicles[i] = nil
+                    table.remove(LocalVehicles, i)
                 end
             end, LocalVehicles[i].plate, action)
         end
