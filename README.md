@@ -211,7 +211,38 @@ end
 
 ## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
 ```lua
- TriggerEvent("qb-parking:client:stolen", plate) 
+ TriggerEvent("qb-parking:client:stolen", lockpickedPlate) 
+
+-- resources/[qb]/qb-vehiclekeys/client.lua line 165 change it with this code.
+local function lockpickFinish(success)
+    local ped = PlayerPedId()
+    local pos = GetEntityCoords(ped)
+    local vehicle = QBCore.Functions.GetClosestVehicle(pos)
+    local chance = math.random()
+    if success then
+        TriggerServerEvent('hud:server:GainStress', math.random(1, 4))
+        QBCore.Functions.Notify('Opened Door!', 'success')
+        SetVehicleDoorsLocked(vehicle, 1)
+        lockpicked = true
+        lockpickedPlate = QBCore.Functions.GetPlate(vehicle)
+        TriggerEvent("qb-parking:client:stolen", lockpickedPlate) -- <---------------- HERE !!!
+    else
+        PoliceCall()
+        TriggerServerEvent('hud:server:GainStress', math.random(1, 4))
+        QBCore.Functions.Notify('Someone Called The Police!', 'error')
+    end
+    if usingAdvanced then
+        if chance <= Config.RemoveLockpickAdvanced then
+            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["advancedlockpick"], "remove")
+            TriggerServerEvent("QBCore:Server:RemoveItem", "advancedlockpick", 1)
+        end
+    else
+        if chance <= Config.RemoveLockpickNormal then
+            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["lockpick"], "remove")
+            TriggerServerEvent("QBCore:Server:RemoveItem", "lockpick", 1)
+        end
+    end
+end
 ```
 
 ## Impound Trigger, to unpark the vehicle.
