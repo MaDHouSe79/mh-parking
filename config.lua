@@ -13,7 +13,6 @@ Config.DisplayDistance        = 20.0         -- 👉 Distence to see text above 
 Config.KeyBindButton          = "F5"         -- 👉 If you want to change the drive and park button. (you must use /binds for this)
 Config.parkingButton          = 166          -- 👉 F5 (vehicle exit and or park)
 Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
-Config.YourFuelExportName     = 'LegacyFuel' -- 👉 Default is LegacyFuel, if you use a other fuel script, for example cc-fuel
 
 Config.UseStopSpeedForPark    = true         -- 👉 Default true
 Config.MinSpeedToPark         = 1            -- 👉 Default 1 the min speed to park
