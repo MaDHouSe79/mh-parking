@@ -240,7 +240,7 @@ local function SpawnVehicles(vehicles)
 				TableInsert(VehicleEntity, vehicles[i])
 				DoAction(action)
 
-                Wait(100)
+                Wait(10)
 				FreezeEntityPosition(VehicleEntity, true)
 			end
 		end
@@ -255,7 +255,7 @@ local function SpawnVehicle(vehicleData)
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
             Wait(500)
-            
+
 			DeleteLocalVehicle(vehicleData.vehicle)
 			LoadEntity(vehicleData, 'client')
 			PrepareVehicle(VehicleEntity, vehicleData)
@@ -268,7 +268,7 @@ local function SpawnVehicle(vehicleData)
 			TableInsert(VehicleEntity, vehicleData)
 			DoAction(action)
 
-            Wait(100)
+            Wait(10)
 			FreezeEntityPosition(VehicleEntity, true)
 		end
     end)
