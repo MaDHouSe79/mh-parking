@@ -38,6 +38,7 @@ Config.Command = {
     notification = 'park-notification',      -- 👉 User/Admin permission
     vip          = 'park-vip',               -- 👉 Admin permission
     system       = 'park-system',            -- 👉 Admin permission
+    usevip       = 'park-usevip',
     addvip       = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])
     removevip    = 'park-removevip'          -- 👉 Admin permission
 }

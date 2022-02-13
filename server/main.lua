@@ -101,7 +101,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 		local plate   = vehicleData.plate
 		local isFound = false
 
-		if Config.UseOnlyForVipPlayers then -- only allow for vip players
+		if UseOnlyForVipPlayers then -- only allow for vip players
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = GetCitizenid(Player),
 			}, function(rs)
@@ -264,7 +264,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							["@plate"]     = plate,
 							["@citizenid"] = GetCitizenid(Player)
 						})
-						if Config.UseOnlyForVipPlayers then -- only allow for vip players
+						if UseOnlyForVipPlayers then -- only allow for vip players
 							MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 								['@citizenid'] = GetCitizenid(Player),
 							}, function(rs)
@@ -322,7 +322,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 					["@plate"] = plate,
 				})
 			end
-			if Config.UseOnlyForVipPlayers then -- only allow for vip players
+			if UseOnlyForVipPlayers then -- only allow for vip players
 				MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
 					["@citizenid"] = rs[1].citizenid
 				})
@@ -390,6 +390,16 @@ QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, true, funct
 	end
 end, 'admin')
 
+
+QBCore.Commands.Add(Config.Command.usevip, "Park VIP System On/Off", {}, true, function(source)
+	UseOnlyForVipPlayers = not UseOnlyForVipPlayers
+	if UseOnlyForVipPlayers then
+		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.enable', {type = "vip"}), "success")
+	else
+		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.disable', {type = "vip"}), "error")
+	end
+end, 'admin')
+
 -------------------------------------------------------------------------------------------------
 
 -- Reset state and counting to stay in sync.
@@ -407,7 +417,7 @@ AddEventHandler('onResourceStart', function(resource)
 						if type(rs) == 'table' and #rs > 0 then
 							for _, v in pairs(rs) do
 								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {["@plate"] = vehicle.plate})
-								if Config.UseOnlyForVipPlayers then -- only allow for vip players
+								if UseOnlyForVipPlayers then -- only allow for vip players
 									MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 										['@citizenid'] = vehicle.citizenid,
 									}, function(park)

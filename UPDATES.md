@@ -1,4 +1,13 @@
 ## ---------------------------------------------Updates------------------------------------------------
+## Added Free For All Parking 👊😉👍 13-2-2022
+
+- 👉 Default true, set it to false, but it's not recommended to do that, but if you want you can.
+- Config.UseOnlyForVipPlayers = true (config.lua line:8)       
+
+- New command "/park-usevip" to enable or disable vip system (Admin Only)
+
+
+## ---------------------------------------------Updates------------------------------------------------
 ## Needed fix 👊😉👍 12-2-2022
 
 # 👇 Sometime the vehicle spawn on top of each other, and to avoid this you can use this time delay below in de config.lua.
