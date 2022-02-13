@@ -176,8 +176,8 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 					})
 				end
 			end)
-		else -- free for all
-			FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
+		else 
+			FindPlayerVehicles(GetCitizenid(Player), function(vehicles) -- free for all
 				for k, v in pairs(vehicles) do
 					if type(v.plate) and plate == v.plate then
 						isFound = true
