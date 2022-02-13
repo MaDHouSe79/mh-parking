@@ -312,9 +312,10 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 				["@plate"] = plate,
 			})	
 			if action == 'impound' then
-				MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = @plate AND citizenid = @citizenid', {
+				MySQL.Async.execute('UPDATE player_vehicles SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
 					["@plate"]     = plate,
-					["@citizenid"] = rs[1].citizenid
+					["@citizenid"] = rs[1].citizenid,
+					["@garage"]    = 'impoundlot',
 				})
 			end
 			if action ~= 'impound' then
