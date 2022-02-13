@@ -5,6 +5,7 @@ Config.UseSpawnDelay          = true         -- 👉 Default false, if your vehi
 Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for deleting a vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 10           -- 👉 Default 10, a delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
+Config.UseOnlyForVipPlayers   = true         -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
 
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
