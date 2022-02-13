@@ -1,9 +1,9 @@
 Config                        = {}
 
 -- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
-Config.UseSpawnDelay          = true         -- 👉 Default false, if your vehicles spawn on each other, set this to true
-Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for deleting a vehicle. (works only if Config.UseSpawnDelay = true)
-Config.FreezeDelay            = 10           -- 👉 Default 10, a delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+Config.UseSpawnDelay          = false        -- 👉 Default false, if your vehicles spawn on top of each other, set this to true
+Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+Config.FreezeDelay            = 10           -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
 Config.UseOnlyForVipPlayers   = true         -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
 
@@ -25,10 +25,9 @@ Config.PlaceOnGroundRadius    = 100.0        -- 👉 lower wil limit the distanc
 Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is police impound. 
 
 -- 👇 Base config when the server start, this is the default settings
-Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
+Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
-
 Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 
 -- 👇 change this to your own commands
@@ -36,7 +35,6 @@ Config.Command = {
     park         = 'park',                   -- 👉 User/Admin permission
     parknames    = 'park-names',             -- 👉 User/Admin permission
     notification = 'park-notification',      -- 👉 User/Admin permission
-    vip          = 'park-vip',               -- 👉 Admin permission
     system       = 'park-system',            -- 👉 Admin permission
     usevip       = 'park-usevip',
     addvip       = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])

@@ -345,6 +345,7 @@ local function MakeVehicleReadyToDrive(vehicle)
 end
 
 -- Drive 
+
 local function Drive(player, vehicle)
     action = 'drive'
     QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
@@ -358,8 +359,6 @@ local function Drive(player, vehicle)
         end
     end, vehicle)
 end
-
-
 
 --------------------------------------------------Park-------------------------------------------------
 local function ParkCar(player, vehicle)
@@ -418,9 +417,11 @@ local function Save(player, vehicle)
     local carModelName = GetLabelText(displaytext)
     action             = 'park'
     LastUsedPlate      = vehicleProps.plate
+
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle)
+            
             SendMail(
                 Lang:t('mail.sender' , {
                     company   = Lang:t('info.companyName'),
