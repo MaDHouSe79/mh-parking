@@ -461,7 +461,9 @@ local function ActionVehicle(plate, action)
             QBCore.Functions.TriggerCallback("qb-parking:server:vehicle_action", function(callback)
                 if callback.status then
                     FreezeEntityPosition(LocalVehicles[i].entity, false)
-                    DeleteEntity(LocalVehicles[i].entity)
+                    if action == 'impound' then
+                        DeleteEntity(LocalVehicles[i].entity)
+                    end
                     table.remove(LocalVehicles, i)
                 end
             end, LocalVehicles[i].plate, action)
@@ -521,6 +523,7 @@ RegisterNetEvent("qb-parking:client:impound",  function(plate)
 end)
 
 RegisterNetEvent("qb-parking:client:stolen",  function(plate)
+    local tmpPlate = plate 
     ActionVehicle(plate, 'stolen')
 end)
 

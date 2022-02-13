@@ -1,5 +1,11 @@
 ## ---------------------------------------------Updates------------------------------------------------
-## Added Free For All Parking 👊😉👍 13-2-2022
+## Added Free For All Parking An Fixed 👊😉👍 13-2-2022
+- vehicles that are picklocked are not de-spawn anymore.
+- after lockpick with success, the vehicle stays where it is, and is unparked and driveable.
+- the owner of this vehicle is stil able to drive to get it back.
+- everting thats after the picklock is done, is for other scripts to handle.
+
+
 
 - 👉 Default true, set it to false, but it's not recommended to do that, but if you want you can.
 - Config.UseOnlyForVipPlayers = true (config.lua line:8)       
