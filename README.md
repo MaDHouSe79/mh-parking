@@ -28,6 +28,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 
 ## 💪 Optional
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
+- ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 - ✅ you can also use other vehiclekey scripts, change this in the config file.
 
 
