@@ -37,8 +37,8 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
 - 👉 Step 4: Add any recommended extra code what I say you should add.
 - 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
-- 👉 Step 6: Add your self as vip, you can use the command: /park-addvip [id] [amount]
-- 👉 Step 7: Start your server. 
+- 👉 Step 6: Start your server.  
+- 👉 Step 7: Add your self as vip, you can use the command: /park-addvip [id] [amount]
 - 👉 Step 8: Most important step -> Enjoy 👊😎👍
 
 
