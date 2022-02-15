@@ -21,13 +21,14 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ## 💪 Dependencies
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
-- ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-garages](https://github.com/MaDHouSe79/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
 
 ## 💪 Optional
+- ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
+- ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 - ✅ you can also use other vehiclekey scripts, change this in the config file.
 
 
