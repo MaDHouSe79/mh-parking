@@ -70,7 +70,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 
 ## ⚙️ Settings
 - 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
-- 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
+- 👉 Vip users can be added by command, only if you use the vip option.
 - 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
 
 
