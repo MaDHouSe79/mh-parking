@@ -237,6 +237,9 @@ local function SpawnVehicles(vehicles)
 				SetVehicleEngineOn(VehicleEntity, false, false, true)
 				doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
 				TableInsert(VehicleEntity, vehicles[i])
+                if vehicles[i].citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
+                    SetVehicleDoorsLocked(VehicleEntity, 2)
+                end
 				DoAction(action)
                 if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
 				FreezeEntityPosition(VehicleEntity, true)
