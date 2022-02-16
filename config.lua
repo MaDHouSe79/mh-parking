@@ -21,12 +21,12 @@ Config.MinSpeedToPark         = 1            -- 👉 Default 1 the min speed to 
 Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
 
 -- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state      
-Config.PlaceOnGroundRadius    = 100.0        -- 👉 lower wil limit the distance of placeing vehicles on the ground.
+Config.PlaceOnGroundRadius    = 20.0        -- 👉 lower wil limit the distance of placeing vehicles on the ground.
 Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is police impound. 
 
 -- 👇 Base config when the server start, this is the default settings
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
-Config.PhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
+Config.UsePhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 

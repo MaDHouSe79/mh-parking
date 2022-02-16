@@ -483,11 +483,11 @@ RegisterCommand(Config.Command.park, function()
 end, false)
 
 RegisterCommand(Config.Command.parknames, function()
-    HideParkedVehicleNames = not HideParkedVehicleNames
-    if HideParkedVehicleNames then
+    UseParkedVehicleNames = not UseParkedVehicleNames
+    if UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "success", 1500)
     end
-    if not HideParkedVehicleNames then
+    if not UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "error", 1500)
     end
 end, false)

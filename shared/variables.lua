@@ -1,6 +1,6 @@
 -- Shared By Server And Client.
 UseParkingSystem       = Config.UseParkingSystem
-UsePhoneNotification   = Config.PhoneNotification
+UsePhoneNotification   = Config.UsePhoneNotification
 UseParkedVehicleNames  = Config.UseParkedVehicleNames
 UseOnlyForVipPlayers   = Config.UseOnlyForVipPlayers
 curVersion             = 0
