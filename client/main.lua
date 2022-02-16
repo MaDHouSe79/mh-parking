@@ -132,22 +132,22 @@ local function DoAction(action)
 end
 
 -- Insert Data to table
-local function TableInsert(VehicleEntity, vehicleData)
+local function TableInsert(entity, data)
     LocalVehicles[#LocalVehicles+1] = {
-		entity      = VehicleEntity,
-		vehicle     = vehicleData.mods,
-		plate       = vehicleData.plate,
-        fuel        = vehicleData.fuel,
-		citizenid   = vehicleData.citizenid,
-		citizenname = vehicleData.citizenname,
-		livery      = vehicleData.vehicle.livery,
-		health      = vehicleData.vehicle.health,
-		model       = vehicleData.model,
+		entity      = entity,
+		vehicle     = data.mods,
+		plate       = data.plate,
+        fuel        = data.fuel,
+		citizenid   = data.citizenid,
+		citizenname = data.citizenname,
+		livery      = data.vehicle.livery,
+		health      = data.vehicle.health,
+		model       = data.model,
 		location    = {
-			x = vehicleData.vehicle.location.x,
-			y = vehicleData.vehicle.location.y,
-			z = vehicleData.vehicle.location.z + 0.5,
-			w = vehicleData.vehicle.location.w
+			x = data.vehicle.location.x,
+			y = data.vehicle.location.y,
+			z = data.vehicle.location.z,
+			w = data.vehicle.location.w
 		}
     }
 end
@@ -184,11 +184,11 @@ local function DisplayParkedOwnerText()
 			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
 				if PlayerData.job.name == "police" and PlayerData.job.onduty then
                     displayWhoOwnesThisCar = CreateParkDisPlay(vehicle, 'police')
-					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                 else
                     if PlayerData.citizenid == vehicle.citizenid then
                         displayWhoOwnesThisCar = CreateParkDisPlay(vehicle, 'citizen')
-                        Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+                        Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                     end
                 end
 			end
@@ -378,7 +378,7 @@ local function ParkCar(player, vehicle)
     SetVehicleLights(vehicle, 2)
     Wait(150)
     SetVehicleLights(vehicle, 0)
-    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.3)
+    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
 end
 
 -- Send Email to the player phone
@@ -424,7 +424,6 @@ local function Save(player, vehicle)
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle)
-            
             SendMail(
                 Lang:t('mail.sender' , {
                     company   = Lang:t('info.companyName'),
@@ -452,7 +451,7 @@ local function Save(player, vehicle)
         fuel        = GetVehicleFuelLevel(vehicle),
         model       = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
-        location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
+        location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z, GetEntityHeading(vehicle)),
     })
 end
 
