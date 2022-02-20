@@ -184,11 +184,11 @@ local function DisplayParkedOwnerText()
 			if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
 				if PlayerData.job.name == "police" and PlayerData.job.onduty then
                     displayWhoOwnesThisCar = CreateParkDisPlay(vehicle, 'police')
-					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+					Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + -0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                 else
                     if PlayerData.citizenid == vehicle.citizenid then
                         displayWhoOwnesThisCar = CreateParkDisPlay(vehicle, 'citizen')
-                        Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
+                        Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + -0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                     end
                 end
 			end
