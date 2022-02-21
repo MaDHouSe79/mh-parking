@@ -122,8 +122,8 @@ local function Spawn(vehicleData)
     SetFuel(VehicleEntity, vehicleData.fuel)
     Wait(100)
     FreezeEntityPosition(VehicleEntity, true)
-    if QBCore.Functions.GetPlayerData(source) ~= nil and QBCore.Functions.GetPlayerData(source).citizenid == vehicleData.citizenid then
-        TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayerData(source), vehicleData.plate)
+    if PlayerData.citizenid == vehicleData.citizenid then
+        TriggerEvent('vehiclekeys:client:SetOwner', vehicleData.plate)
     end
 
     LocalVehicles[#LocalVehicles + 1] = {
