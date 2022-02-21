@@ -9,33 +9,6 @@
 - 👉 Refresh vehicles, check if vehicels are on the ground i a amount of radius. default 50, higher is bigger radius.
 
 
-## YOU CAN ALSO REMOVE THIS OLD CODE, you normal had to add this for this mod but this is no longer needed.
-## 👇 REMOVE old code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-````lua
-RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
-end)
-````
-
-## 👇 Remove old code in resources/[qb]/qb-vehiclekeys/server/main.lua.
-````lua
-RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    if VehicleList then
-        local val = VehicleList[plate]
-        if val then
-            VehicleList[plate].owners[citizenid] = true
-        else
-            VehicleList[plate] = { owners = {} }
-            VehicleList[plate].owners[citizenid] = true
-        end
-    else
-        VehicleList = {}
-        VehicleList[plate] = { owners = {} }
-        VehicleList[plate].owners[citizenid] = true
-    end
-end)
-````
-
 ## 😎 Special thanks for the people who helping me with testing 👊😉👍
 - 💪 Jazerra
 - 💪 ameN
