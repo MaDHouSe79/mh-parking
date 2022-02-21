@@ -34,16 +34,6 @@ local function FindPlayerVehicles(citizenid, cb)
     end)
 end
 
--- Get the number of the vehicles.
-local function GetVehicleNumOfParking()
-    local rs = MySQL.Async.fetchAll('SELECT id FROM player_parking', {})
-    if type(rs) == 'table' then
-        return #rs
-    else
-        return 0
-    end
-end
-
 -- Refresh client local vehicles entities.
 local function RefreshVehicles(src)
     if src == nil then src = -1 end
@@ -60,9 +50,7 @@ local function RefreshVehicles(src)
 					fuel        = v.fuel,
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    if not Config.ImUsingOtherKeyScript then
-                        TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
-                    end
+                    TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
                 end
             end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
@@ -91,6 +79,13 @@ local function checkVersion(err, responseText, headers)
     end
 end
 
+if Config.CheckForUpdates then
+    Citizen.CreateThread( function()
+        updatePath   = "/MaDHouSe79/qb-parking"
+        resourceName = "qb-parking ("..GetCurrentResourceName()..")"
+        PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
+    end)
+end
 
 --------------------------------------------Callbacks--------------------------------------------
 -- Save the car to database
@@ -110,9 +105,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 					if hasparked < 0 then hasparked = 0 end
 					if hasparked < rs[1].maxparking then
 						FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
+							local tmpvehicle = false
 							for k, v in pairs(vehicles) do
 								if type(v.plate) and plate == v.plate then
 									isFound = true
+									tmpvehicle = v
 								end		
 							end
 							if isFound then
@@ -145,6 +142,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 										cb({ 
 											status  = true, 
 											message = Lang:t("success.parked"),
+											vehicle = tmpvehicle
 										})
 										TriggerClientEvent("qb-parking:client:addVehicle", -1, {
 											vehicle     = vehicleData,
@@ -178,9 +176,11 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 			end)
 		else 
 			FindPlayerVehicles(GetCitizenid(Player), function(vehicles) -- free for all
+				local tmpvehicle = false
 				for k, v in pairs(vehicles) do
 					if type(v.plate) and plate == v.plate then
 						isFound = true
+						tmpvehicle = v
 					end		
 				end
 				if isFound then
@@ -210,6 +210,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 							cb({ 
 								status  = true, 
 								message = Lang:t("success.parked"),
+								vehicle = tmpvehicle
 							})
 							TriggerClientEvent("qb-parking:client:addVehicle", -1, {
 								vehicle     = vehicleData,
@@ -237,7 +238,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
     end
 end)
 
--- When player request to drive the car
+---------------------------------- When player request to drive the car ----------------------------------
 QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, vehicleData)
     if UseParkingSystem then
 		local src = source
@@ -302,7 +303,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
     end
 end)
 
-
 QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(source, cb, plate, action)
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
@@ -341,7 +341,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 end)
 
 ------------------------------------------------------Admin Commands-------------------------------------------------
--- Save vip player to database
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}, {name='Amount', help='The max vehicles amount a player can park'}}, true, function(source, args)
 	if args[1] and tonumber(args[1]) > 0 then
 		local amount = 0 
@@ -382,7 +381,6 @@ QBCore.Commands.Add(Config.Command.removevip, Lang:t("commands.removevip"), {{na
 	end
 end, 'admin')
 
-
 QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, true, function(source)
 	UseParkingSystem = not UseParkingSystem
 	if UseParkingSystem then
@@ -391,7 +389,6 @@ QBCore.Commands.Add(Config.Command.system, "Park System On/Off", {}, true, funct
 		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.disable', {type = "system"}), "error")
 	end
 end, 'admin')
-
 
 QBCore.Commands.Add(Config.Command.usevip, "Park VIP System On/Off", {}, true, function(source)
 	UseOnlyForVipPlayers = not UseOnlyForVipPlayers
@@ -403,9 +400,7 @@ QBCore.Commands.Add(Config.Command.usevip, "Park VIP System On/Off", {}, true, f
 end, 'admin')
 
 
--------------------------------------------------------------------------------------------------
-
--- Reset state and counting to stay in sync.
+----------------------------Reset state and counting to stay in sync------------------------------
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         Wait(2000)
@@ -442,24 +437,6 @@ AddEventHandler('onResourceStart', function(resource)
     end
 end)
 
-if Config.CheckForUpdates then
-    Citizen.CreateThread( function()
-        updatePath   = "/MaDHouSe79/qb-parking"
-        resourceName = "qb-parking ("..GetCurrentResourceName()..")"
-        PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
-    end)
-end
-
--- version check
-RegisterServerEvent("qb-parking:server:CheckVersion", function()
-    if updateavail then
-        TriggerClientEvent("qb-parking:client:GetUpdate", source, true)
-    else
-        TriggerClientEvent("qb-parking:client:GetUpdate", source, false)
-    end
-end)
-
--- When the client request to refresh the vehicles.
 RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName)
     RefreshVehicles(source)
 end)

@@ -101,32 +101,6 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ You MUST add this to your police impound trigger event.
 
 
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-````lua
-RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
-end)
-````
-
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
-````lua
-RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    if VehicleList then
-        local val = VehicleList[plate]
-        if val then
-            VehicleList[plate].owners[citizenid] = true
-        else
-            VehicleList[plate] = { owners = {} }
-            VehicleList[plate].owners[citizenid] = true
-        end
-    else
-        VehicleList = {}
-        VehicleList[plate] = { owners = {} }
-        VehicleList[plate].owners[citizenid] = true
-    end
-end)
-````
-
 ## 👇 To keep things nice and clean for the qb-core system and database.
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
