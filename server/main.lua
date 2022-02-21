@@ -49,9 +49,6 @@ local function RefreshVehicles(src)
                     model       = v.model,
 					fuel        = v.fuel,
                 }
-                if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
-                end
             end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
         end
