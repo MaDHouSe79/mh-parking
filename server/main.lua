@@ -29,6 +29,7 @@ local function FindPlayerVehicles(citizenid, cb)
 				model       = v.model,
 				fuel        = v.fuel,
 			}
+			TriggerEvent("vehiclekeys:server:SetVehicleOwnerToCitizenid", v.plate, v.citizenid)
         end
         cb(vehicles)
     end)
@@ -49,7 +50,9 @@ local function RefreshVehicles(src)
                     model       = v.model,
 					fuel        = v.fuel,
                 }
+				TriggerEvent("vehiclekeys:server:SetVehicleOwnerToCitizenid", v.plate, v.citizenid) 
             end
+			
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
         end
     end)

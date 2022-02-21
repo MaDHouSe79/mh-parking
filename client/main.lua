@@ -2,6 +2,7 @@ local QBCore             = exports['qb-core']:GetCoreObject()
 local PlayerData         = {}
 local LocalVehicles      = {}
 local GlobalVehicles     = {}
+local Citizenid          = 0
 local UpdateAvailable    = false
 local SpawnedVehicles    = false
 local isUsingParkCommand = false
@@ -24,6 +25,7 @@ RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
 end)
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
+    Citizenid = PlayerData.citizenid
 end)
 
 
@@ -97,16 +99,20 @@ local function SetFuel(vehicle, fuel)
 	end
 end
 
+
 -- Load Entity
 local function Spawn(vehicleData)
 	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.5, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
-    SetVehicleDoorsLocked(VehicleEntity, 2)
+
+    if QBCore.Functions.GetPlayerData().citizenid ~= vehicleData.citizenid then
+        SetVehicleDoorsLocked(VehicleEntity, 2)
+    end
+
     SetVehicleNumberPlateText(VehicleEntity, vehicleData.plate)
     SetEntityAsMissionEntity(VehicleEntity, true, true)
-    FreezeEntityPosition(VehicleEntity, false)
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
     SetVehicleOnGroundProperly(VehicleEntity)
     SetEntityInvincible(VehicleEntity, true)
@@ -120,11 +126,10 @@ local function Spawn(vehicleData)
     SetVehicleDirtLevel(VehicleEntity, 0)
 	doCarDamage(VehicleEntity, vehicleData.vehicle.health)
     SetFuel(VehicleEntity, vehicleData.fuel)
+
+
     Wait(100)
     FreezeEntityPosition(VehicleEntity, true)
-    if PlayerData.citizenid == vehicleData.citizenid then
-        TriggerEvent('vehiclekeys:client:SetOwner', vehicleData.plate)
-    end
     LocalVehicles[#LocalVehicles + 1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
@@ -467,6 +472,7 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
+
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
