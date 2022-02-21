@@ -125,7 +125,6 @@ local function Spawn(vehicleData)
     if PlayerData.citizenid == vehicleData.citizenid then
         TriggerEvent('vehiclekeys:client:SetOwner', vehicleData.plate)
     end
-
     LocalVehicles[#LocalVehicles + 1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
