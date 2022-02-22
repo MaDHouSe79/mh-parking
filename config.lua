@@ -27,3 +27,6 @@ Config.Command = {
     addvip       = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])
     removevip    = 'park-removevip'          -- 👉 Admin permission
 }
+
+-- 👇 Dont change this, you will not be able to park if you change this...
+Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
