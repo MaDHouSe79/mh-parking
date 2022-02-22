@@ -329,8 +329,8 @@ local function ParkCar(player, vehicle)
     Wait(150)
     SetVehicleLights(vehicle, 0)
     TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
-    SetEntityVisible(vehicle, false, 0)
-    SetEntityCollision(vehicle, false, false)
+    --SetEntityVisible(vehicle, false, 0)
+    --SetEntityCollision(vehicle, false, false)
 end
 
 -- Send Email to the player phone
