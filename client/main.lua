@@ -355,6 +355,7 @@ local function Drive(player, vehicle)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
+            DeleteLocalVehicle(vehicle)
             vehicle = false
             MakeVehicleReadyToDrive(callback.data)
         else
