@@ -1,15 +1,15 @@
 Config                         = {}           -- Holder..
 
-Config.UseSpawnDelay            = true
-Config.DeleteDelay              = 500
-Config.FreezeDelay              = 100
+Config.UseSpawnDelay           = true
+Config.DeleteDelay             = 500
+Config.FreezeDelay             = 100
 
 
 Config.DisplayDistance         = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 Config.parkingButton           = 166          -- 👉 F5 (vehicle exit and or park)
 Config.ResetState              = 1            -- 👉 1 is stored in garage, 2 is police impound. 
 
-Config.RefreshGroundedRadius   = 50.0         -- 👉 Default 50.0, if vehicles are floating, the vehicles get on the ground if you are in this amount of radius of this vehicle.
+Config.PlaceOnGroundRadius     = 50.0         -- 👉 Default 50.0, if vehicles are floating, the vehicles get on the ground if you are in this amount of radius of this vehicle.
 
 Config.UseOnlyForVipPlayers    = true         -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
 Config.CheckForUpdates         = true         -- 👉 If you want to stay updated keep it on true.
