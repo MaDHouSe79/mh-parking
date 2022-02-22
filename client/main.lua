@@ -298,7 +298,7 @@ local function Drive(player, vehicle)
             DeleteLocal(vehicle)
             local player = PlayerPedId()
             local tmpVehicle = GetVehiclePedIsIn(player)
-            SetEntityInvincible(tmpVehicle, false)
+            --SetEntityInvincible(tmpVehicle, false)
             doCarDamage(tmpVehicle, vehicle.health)
 	        SetFuel(tmpVehicle, callback.fuel)
             vehicle = false
