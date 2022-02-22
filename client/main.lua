@@ -212,8 +212,8 @@ local function DeleteLocalVehicle(vehicle)
 		for i = 1, #LocalVehicles do
             if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
 				if vehicle.plate == LocalVehicles[i].plate then
-                    SetEntityCollision(vehicle, false, true)
-                    SetEntityVisible(vehicle, false, 0)
+                    --SetEntityCollision(vehicle, false, true)
+                    --SetEntityVisible(vehicle, false, 0)
 					DeleteEntity(LocalVehicles[i].entity)
                     table.remove(LocalVehicles, i)
 				end
