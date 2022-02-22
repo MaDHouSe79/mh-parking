@@ -1,5 +1,10 @@
 Config                         = {}           -- Holder..
 
+Config.UseSpawnDelay            = true
+Config.DeleteDelay              = 500
+Config.FreezeDelay              = 100
+
+
 Config.DisplayDistance         = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 Config.parkingButton           = 166          -- 👉 F5 (vehicle exit and or park)
 Config.ResetState              = 1            -- 👉 1 is stored in garage, 2 is police impound. 
