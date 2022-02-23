@@ -1,7 +1,7 @@
 Config                        = {}
 
 -- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
-Config.UseSpawnDelay          = true         -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
+Config.UseSpawnDelay          = false        -- 👉 Default false, if your vehicles spawn on top of each other, set this to true
 Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 10           -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
