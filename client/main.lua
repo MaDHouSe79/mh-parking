@@ -109,6 +109,7 @@ end
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+    SetEntityNoCollisionEntity(vehicleData.entity, VehicleEntity, true)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetEntityCoords(VehicleEntity, vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z, false, false, false, true)
     SetVehicleOnGroundProperly(VehicleEntity)
