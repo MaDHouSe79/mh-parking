@@ -57,10 +57,3 @@ Config.BlackListedPositions = {
 }
 
 
--- use target to park and unpark the traileres on the position where thay stand.
-Config.Trailers = {
-    [1] = {
-        name  = "",  -- trailer display name 
-        model = "",  -- trailer model spawn name
-    }
-}
