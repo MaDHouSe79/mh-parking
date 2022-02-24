@@ -15,6 +15,7 @@ local InParking          = false
 local LastUsedPlate      = nil
 local VehicleEntity      = nil
 local action             = 'none'
+local ParkOwnerName      = nil
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
@@ -30,7 +31,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
 
--- Local Functions
 local function CreateParkDisPlay(vehicleData, type)
     local info, model, owner, plate = nil
     local viewType = ""
@@ -99,6 +99,7 @@ local function CreateParkedBlip(label, location)
     end
     return blip
 end
+
 
 -- Set No Collission between 2 entities
 local function NoColission(entity, location)
@@ -505,7 +506,7 @@ local function ActionVehicle(plate, action)
     end
 end
 
-
+-- blacklistedSports
 local function IsNotBlackListedPosition(position)
     local freeSpot = true
     for i = 1, #Config.BlackListedPositions do
@@ -534,8 +535,7 @@ RegisterCommand(Config.Command.parknames, function()
     UseParkedVehicleNames = not UseParkedVehicleNames
     if UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "success", 1500)
-    end
-    if not UseParkedVehicleNames then
+    else
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "error", 1500)
     end
 end, false)
@@ -544,8 +544,7 @@ RegisterCommand(Config.Command.notification, function()
     PhoneNotification = not PhoneNotification
     if PhoneNotification then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "notifications"}), "success", 1500)
-    end
-    if not PhoneNotification then
+    else
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "notifications"}), "error", 1500)
     end
 end, false)
@@ -666,9 +665,12 @@ CreateThread(function()
 						Drive(player, storedVehicle)
 					else
 						if vehicle then
-                            
-							if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
-                                if IsNotBlackListedPosition(GetEntityCoords(vehicle)) then
+                            local speed = GetEntitySpeed(vehicle)
+                            if speed > Config.MinSpeedToPark then
+                                QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
+							elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
+                                local vehicleCoords = GetEntityCoords(vehicle)
+                                if IsNotBlackListedPosition(vehicleCoords) then
                                     Save(player, vehicle)
                                     QBCore.Functions.Notify(Lang:t("success.parked"), 'success', 1000)
                                 else

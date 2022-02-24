@@ -26,5 +26,13 @@ dependencies {
     'qb-core',
 }
 
+ui_page 'html/index.html'
+
+files {
+	'html/*.html',
+	'html/*.js',
+	'html/*.css',
+}
+
 lua54 'yes'
 
