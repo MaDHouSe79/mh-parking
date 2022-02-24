@@ -37,7 +37,7 @@ local function CreateParkDisPlay(vehicleData, type)
     if type == 'police'  then if Config.DisplayPlayerAndPolice then viewType = Lang:t('info.police_info')..'\n'  end end
     if type == 'citizen' then if Config.DisplayPlayerAndPolice then viewType = Lang:t('info.citizen_info')..'\n' end end
     owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-    model = viewType .. string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+    model = viewType .. string.format(Lang:t("info.model", {model = vehicleData.modelname}))..'\n'
     plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     info  = string.format("%s", model..plate..owner)
     return info
