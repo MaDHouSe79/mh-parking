@@ -25,7 +25,7 @@ local Translations = {
         ["already_reserved"]    = "This parking place has already been reserved by %{name}",
     },
     success = {
-        ["parked"]              = "Your vehicle is packed",
+        ["parked"]              = "Your vehicle is parked",
         ["route_has_been_set"]  = "Er is een waypoint op de map geplaatst waar jou voertuig is gepakeerd.",
     },
     info = {
