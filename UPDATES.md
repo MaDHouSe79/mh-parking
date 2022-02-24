@@ -10,7 +10,10 @@ Added Parking place reserved, this to avoid parking on vehicle spawnpoints, you 
 - i change the spawns for the vehicles and did some other tricks to force it on the ground.
 
 
-
+You have to use this in your database:
+```sql
+ALTER TABLE `player_parking` ADD `modelname` varchar(255) NOT NULL
+```
 
 ## 😎 Special thanks for helping me with testing 👊😉👍
 - 💪 Jazerra
