@@ -22,8 +22,7 @@ local Translations = {
         ["vip_remove"] = "Player %{username} is removed as vip!",
         ["max_allow_reached"] = "Die maximale Anzahl an gepackten Fahrzeugen für Sie beträgt %{max}",
         ["park_or_drive"] = "Parken oder fahren",
-        ["park"] = "Press F5 to park",
-        ["drive"] = "Press F5 to Drive",
+        ["already_reserved"]    = "This parking place has already been reserved by %{name}",
     },
     success = {
         ["parked"] = "Ihr Auto ist gepackt",

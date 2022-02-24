@@ -22,9 +22,10 @@ local Translations = {
         ["vip_remove"]          = "Player %{username} is removed as vip!",
         ["max_allow_reached"]   = "The maximum number of packed vehicles for you is %{max}",
         ["park_or_drive"]       = "Park or Drive",
+        ["already_reserved"]    = "This parking place has already been reserved by %{name}",
     },
     success = {
-        ["parked"]              = "Your car is packed",
+        ["parked"]              = "Your vehicle is packed",
         ["route_has_been_set"]  = "Er is een waypoint op de map geplaatst waar jou voertuig is gepakeerd.",
     },
     info = {
