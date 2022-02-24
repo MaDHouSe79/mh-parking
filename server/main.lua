@@ -48,7 +48,8 @@ local function GetVehicleNumOfParking()
 end
 
 -- Refresh client local vehicles entities.
-local function RefreshVehicles(src)
+local function RefreshVehicles(source)
+	local src = source
     if src == nil then src = -1 end
         local vehicles = {}
         MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
@@ -64,7 +65,7 @@ local function RefreshVehicles(src)
 					fuel        = v.fuel,
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                	TriggerClientEvent('vehiclekeys:client:SetOwner', src, v.plate)
+					TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid)
                 end
             end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)

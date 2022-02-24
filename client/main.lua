@@ -21,6 +21,7 @@ local ParkOwnerName      = nil
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
+    TriggerServerEvent("qb-parking:server:refreshVehicles", source)
 end)
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
     PlayerJob = job
@@ -137,6 +138,9 @@ local function VehicleSpawn(vehicleData)
         SetVehicleDirtLevel(veh, 0)
         makeDamage(veh, vehicleData.vehicle.health)
         SetFuel(veh, vehicleData.fuel)
+        if PlayerData.citizenid == vehicleData.citizenid then
+            TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
+        end
         QBCore.Functions.SetVehicleProperties(veh, vehicleData.vehicle.props)
     end, vehicleData.vehicle.location, true)
     return vehicle
@@ -540,7 +544,7 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
 end)
 
 RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
-    if QBCore.Functions.GetPlayerData().citizenid == citizenid then 
+    if PlayerData.citizenid == citizenid then 
         TriggerEvent('vehiclekeys:client:SetOwner', plate) 
     end
 end)
