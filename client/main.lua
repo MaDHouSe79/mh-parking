@@ -21,7 +21,6 @@ local ParkOwnerName      = nil
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
 end)
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
     PlayerJob = job
