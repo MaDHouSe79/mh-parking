@@ -108,8 +108,9 @@ end
 
 local function NoColission(entity, location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
-    if distance <= 1 then
+    if distance <= 2 then
         SetEntityNoCollisionEntity(entity, vehicle, true)
+        Wait(10)
     end
 end
 
@@ -328,11 +329,13 @@ local function Drive(player, vehicle)
             RemoveBlip(vehicle.parkedBlip)
             vehicle = false
             DeleteNearByVehicle(vector3(callback.data.location.x, callback.data.location.y, callback.data.location.z))
+            Wait(5)
             QBCore.Functions.LoadModel(callback.data.props["model"])
             local VehicleEntity = CreateVehicle(callback.data.props["model"], callback.data.location.x, callback.data.location.y, callback.data.location.z, callback.data.location.w, true)
-            NoColission(VehicleEntity, callback.data.location)
             TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
+            NoColission(VehicleEntity, callback.data.location)
             QBCore.Functions.SetVehicleProperties(VehicleEntity, callback.data.props)
+            Wait(5)
             RequestCollisionAtCoord(callback.data.location.x, callback.data.location.y, callback.data.location.z)
             SetVehicleOnGroundProperly(VehicleEntity)
             FreezeEntityPosition(VehicleEntity, false)
