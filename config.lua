@@ -1,8 +1,14 @@
 Config                        = {}
 
-Config.UseOnlyForVipPlayers   = false        -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
-Config.UseParkingBlips        = true
+-- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
+Config.UseSpawnDelay          = false        -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
+Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+Config.FreezeDelay            = 10           -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+
+Config.UseOnlyForVipPlayers   = true         -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
+
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
+Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
 Config.DisplayDistance        = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 
 Config.KeyBindButton          = "F5"         -- 👉 If you want to change the drive and park button. (you must use /binds for this)
@@ -20,7 +26,7 @@ Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is
 
 -- 👇 Base config when the server start, this is the default settings
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
-Config.UsePhoneNotification      = false     -- 👉 Auto turn on when server is starting. (default true)
+Config.UsePhoneNotification      = false        -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 
@@ -30,9 +36,9 @@ Config.Command = {
     parknames    = 'park-names',             -- 👉 User/Admin permission
     notification = 'park-notification',      -- 👉 User/Admin permission
     system       = 'park-system',            -- 👉 Admin permission
-    usevip       = 'park-usevip',            -- 👉 Admin permission
+    usevip       = 'park-usevip',
     addvip       = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])
-    removevip    = 'park-removevip',         -- 👉 Admin permission
+    removevip    = 'park-removevip'          -- 👉 Admin permission
 }
 
 -- 👇 Dont change this, you will not be able to park if you change this...
