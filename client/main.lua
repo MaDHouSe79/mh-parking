@@ -28,7 +28,7 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
 end)
 
 
---------------------------------------------Local Functions--------------------------------------------
+-- Local Functions
 local function CreateParkDisPlay(vehicleData, type)
     local info, model, owner, plate = nil
     local viewType = ""
@@ -304,8 +304,6 @@ local function DisplayHelpText(text)
 end
 
 
-
----------------------------------------------------Drive-----------------------------------------------
 -- Create Vehicle Entity
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props["model"])
@@ -349,7 +347,6 @@ local function MakeVehicleReadyToDrive(vehicle)
 end
 
 -- Drive 
-
 local function Drive(player, vehicle)
     action = 'drive'
     QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
@@ -365,7 +362,7 @@ local function Drive(player, vehicle)
     end, vehicle)
 end
 
---------------------------------------------------Park-------------------------------------------------
+-- Park
 local function ParkCar(player, vehicle)
     SetVehicleEngineOn(vehicle, false, false, true)
     TaskLeaveVehicle(player, vehicle)
@@ -459,7 +456,7 @@ end
 
 
 
----------------------------------------Impound/Stolen/UnPark-------------------------------------------
+-- Impound/Stolen/UnPark
 local function ActionVehicle(plate, action)
     for i = 1, #LocalVehicles do
         if LocalVehicles[i].plate == plate then
@@ -477,7 +474,7 @@ local function ActionVehicle(plate, action)
 end
 
 
-------------------------------------------------Commands-----------------------------------------------
+-- Commands
 RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
 
 RegisterCommand(Config.Command.park, function()
@@ -506,7 +503,7 @@ end, false)
 
 
 
----------------------------------------------------Events----------------------------------------------
+-- Events
 RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
     GlobalVehicles = vehicles
     RemoveVehicles(vehicles)
@@ -554,7 +551,7 @@ end)
 
 
 
--------------------------------------------------Thread-------------------------------------------------
+-- Thread
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
 end)
