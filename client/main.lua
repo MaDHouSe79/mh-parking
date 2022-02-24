@@ -338,6 +338,9 @@ local function Drive(player, vehicle)
             local VehicleEntity = CreateVehicle(callback.data.props["model"], callback.data.location.x, callback.data.location.y, callback.data.location.z, callback.data.location.w, true)
             TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
             NoColission(VehicleEntity, callback.data.location)
+            if PlayerData.citizenid == vehicleData.citizenid then
+                TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
+            end
             QBCore.Functions.SetVehicleProperties(VehicleEntity, callback.data.props)
             Wait(5)
             RequestCollisionAtCoord(callback.data.location.x, callback.data.location.y, callback.data.location.z)
