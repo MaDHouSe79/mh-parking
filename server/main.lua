@@ -1,7 +1,11 @@
+--[[ ===================================================== ]]--
+--[[      QBCore Realistic Parking Script by MaDHouSe      ]]--
+--[[ ===================================================== ]]--
+
 local QBCore      = exports['qb-core']:GetCoreObject()
 local updateavail = false
 
--------------------------------------------Local Function----------------------------------------
+
 -- Get Player username
 local function GetUsername(player)
 	local tmpName = player.PlayerData.name
@@ -57,12 +61,12 @@ local function RefreshVehicles(src)
                     citizenid   = v.citizenid,
                     citizenname = v.citizenname,
                     model       = v.model,
+					modelname   = v.modelname,
 					fuel        = v.fuel,
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    if not Config.ImUsingOtherKeyScript then
-                        TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
-                    end
+					TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
+                    --TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
                 end
             end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
@@ -126,12 +130,13 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 											message = Lang:t("info.car_already_parked"),
 										})
 									else
-										MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @data, @time)", {
+										MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @modelname, @data, @time)", {
 											["@citizenid"]   = GetCitizenid(Player),
 											["@citizenname"] = GetUsername(Player),
 											["@plate"]       = plate,
 											["@fuel"]        = vehicleData.fuel,
 											['@model']       = vehicleData.model,
+											["@modelname"]   = vehicleData.modelname,
 											["@data"]        = json.encode(vehicleData),
 											["@time"]        = os.time(),
 										})
@@ -153,6 +158,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 											citizenid   = GetCitizenid(Player), 
 											citizenname = GetUsername(Player),
 											model       = vehicleData.model,
+											modelname   = vehicleData.modelname,
 										})
 									end
 								end)	
@@ -194,12 +200,13 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								message = Lang:t("info.car_already_parked"),
 							})
 						else
-							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @data, @time)", {
+							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @modelname, @data, @time)", {
 								["@citizenid"]   = GetCitizenid(Player),
 								["@citizenname"] = GetUsername(Player),
 								["@plate"]       = plate,
 								["@fuel"]        = vehicleData.fuel,
 								['@model']       = vehicleData.model,
+								["@modelname"]   = vehicleData.modelname,
 								["@data"]        = json.encode(vehicleData),
 								["@time"]        = os.time(),
 							})
@@ -218,6 +225,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								citizenid   = GetCitizenid(Player), 
 								citizenname = GetUsername(Player),
 								model       = vehicleData.model,
+								modelname   = vehicleData.modelname,
 							})
 						end
 					end)	

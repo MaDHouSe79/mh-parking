@@ -1,11 +1,13 @@
 Config                        = {}
 
+Config.UseParkingBlips        = true         -- 👉 Default true
+
 -- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
-Config.UseSpawnDelay          = false        -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
+Config.UseSpawnDelay          = true         -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
 Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 10           -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
-Config.UseOnlyForVipPlayers   = true         -- 👉 Default true, set it to false, It's not recommended to do that, but if you want you can.
+Config.UseOnlyForVipPlayers   = false        -- 👉 Default false, It's not recommended to do that, but if you want you can.
 
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
@@ -17,8 +19,6 @@ Config.useRoleplayName        = true         -- 👉 If you want to use Roleplay
 
 Config.UseStopSpeedForPark    = true         -- 👉 Default true
 Config.MinSpeedToPark         = 1            -- 👉 Default 1 the min speed to park
-
-Config.ImUsingOtherKeyScript  = false        -- 👉 Default false, if you have an other vehiclekeys script, set this to true. 
 
 -- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state      
 Config.PlaceOnGroundRadius    = 20.0         -- 👉 lower wil limit the distance of placeing vehicles on the ground.
@@ -43,6 +43,7 @@ Config.Command = {
 
 -- 👇 Dont change this, you will not be able to park if you change this...
 Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
+
 
 
 Config.BlackListedPositions = {
