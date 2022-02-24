@@ -160,7 +160,7 @@ local function TableInsert(entity, data)
     local blip = nil
     if PlayerData.citizenid == data.citizenid then
         if Config.UseParkingBlips then
-            blip = CreateParkedBlip("Parked Vehicle: "..data.modelname, data.vehicle.location)
+            blip = CreateParkedBlip(Lang:t('info.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
         end
         TriggerEvent('qb-parking:client:addkey', data.plate, data.citizenid) 
     end

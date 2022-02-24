@@ -23,6 +23,7 @@ local Translations = {
         ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
         ["park_or_drive"]       = "Park or Drive",
         ["already_reserved"]    = "Deze parkeerplaats is al gereserveerd door %{name}",
+        ["parked_blip_info"]    = "Parked: %{modelname}",
     }, 
     success = {
         ["parked"]              = "Je voertuig is gepakeerd",

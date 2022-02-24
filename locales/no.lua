@@ -23,6 +23,7 @@ local Translations = {
         ["max_allow_reached"]   = "Du har parkert maks antall kjøretøy du kan parkere %{max}",
         ["park_or_drive"]       = "Park or Drive",
         ["already_reserved"]    = "This parking place has already been reserved by %{name}",
+        ["parked_blip_info"]    = "Parked: %{modelname}",
     },
     success = {
         ["parked"]              = "Din bil er parkert",

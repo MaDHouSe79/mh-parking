@@ -84,8 +84,6 @@ local function checkVersion(err, responseText, headers)
     end
 end
 
-
---------------------------------------------Callbacks--------------------------------------------
 -- Save the car to database
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
     if UseParkingSystem then
