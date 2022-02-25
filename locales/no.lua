@@ -22,8 +22,9 @@ local Translations = {
         ["vip_remove"]          = "Spiller %{username} er fjernet som vip!",
         ["max_allow_reached"]   = "Du har parkert maks antall kjøretøy du kan parkere %{max}",
         ["park_or_drive"]       = "Park or Drive",
-        ["already_reserved"]    = "This parking place has already been reserved by %{name}",
+        ["already_reserved"]    = "This parking place has already been reserved.",
         ["parked_blip_info"]    = "Parked: %{modelname}",
+        ["to_far_from_vehicle"] = "You are to far from the vehicle",
     },
     success = {
         ["parked"]              = "Din bil er parkert",

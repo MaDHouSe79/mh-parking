@@ -20,14 +20,15 @@ local Translations = {
         ["vip_not_found"]       = "Player not found!",
         ["vip_add"]             = "Player %{username} is added as vip!",
         ["vip_remove"]          = "Player %{username} is removed as vip!",
-        ["max_allow_reached"]   = "The maximum number of packed vehicles for you is %{max}",
+        ["max_allow_reached"]   = "The maximum number of parked vehicles for you is %{max}",
         ["park_or_drive"]       = "Park or Drive",
-        ["already_reserved"]    = "This parking place has already been reserved by %{name}",
+        ["already_reserved"]    = "This parking place has already been reserved.",
         ["parked_blip_info"]    = "Parked: %{modelname}",
+        ["to_far_from_vehicle"] = "You are to far from the vehicle",
     },
     success = {
         ["parked"]              = "Your vehicle is parked",
-        ["route_has_been_set"]  = "Er is een waypoint op de map geplaatst waar jou voertuig is gepakeerd.",
+        ["route_has_been_set"]  = "A waypoint has been placed on the map where your vehicle is parked.",
     },
     info = {
         ["companyName"]         = "Beunhaas BV",

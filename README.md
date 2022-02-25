@@ -27,6 +27,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 
 ## 💪 Optional
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
+- ✅ [qb-target](https://github.com/qbcore-framework/qb-target)
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
 - ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 - ✅ you can also use other vehiclekey scripts, change this in the config file.
@@ -39,7 +40,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - 👉 Step 4: Add any recommended extra code what I say you should add.
 - 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
 - 👉 Step 6: Start your server.  
-- 👉 Step 7: Add your self as vip, you can use the command: /park-addvip [id] [amount]
+- 👉 Step 7: Add your self or other as vip, you can use the command: /park-addvip [id]
 - 👉 Step 8: Most important step -> Enjoy 👊😎👍
 
 
@@ -194,12 +195,6 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
 end)
 ```
 
-## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
-```lua
- TriggerEvent("qb-parking:client:unpark", plate) 
-```
-
-
 ## ⚙️ Database Table
 ````sql
 CREATE TABLE `player_parking`  (
@@ -207,6 +202,7 @@ CREATE TABLE `player_parking`  (
   `citizenid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `citizenname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `modelname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `plate` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fuel` int(15) NOT NULL DEFAULT 0,
   `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
@@ -220,8 +216,6 @@ CREATE TABLE IF NOT EXISTS `player_parking_vips` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `citizenid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `citizenname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `maxparking` int(5) NOT NULL DEFAULT 0,
-  `hasparked` int(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 

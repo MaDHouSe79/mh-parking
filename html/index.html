@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>NUI Parking</title>
+        <link href="style.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="container">
+            <div id="park" style="display: none; background: rgb(19, 28, 74);"></div>
+        </div>
+        <div id="formContainer" style="display: none;">
+            <form id="newPark">
+                <div>
+                    <text>Config file name</text>
+                    <input id="config" type="text" name="config" placeholder='name of the file to save'><br>
+                </div>
+                <div>
+                    <text>Park name (unique)</text>
+                    <input id="parkname" type="text" name="parkname" placeholder='Park Name'><br>
+                </div>
+                <div>
+                    <text>Display Label</text>
+                    <input id="display" type="text" name="display" placeholder='Dispplay Name'><br>
+                </div>
+                <div>
+                    <text>Parking Marker</text>
+                    <select id ='marker' name='marker' class='dropdown'>
+                        <option option value='false'>N0</option>
+                        <option option value='true'>Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <text>Parking Radius</text>
+                    <select id ='radius' name='radius' class='dropdown'>
+                        <option option value='2'>2</option>
+                        <option option value='3'>3</option>
+                        <option option value='4'>4</option>
+                        <option option value='5'>5</option>
+                        <option option value='6'>6</option>
+                    </select>
+                </div>
+                <div>
+                    <text>Parking Type</text>
+                    <select id ='parktype' name='parktype' class='dropdown'>
+                        <option option value='prived'>Prived</option>
+                        <option option value='paid'>Paid</option>
+                        <option option value='free'>Free</option>
+                    </select>
+                </div>
+                <div>
+                    <text>Park Cost</text>
+                    <input id="cost" type="text" name="cost" placeholder='10'><br>
+                </div>
+                <div>
+                    <text>Park Job Authorisation</text>
+                    <input id="job" type="text" name="job" placeholder='job or none'><br>
+                </div>
+                <div>
+                    <text>Park CitizenID Authorisation</text>
+                    <input id="cid" type="text" name="cid" placeholder='0 or player id '><br>
+                </div>
+                <div>
+                    <label class="customCheckBox">
+                        <input type="checkbox" id="prived" checked>
+                        <text>Prived</text>
+                    </label>
+                </div>
+                <div>
+                    <button id="submit" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <script src="main.js" type="text/javascript"></script>
+    </body>
+</html>
