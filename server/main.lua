@@ -5,6 +5,7 @@
 local QBCore        = exports['qb-core']:GetCoreObject()
 local updateavail   = false
 local ParkOwnerName = nil
+local vehicleList   = {}
 
 -- Get Player username
 local function GetUsername(player)
@@ -275,10 +276,15 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							["@citizenid"] = GetCitizenid(Player)
 						})
 						cb({
-							status  = true,
-							message = Lang:t("info.has_take_the_car"),
-							data    = json.decode(rs[1].data),
-							fuel    = rs[1].fuel,
+							status      = true,
+							message     = Lang:t("info.has_take_the_car"),
+							vehicle     = json.decode(rs[1].data),
+							plate       = rs[1].plate, 
+							fuel        = rs[1].fuel,
+							citizenid   = GetCitizenid(Player), 
+							citizenname = GetUsername(Player),
+							model       = rs[1].model,
+							modelname   = rs[1].modelname,
 						})
 						TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 					end
@@ -390,7 +396,33 @@ QBCore.Commands.Add(Config.Command.openmenu, "Open Perk Create Menu", {}, true, 
 end, 'admin')
 
 
-
+--[[
+CreateThread(function()
+	Wait(500)
+	local vehicles = MySQL.Sync.fetchAll('SELECT * FROM player_vehicles', {})
+	if not vehicles then
+		return
+	end
+	for k,v in pairs(vehicles) do
+		local citizenid = tostring(v.citizenid)
+		local v = tonumber(v.amount)
+		if k and v then
+			vehicleList[#vehicleList+1] = 
+			{
+				citizenid   = v.citizenid,
+				citizenname = v.citizenname,
+				plate       = v.plate
+				model       = v.vehicle,
+				mods        = v.mods,
+				lastGarage  = v.garage,
+				body        = v.body,
+				fuel        = v.fuel,
+				engine      = v.engine,
+			}
+		end
+	end
+end)
+]]--
 
 -- Reset state and counting to stay in sync.
 AddEventHandler('onResourceStart', function(resource)

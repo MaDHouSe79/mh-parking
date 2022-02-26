@@ -1,8 +1,9 @@
 Config                        = {}
 Config.UsingTargetEye         = true         -- 👉 if you have target eye 
 Config.UseSpawnDelay          = true         -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
-Config.DeleteDelay            = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
-Config.FreezeDelay            = 10           -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+
+Config.TimeDelay              = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.DisplayDistance        = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 Config.KeyBindButton          = "F5"         -- 👉 If you want to change the drive and park button. (you must use /binds for this)
@@ -17,6 +18,8 @@ Config.UseParkingBlips        = true         -- 👉 Default true
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 
+Config.ForceGroundedDistane   = 50           -- 👉 Force vehicle to the ground in a amount of distace, default is 50 this is 50mtr, make this higher will cost proccess
+Config.ForceGroundenInMilSec  = 1500         -- 👉 Force vehicle to the ground in a amount of miliseconds, default is 1500.
 
 -- 👇 change this to your own commands
 Config.Command = {
@@ -27,7 +30,7 @@ Config.Command = {
     refresh       = 'park-refresh',           -- 👉 User/Admin permission
     system        = 'park-system',            -- 👉 Admin permission
     usevip        = 'park-usevip',            -- 👉 Admin permission
-    addvip        = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id] [amount])
+    addvip        = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id])
     removevip     = 'park-removevip',         -- 👉 Admin permission
     openmenu      = 'park-create',            -- 👉 Admin permission
 }
@@ -37,16 +40,15 @@ Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 9999
 Config.UseOnlyPreCreatedParkSpots = true      -- 👉 true If players can only park on pre-created locations, if false ot true player are not able to park on pre-created park lots
 Config.UseOnlyForVipPlayers       = false     -- 👉 if you want to use it for vip players only
 Config.UseParkedLocationNames     = true      -- 👉 if you want to see markers
-Config.ReservedParkList = {} -- dont edit or remove this.
--- Below here you can remove parking locations that you added in game.
-
-
+Config.ReservedParkList = {}                  -- 👉 DONT EDIT OR REMOVE THIS!!!.
 
 Config.IgnoreJobs = {
     ['police'] = true,
     ['ambulance'] = true,
     ['mechanic'] = true,
 }
+
+-- Below here you can remove parking locations that you added in game.
 
 -- Blokkenpark created by MaDHouSe in game with command
 Config.ReservedParkList["Blokkenpark"] = {
@@ -58,7 +60,7 @@ Config.ReservedParkList["Blokkenpark"] = {
     ["cost"] = 0,
     ["job"] = "none",
     ["radius"] = 2.0,
-    ["prived"] = false,
+    ["prived"] = true,
     ["marker"] = true,
     ["markcoords"] = vec3(217.716370, -808.193604, 30.398928),
 }
