@@ -33,19 +33,30 @@ Config.Command = {
     addvip        = 'park-addvip',            -- 👉 Admin permission (/park-addvip [id])
     removevip     = 'park-removevip',         -- 👉 Admin permission
     openmenu      = 'park-create',            -- 👉 Admin permission
+    create        = 'park-build',         -- 👉 Admin permission
 }
 
 -- 👇 Dont change this, you will not be able to park if you change this...
 Config.ParkingLocation = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
-Config.UseOnlyPreCreatedParkSpots = true      -- 👉 true If players can only park on pre-created locations, if false ot true player are not able to park on pre-created park lots
-Config.UseOnlyForVipPlayers       = false     -- 👉 if you want to use it for vip players only
 Config.UseParkedLocationNames     = true      -- 👉 if you want to see markers
 Config.ReservedParkList = {}                  -- 👉 DONT EDIT OR REMOVE THIS!!!.
 
+
 Config.IgnoreJobs = {
-    ['police'] = true,
+    ['police']    = true,
     ['ambulance'] = true,
-    ['mechanic'] = true,
+    ['mechanic']  = true,
+}
+
+Config.ParkColours = {
+    ['white']  = { r = 255, g = 255, b = 255 }, -- white
+    ['green']  = { r = 9,   g = 255, b = 0   }, -- green 
+    ['blue']   = { r = 9,   g = 9,   b = 255 }, -- blue
+    ['yellow'] = { r = 255, g = 230, b = 0   }, -- yellow
+    ['orange'] = { r = 255, g = 128, b = 0   }, -- orange
+    ['grey']   = { r = 148, g = 148, b = 148 }, -- grey
+    ['black']  = { r = 6,   g = 5,   b = 5   }, -- black
+    ['red']    = { r = 255, g = 0,   b = 0   }, -- red
 }
 
 -- Below here you can remove parking locations that you added in game.
@@ -60,7 +71,7 @@ Config.ReservedParkList["Blokkenpark"] = {
     ["cost"] = 0,
     ["job"] = "none",
     ["radius"] = 2.0,
-    ["prived"] = true,
+    ["parktype"] = "prived",
     ["marker"] = true,
     ["markcoords"] = vec3(217.716370, -808.193604, 30.398928),
 }

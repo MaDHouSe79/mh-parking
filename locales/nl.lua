@@ -45,6 +45,7 @@ local Translations = {
         ["stop_car"]            = "Stop het voertuig voor dat je het wilt parkeren...",
         ["police_info"]         = "~r~Politie~s~ Voertuig Info\n",
         ["citizen_info"]        = "~g~Citizen~s~ Voertuig Info\n",
+        ["paid_park_space"]     = "Je huurt deze parkeer plek voor %{paid} p/h",
         
     },
     mail = {

@@ -24,7 +24,6 @@ local Translations = {
         ["park_or_drive"]       = "Park or Drive",
         ["already_reserved"]    = "This parking place has already been reserved.",
         ["parked_blip_info"]    = "Parked: %{modelname}",
-        ["to_far_from_vehicle"] = "You are to far from the vehicle",
     },
     success = {
         ["parked"]              = "Din bil er parkert",
@@ -45,6 +44,7 @@ local Translations = {
         ["stop_car"]            = "Stopp kjøretøy før du parkerer",
         ["police_info"]         = "~r~Politi~s~ Kjøretøy Info\n",
         ["citizen_info"]        = "~g~Borger~s~ Kjøretøy Info\n",
+        ["paid_park_space"]     = "You rent this parking space for $%{paid} p/h",
     },
     mail = {
         ["sender"]              = "%{company}",

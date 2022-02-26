@@ -12,7 +12,16 @@
             <form id="newPark">
                 <div>
                     <text>Config file name</text>
-                    <input id="config" type="text" name="config" placeholder='name of the file to save'><br>
+                    <select id ='config' name='config' class='dropdown'>
+                        <option option value='police'>Police Parking</option>
+                        <option option value='ambulance'>Ambulance Parking</option>
+                        <option option value='mechanic'>Mechanic Parking</option>
+                        <option option value='cardealer'>Cardealer Parking</option>
+                        <option option value='gang'>Gang Parking</option>
+                        <option option value='vip'>Vip Parking</option>
+                        <option option value='paid'>Paid Parking</option>
+                        <option option value='free'>Free Parking</option>
+                    </select>
                 </div>
                 <div>
                     <text>Park name (unique)</text>
@@ -37,33 +46,41 @@
                         <option option value='4'>4</option>
                         <option option value='5'>5</option>
                         <option option value='6'>6</option>
+                        <option option value='6'>7</option>
+                        <option option value='6'>8</option>
+                        <option option value='6'>9</option>
+                        <option option value='6'>10</option>
                     </select>
                 </div>
                 <div>
                     <text>Parking Type</text>
                     <select id ='parktype' name='parktype' class='dropdown'>
                         <option option value='prived'>Prived</option>
+                        <option option value='job'>Job</option>
                         <option option value='paid'>Paid</option>
                         <option option value='free'>Free</option>
+                        <option option value='nopark'>No Park Zone</option>
                     </select>
                 </div>
                 <div>
-                    <text>Park Cost</text>
-                    <input id="cost" type="text" name="cost" placeholder='10'><br>
+                    <text>Job or None</text>
+                    <select id ='job' name='job' class='dropdown'>
+                        <option option value='none'>2</option>
+                        <option option value='police'>Police</option>
+                        <option option value='ambulance'>Ambulance</option>
+                        <option option value='mechanic'>Mechanic</option>
+                        <option option value='gain'>Gang</option>
+                    </select>
                 </div>
-                <div>
-                    <text>Park Job Authorisation</text>
-                    <input id="job" type="text" name="job" placeholder='job or none'><br>
-                </div>
+
                 <div>
                     <text>Park CitizenID Authorisation</text>
                     <input id="cid" type="text" name="cid" placeholder='0 or player id '><br>
                 </div>
+
                 <div>
-                    <label class="customCheckBox">
-                        <input type="checkbox" id="prived" checked>
-                        <text>Prived</text>
-                    </label>
+                    <text>Park Cost</text>
+                    <input id="cost" type="text" name="cost" placeholder='10'><br>
                 </div>
                 <div>
                     <button id="submit" type="submit">Submit</button>

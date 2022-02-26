@@ -28,7 +28,7 @@
 ## Example of a parkong place
 ```lua
 Config.ReservedParkList["Blokkenpark"] = {                     -- must be a unique name
-    ["name"] = "Blokkenpark",                                  -- the name of the parking place
+    ["name"] = "Blokkenpark",                                  -- the name of the parking place (must be a unique name)
     ["display"] = "Garage Spawnpoint",                         -- the marker display label
     ["citizenid"] = "0",                                       -- if 0 this had no owner and can not be use as a parking space
     ["coords"] = vec3(220.021973, -809.142883, 30.324585),     -- the center of the parking place where the car is parked.

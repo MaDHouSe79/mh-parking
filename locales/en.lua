@@ -45,6 +45,7 @@ local Translations = {
         ["stop_car"]            = "Stop your vehicle before you park",
         ["police_info"]         = "~r~Police~s~ Vehicle Info\n",
         ["citizen_info"]        = "~g~Citizen~s~ Vehicle Info\n",
+        ["paid_park_space"]     = "You rent this parking space for $%{paid} p/h",
     },
     mail = {
         ["sender"]              = "%{company}",
