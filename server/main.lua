@@ -425,9 +425,15 @@ QBCore.Commands.Add(Config.Command.usevip, "Park VIP System On/Off", {}, true, f
 	end
 end, 'admin')
 
-QBCore.Commands.Add(Config.Command.openmenu, "Open Perk Create Menu", {}, true, function(source)
+QBCore.Commands.Add(Config.Command.createmenu, "Open park create menu", {}, true, function(source)
 	TriggerClientEvent("qb-parking:client:openmenu", source)
 end, 'admin')
+
+QBCore.Commands.Add(Config.Command.buildmode, "Change build Mode", {}, true, function(source)
+	TriggerClientEvent("qb-parking:client:create", source)
+end, 'admin')
+
+
 
 -- Reset state and counting to stay in sync.
 AddEventHandler('onResourceStart', function(resource)
@@ -473,7 +479,6 @@ RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName)
 end)
 
 RegisterServerEvent('qb-parking:server:AddNewParkingSpot', function(source, data, markerOffset)
-	print(json.encode(data, {indent = true}))
 	if data.config == "" or data.cid == "" or data.parkname == "" then
 		TriggerClientEvent('QBCore:Notify', source, "Parking space not saved", "error")
 	else

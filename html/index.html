@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>NUI Parking</title>
+        <title>NUI Advanced Parking</title>
         <link href="style.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet" />
     </head>
@@ -11,7 +11,7 @@
         <div id="formContainer" style="display: none;">
             <form id="newPark">
                 <div>
-                    <text>Config file name</text>
+                    <text>Select config file</text>
                     <select id ='config' name='config' class='dropdown'>
                         <option option value='police'>Police Parking</option>
                         <option option value='ambulance'>Ambulance Parking</option>
@@ -21,10 +21,11 @@
                         <option option value='vip'>Vip Parking</option>
                         <option option value='paid'>Paid Parking</option>
                         <option option value='free'>Free Parking</option>
+                        <option option value='nopark'>No Park Zone</option>
                     </select>
                 </div>
                 <div>
-                    <text>Park name (unique)</text>
+                    <text>Park Name (unique)</text>
                     <input id="parkname" type="text" name="parkname" placeholder='Park Name'><br>
                 </div>
                 <div>
@@ -50,34 +51,48 @@
                         <option option value='6'>8</option>
                         <option option value='6'>9</option>
                         <option option value='6'>10</option>
+                        <option option value='2'>11</option>
+                        <option option value='3'>12</option>
+                        <option option value='4'>13</option>
+                        <option option value='5'>14</option>
+                        <option option value='6'>15</option>
+                        <option option value='6'>16</option>
+                        <option option value='6'>17</option>
+                        <option option value='6'>18</option>
+                        <option option value='6'>19</option>
+                        <option option value='6'>20</option>
+                        <option option value='6'>21</option>
+                        <option option value='6'>22</option>
+                        <option option value='6'>23</option>
+                        <option option value='6'>24</option>
+                        <option option value='6'>25</option>
                     </select>
                 </div>
                 <div>
                     <text>Parking Type</text>
                     <select id ='parktype' name='parktype' class='dropdown'>
+                        <option option value='notpark'>No Park Zone</option>
                         <option option value='prived'>Prived</option>
                         <option option value='job'>Job</option>
+                        <option option value='vip'>Vip</option>
                         <option option value='paid'>Paid</option>
                         <option option value='free'>Free</option>
-                        <option option value='nopark'>No Park Zone</option>
                     </select>
                 </div>
                 <div>
-                    <text>Job or None</text>
+                    <text>Job Authorisation</text>
                     <select id ='job' name='job' class='dropdown'>
-                        <option option value='none'>2</option>
+                        <option option value='none'>None</option>
                         <option option value='police'>Police</option>
                         <option option value='ambulance'>Ambulance</option>
                         <option option value='mechanic'>Mechanic</option>
                         <option option value='gain'>Gang</option>
                     </select>
                 </div>
-
                 <div>
                     <text>Park CitizenID Authorisation</text>
                     <input id="cid" type="text" name="cid" placeholder='0 or player id '><br>
                 </div>
-
                 <div>
                     <text>Park Cost</text>
                     <input id="cost" type="text" name="cost" placeholder='10'><br>

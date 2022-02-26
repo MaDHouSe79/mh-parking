@@ -610,8 +610,10 @@ end
 
 local function DrawParkedLocation(coords)
     if UseParkedLocationNames then
+        local extraRadius = 3
         for _, data in pairs(Config.ReservedParkList) do
-            if #(coords - data.coords) < tonumber(data.radius) + 3 then
+            if CreateMode then extraRadius = Config.BuildModeDisplayDistance else extraRadius = Config.DisplayMarkerDistance end
+            if #(coords - data.coords) < tonumber(data.radius) + extraRadius then
                 if data.marker == true then
                     local r, g, b = 0, 0, 0
                     if data.parktype == 'paid' then
@@ -683,10 +685,6 @@ local function CreateState()
 		DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200, false, false, false, true, false, false, false)
     end
 end
-
-RegisterCommand(Config.Command.create, function()
-    CreateMode = not CreateMode
-end, false)
 
 -- Commands
 RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
@@ -776,6 +774,11 @@ RegisterNetEvent("qb-parking:client:parking", function()
         QBCore.Functions.Notify(Lang:t("system.to_far_from_vehicle"), "error", 2000)
     end
 end)
+
+RegisterNetEvent("qb-parking:client:create",  function(source)
+    CreateMode = not CreateMode
+end)
+
 
 RegisterNetEvent("qb-parking:client:parkcreate", function(source, state)
     CreateMode = state
