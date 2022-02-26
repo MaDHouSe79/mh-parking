@@ -54,7 +54,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
 - ✅ User Controll like displaying text on screen.
 - ✅ Police can, if thay want, always see who owns the vehicle by using /park-names
-- ✅ Create costum park spaces, you can also use it as a paid parking or a job only parking place. also you can add places that are now allowed to park,
+- ✅ Create costum park spaces, you can also use it as a paid parking or a job only parking place. also you can add places that are not allowed to park,
 - ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
