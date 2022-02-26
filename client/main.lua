@@ -690,9 +690,10 @@ RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
 end, false)
 
-RegisterCommand(Config.Command.refresh, function()
-    TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
-end, false)
+-- Refresh Vehicles By Command
+--RegisterCommand('park-refresh', function()
+--    TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
+--end, false)
 
 RegisterCommand(Config.Command.parknames, function()
     UseParkedVehicleNames = not UseParkedVehicleNames

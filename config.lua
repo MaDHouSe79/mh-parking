@@ -33,7 +33,6 @@ Config.Command = {
     parknames     = 'park-names',             -- 👉 User/Admin permission
     parkspotnames = 'park-lotnames',          -- 👉 User/Admin permission
     notification  = 'park-notification',      -- 👉 User/Admin permission
-    refresh       = 'park-refresh',           -- 👉 User/Admin permission
     system        = 'park-system',            -- 👉 Admin permission
     usevip        = 'park-usevip',            -- 👉 Admin permission
     addvip        = 'park-addvip',            -- 👉 Admin permission

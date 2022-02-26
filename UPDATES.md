@@ -13,7 +13,6 @@
 - The parkname must not be a duplicate, it must have a unique name.
 - The Park Displayname is the name that you see in game. this does not have to be a unique name.
 
-
 ## Best way to use the create a parking lot
 - Park your vehicle facing the nose inside the parking lot. (to correctly place a marker)
 - Type /park-create or use F6 if you use the keybinds.
@@ -22,22 +21,21 @@
 - Park your vehicle correct before opening the menu and create the spot.
 
 ## New Admin Commands
-- 👉 /park-create   (admin only)
-- 👉 /park-refresh 
+- 👉 /park-build    (admin only) (Build Mode)
+- 👉 /park-create   (admin only) (Create Menu)
 
 ## Example of a parkong place
 ```lua
 Config.ReservedParkList["Blokkenpark"] = {                     -- must be a unique name
-    ["name"] = "Blokkenpark",                                  -- the name of the parking place (must be a unique name)
-    ["display"] = "Garage Spawnpoint",                         -- the marker display label
-    ["citizenid"] = "0",                                       -- if 0 this had no owner and can not be use as a parking space
-    ["coords"] = vec3(220.021973, -809.142883, 30.324585),     -- the center of the parking place where the car is parked.
-    ["heading"] = 65.196853637695,                             -- header, is not used yet
-    ["cost"] = 0,                                              -- cost per day, not in used yet
-    ["job"] = "none",                                          -- the job that is allowed to park
-    ["radius"] = 2.0,                                          -- the radius of this parking space
-    ["prived"] = false,                                        -- is a prived parking space
-    ["marker"] = true,                                         -- if true a marker wil showup when you walk to it
+    ["name"]       = "Blokkenpark",                            -- the name of the parking place (must be a unique name)
+    ["display"]    = "Garage Spawnpoint",                      -- the marker display label
+    ["citizenid"]  = "0",                                      -- if 0 this had no owner and can not be use as a parking space
+    ["cost"]       = 0,                                        -- cost per day, not in used yet
+    ["job"]        = "none",                                   -- the job that is allowed to park
+    ["radius"]     = 2.0,                                      -- the radius of this parking space
+    ["parktype"]   = "prived",                                 -- is a prived parking space
+    ["marker"]     = true,                                     -- if true a marker wil showup when you walk to it
+    ["coords"]     = vec3(220.021973, -809.142883, 30.324585), -- the center of the parking place where the car is parked.
     ["markcoords"] = vec3(217.716370, -808.193604, 30.398928), -- the marker coord.
 }
 ```
@@ -52,14 +50,6 @@ you can also create parking spaces by players at there houses, but you can also 
 but pleyers are not able to park on pre-created parking lots.
 
 so if you put a citizenid when you create a parking space, than only this player can park. 
--
-
-
-
-You have to use this to update your database table if you donnt have it:
-```sql
-ALTER TABLE `player_parking` ADD `modelname` varchar(255) NOT NULL
-```
 
 ## 😎 Special thanks for helping me with testing 👊😉👍
 - 💪 GUS
@@ -72,6 +62,6 @@ ALTER TABLE `player_parking` ADD `modelname` varchar(255) NOT NULL
 - 💪 !ExiledVibe!
 - 💪 FARRUKO
 
-## 🙈 Youtube & Discord 👊😉👍
+## 🙈 My Youtube & My Discord 👊😉👍
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
