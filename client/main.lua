@@ -359,8 +359,6 @@ local function createVehParkingZone()
     end
 end
 
-
-
 -- Spawn local vehicles(server data)
 local function SpawnVehicles(vehicles)
     CreateThread(function()
@@ -389,8 +387,6 @@ local function SpawnVehicle(vehicleData)
 		end
     end)
 end
-
-
 
 -- remove all Vehicles
 local function RemoveVehicles(vehicles)
@@ -777,11 +773,6 @@ end)
 
 RegisterNetEvent("qb-parking:client:create",  function(source)
     CreateMode = not CreateMode
-end)
-
-
-RegisterNetEvent("qb-parking:client:parkcreate", function(source, state)
-    CreateMode = state
 end)
 
 RegisterNetEvent("qb-parking:client:openmenu", function(source)
