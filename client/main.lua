@@ -31,23 +31,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
 
-local function resetGrounded()
-    if #LocalVehicles ~= 0 then
-        for i = 1, #LocalVehicles do
-            if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
-                if DoesEntityExist(LocalVehicles[i].entity) and LocalVehicles[i].isGrounded == true then
-                    if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < 50 then
-                        SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
-                        SetVehicleOnGroundProperly(LocalVehicles[i].entity)
-                        SetVehicleFuelLevel(LocalVehicles[i].entity)
-                        LocalVehicles[i].isGrounded = false
-                    end
-                end
-            end
-        end
-    end
-end
-
 -- NUI Menu
 local function displayNUIText(text)
     SendNUIMessage({type = "display", text = text, color = selectedColor})
@@ -676,7 +659,6 @@ RegisterCommand(Config.Command.refresh, function()
     TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
 end, false)
 
-
 RegisterCommand(Config.Command.parknames, function()
     UseParkedVehicleNames = not UseParkedVehicleNames
     if UseParkedVehicleNames then
@@ -694,7 +676,6 @@ RegisterCommand(Config.Command.parkspotnames, function()
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "park location names"}), "error", 1500)
     end
 end, false)
-
 
 RegisterCommand(Config.Command.notification, function()
     PhoneNotification = not PhoneNotification
@@ -729,7 +710,6 @@ RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
     SpawnVehicles(vehicles)
     Wait(1000)
 end)
-
 
 RegisterNetEvent("qb-parking:client:unparking", function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
@@ -908,7 +888,6 @@ CreateThread(function()
         end
     end
 end)
-
 
 CreateThread(function()
     while true do
