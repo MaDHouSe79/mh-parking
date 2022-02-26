@@ -1,4 +1,4 @@
-## QB-Parking
+## QB-Parking is a advanced parking system.
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 This mod is more intended for large servers, with VIP players, you can give this player an extra feature, to let them park in front of there own house, or you can use this, if you are a youtuber, and you don't want to mesh up and get your scene back togetter again, and getting al your vehicles from garage back on it place, you can also use this mod, so your scene stays how you put it, just a little thing I thought of what you also can do with this mod. 😁
@@ -54,6 +54,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
 - ✅ User Controll like displaying text on screen.
 - ✅ Police can, if thay want, always see who owns the vehicle by using /park-names
+- ✅ Create costum park spaces, you can also use it as a paid parking or a job only parking place. also you can add places that are now allowed to park,
 - ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
 - ✅ 3D Waypoints is optional to use, uncommand the d3 waypoint in fxmanifest.lua file.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
