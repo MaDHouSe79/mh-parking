@@ -18,7 +18,7 @@ Config.UseParkingBlips        = true         -- 👉 Default true
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 Config.DisplayPlayerAndPolice = false        -- 👉 if you want to see the police vehicle info or citizen vehicle info.
 
-Config.ForceGroundedDistane   = 50           -- 👉 Force vehicle to the ground in a amount of distace, default is 50 this is 50mtr, make this higher will cost proccess
+Config.ForceGroundedDistane   = 100          -- 👉 Force vehicle to the ground in a amount of distace, default is 50 this is 50mtr, make this higher will cost proccess
 Config.ForceGroundenInMilSec  = 1500         -- 👉 Force vehicle to the ground in a amount of miliseconds, default is 1500.
 
 -- 👇 change this to your own commands
