@@ -86,35 +86,35 @@ local function doCarDamage(vehicle, health)
 	local body = health.body + 0.0
     Wait(100)
     if body < 900.0 then
-		SmashVehicleWindow(vehicle, 0)
-		SmashVehicleWindow(vehicle, 1)
-		SmashVehicleWindow(vehicle, 2)
-		SmashVehicleWindow(vehicle, 3)
-		SmashVehicleWindow(vehicle, 4)
-		SmashVehicleWindow(vehicle, 5)
-		SmashVehicleWindow(vehicle, 6)
-		SmashVehicleWindow(vehicle, 7)
+		SmashVehicleWindow(currentVehicle, 0)
+		SmashVehicleWindow(currentVehicle, 1)
+		SmashVehicleWindow(currentVehicle, 2)
+		SmashVehicleWindow(currentVehicle, 3)
+		SmashVehicleWindow(currentVehicle, 4)
+		SmashVehicleWindow(currentVehicle, 5)
+		SmashVehicleWindow(currentVehicle, 6)
+		SmashVehicleWindow(currentVehicle, 7)
 	end
-	if body < 700.0 then
-		SetVehicleDoorBroken(vehicle, 0, true)
-		SetVehicleDoorBroken(vehicle, 1, true)
-		SetVehicleDoorBroken(vehicle, 2, true)
-		SetVehicleDoorBroken(vehicle, 3, true)
-		SetVehicleDoorBroken(vehicle, 4, true)
-		SetVehicleDoorBroken(vehicle, 5, true)
-		SetVehicleDoorBroken(vehicle, 6, true)
+	if body < 800.0 then
+		SetVehicleDoorBroken(currentVehicle, 0, true)
+		SetVehicleDoorBroken(currentVehicle, 1, true)
+		SetVehicleDoorBroken(currentVehicle, 2, true)
+		SetVehicleDoorBroken(currentVehicle, 3, true)
+		SetVehicleDoorBroken(currentVehicle, 4, true)
+		SetVehicleDoorBroken(currentVehicle, 5, true)
+		SetVehicleDoorBroken(currentVehicle, 6, true)
 	end
-	if engine < 600.0 then
-		SetVehicleTyreBurst(vehicle, 1, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 2, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 3, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 4, false, 990.0)
+	if engine < 700.0 then
+		SetVehicleTyreBurst(currentVehicle, 1, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 2, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 3, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 4, false, 990.0)
 	end
-	if engine < 400.0 then
-		SetVehicleTyreBurst(vehicle, 0, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 5, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 6, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 7, false, 990.0)
+	if engine < 500.0 then
+		SetVehicleTyreBurst(currentVehicle, 0, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 5, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 6, false, 990.0)
+		SetVehicleTyreBurst(currentVehicle, 7, false, 990.0)
 	end
     SetVehicleEngineHealth(vehicle, engine)
     SetVehicleBodyHealth(vehicle, body)
