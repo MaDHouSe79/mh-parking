@@ -402,6 +402,7 @@ local function SpawnVehicles(vehicles)
 			for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
+                if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
 				DeleteLocalVehicle(vehicles[i].vehicle)
                 if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
                 Spawn(vehicles[i], false)
@@ -418,6 +419,7 @@ local function SpawnVehicle(vehicleData)
 		if LocalPlayer.state.isLoggedIn then
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
+            if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
 			DeleteLocalVehicle(vehicleData.vehicle)
             if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
             Spawn(vehicleData, false)
