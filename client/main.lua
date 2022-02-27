@@ -955,7 +955,7 @@ CreateThread(function()
                 local plate = QBCore.Functions.GetPlate(vehicle)
 				if storedVehicle ~= false then
 					DisplayHelpText(Lang:t("info.press_drive_car"))
-					if IsControlJustReleased(0, Config.parkingButton) then
+					if IsControlJustReleased(0, Config.ParkingButton) then
 						isUsingParkCommand = true
 					end
 				end
@@ -1029,17 +1029,19 @@ if UseParkZones then
 end
 
 CreateThread(function()
-    for k, v in pairs(Config.Parkzones) do
-        if v.showBlip then
-            local Parking = AddBlipForCoord(v.enter)
-            SetBlipSprite(Parking, 357)
-            SetBlipDisplay(Parking, 4)
-            SetBlipScale(Parking, 0.7)
-            SetBlipAsShortRange(Parking, true)
-            SetBlipColour(Parking, 3)
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentSubstringPlayerName(v.name)
-            EndTextCommandSetBlipName(Parking)
+    if UseParkZones then
+        for k, v in pairs(Config.Parkzones) do
+            if v.showBlip then
+                local Parking = AddBlipForCoord(v.enter)
+                SetBlipSprite(Parking, 357)
+                SetBlipDisplay(Parking, 4)
+                SetBlipScale(Parking, 0.7)
+                SetBlipAsShortRange(Parking, true)
+                SetBlipColour(Parking, 3)
+                BeginTextCommandSetBlipName("STRING")
+                AddTextComponentSubstringPlayerName(v.name)
+                EndTextCommandSetBlipName(Parking)
+            end
         end
     end
 end)
