@@ -137,16 +137,6 @@ local function CreateParkedBlip(label, location)
     return blip
 end
 
-local function isVehicleOwner(plate, cb)
-    local isOwned = false
-
-    QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicleOwner', function(owned)
-        if owned then isOwned = true end
-    end, plate)
-
-    cb(isOwned)
-end
-
 -- Set No Collission between 2 entities
 local function NoColission(entity, location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
@@ -167,9 +157,7 @@ local function trailerOffset(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
     local offset = 0.0
-    if Config.Trailers[displaytext] then
-        offset = Config.Trailers[displaytext].offset
-    end
+    if Config.Trailers[displaytext] then offset = Config.Trailers[displaytext].offset end
     return offset
 end
 
@@ -184,17 +172,11 @@ local function VehicleSpawn(data, warp)
         SetVehicleNumberPlateText(veh, data.plate)
         SetEntityAsMissionEntity(veh, true, true)
         SetEntityHeading(veh, data.vehicle.location.w)
-
         local offset = trailerOffset(veh)
-
         SetEntityCoords(veh, data.vehicle.location.x, data.vehicle.location.y, data.vehicle.location.z - offset, false, false, false, true);
         SetVehicleOnGroundProperly(veh)
-        --if PlayerData.citizenid ~= data.citizenid then
-            SetVehicleDoorsLocked(veh, 2)
-        --end
-        if warp then
-            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-        end
+        SetVehicleDoorsLocked(veh, 2)
+        if warp then TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1) end
         FreezeEntityPosition(veh, true)
         SetEntityCanBeDamaged(veh, false)
         SetVehicleEngineOn(veh, false, false, true)
@@ -748,7 +730,7 @@ end, false)
 RegisterCommand(Config.Command.buildmode, function()
     local haspermission = false
     QBCore.Functions.TriggerCallback('qb-parking:server:haspermission', function(cb)
-        haspermission = true
+        haspermission = cb
     end)
     if Config.JobToCreateParkSpaces[PlayerData.job.name] or haspermission then
         if PlayerData.job.onduty or haspermission then
@@ -778,6 +760,8 @@ RegisterCommand(Config.Command.createmenu, function()
         QBCore.Functions.Notify("You dont have the right job to do this.", "error", 1500)
     end
 end, false)
+
+
 
 RegisterCommand(Config.Command.parknames, function()
     UseParkedVehicleNames = not UseParkedVehicleNames
@@ -835,7 +819,6 @@ RegisterNetEvent("qb-parking:client:unparking", function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId())) 
     if distance <= 3 then
         Drive(PlayerPedId(), GetParkeddCar(vehicle), false)
-        
         QBCore.Functions.Notify("Your vehicle is unparked", "success", 1000)
     else
         QBCore.Functions.Notify(Lang:t("system.to_far_from_vehicle"), "error", 2000)
@@ -916,6 +899,7 @@ RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
         print("There is a update for qb-parking")
     end
 end)
+
 
 -- Threads
 CreateThread(function()
