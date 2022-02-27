@@ -1,5 +1,38 @@
 ## ---------------------------------------------Updates------------------------------------------------
-## Huge Update 👊😉👍 25-2-2022
+## Update 39 👊😉👍 27-2-2022
+- Added Parking Polyzones.
+- You can still use the park anywhere you want, but,
+- to make it more high performance, you can now also use polyzone.
+- police but only onduty, wil be iqnored and can park anywere, even on other players parking spots or not parking spots free of paid.
+
+
+## Polyzone NOTE
+- Vehicles only showup when you inside a park zone, the same for the park markers and names.
+- You can sill add park spaces that are paid or free or just no park space at all.
+- to create a parking spot fist use the command [/park-build] to enable the build mode, so you can lineup the markers.
+- Then you typ [/park-create] to open the NUI menu, and create your parking spot.
+- All parking locations are saved in de folder [configs] you can also find the polyzones.lua file if you want to make any changes. 
+
+
+## All Commands
+- [/park]              -- 👉 User/Admin
+- [/park-names]        -- 👉 User/Admin
+- [/park-lotnames]     -- 👉 User/Admin
+- [/park-notification] -- 👉 User/Admin
+- [/park-system]       -- 👉 Admin
+- [/park-usevip]       -- 👉 Admin
+- [/park-addvip]       -- 👉 Admin
+- [/park-removevip]    -- 👉 Admin
+- [/park-create]       -- 👉 Admin
+- [/park-build]        -- 👉 Admin
+
+## 🙈 My Youtube & My Discord 👊😉👍
+- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+- [Discord](https://discord.gg/cEMSeE9dgS)
+
+
+## ---------------------------------------------Updates------------------------------------------------
+## Huge Update 38 👊😉👍 25-2-2022
 - Added a NUI to create new parking lots.
 - Added Markers for reserved park positions.
 - Added Park Blips on the map.

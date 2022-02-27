@@ -6,6 +6,7 @@ local QBCore             = exports['qb-core']:GetCoreObject()
 local PlayerData         = {}
 local LocalVehicles      = {}
 local GlobalVehicles     = {}
+local ParkZones          = {}
 local UpdateAvailable    = false
 local SpawnedVehicles    = false
 local isUsingParkCommand = false
@@ -18,6 +19,7 @@ local VehicleEntity      = nil
 local action             = 'none'
 local ParkOwnerName      = nil
 local extraRadius        = 3
+local IsInParkZone       = false
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
     TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
@@ -332,30 +334,32 @@ local function DeleteLocalVehicle(vehicle)
 end
 
 local function createVehParkingZone()
-    if Config.UsingTargetEye then
-        exports['qb-target']:AddGlobalVehicle({
-            options = {
-                {
-                    type = "client",
-                    event = "qb-parking:client:unlock",
-                    icon = "fas fa-car",
-                    label = "Unlock Vecihle",
+    if Config.UseParkZones then
+        if Config.UsingTargetEye then
+            exports['qb-target']:AddGlobalVehicle({
+                options = {
+                    {
+                        type = "client",
+                        event = "qb-parking:client:unlock",
+                        icon = "fas fa-car",
+                        label = "Unlock Vecihle",
+                    },
+                    {
+                        type = "client",
+                        event = "qb-parking:client:parking",
+                        icon = "fas fa-car",
+                        label = "Park Vehicle",
+                    },
+                    {
+                        type = "client",
+                        event = "qb-parking:client:unparking",
+                        icon = "fas fa-car",
+                        label = "Drive Vecihle",
+                    },
                 },
-                {
-                    type = "client",
-                    event = "qb-parking:client:parking",
-                    icon = "fas fa-car",
-                    label = "Park Vehicle",
-                },
-                {
-                    type = "client",
-                    event = "qb-parking:client:unparking",
-                    icon = "fas fa-car",
-                    label = "Drive Vecihle",
-                },
-            },
-            distance = 2.0
-        })
+                distance = 2.0
+            })
+        end
     end
 end
 
@@ -845,15 +849,17 @@ end)
 
 CreateThread(function()
     while true do
-		local pl = GetEntityCoords(PlayerPedId())
-		if #(pl - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.ParkingLocation.s then
-			InParking = true
-			crParking = 'allparking'
-		end
+        if not UseParkZones then
+            local pl = GetEntityCoords(PlayerPedId())
+            if #(pl - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.ParkingLocation.s then
+            	InParking = true
+            	crParking = 'allparking'
+            end
+        end
 		if InParking then
 			if not SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)
-				TriggerServerEvent("qb-parking:server:refreshVehicles", crParking)
+				TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
 				SpawnedVehicles = true
 				Wait(2000)
 			end
@@ -937,3 +943,40 @@ CreateThread(function()
     end
 end)
 
+
+
+if UseParkZones then
+    for k, v in pairs(Config.Parkzones) do
+        ParkZones[#ParkZones + 1] = PolyZone:Create({table.unpack(v.zones)}, { name = v.name })
+    end
+    combo = ComboZone:Create(ParkZones, { name = "parkCombo", debugPoly = DebugPolyzone })
+    CreateThread(function()
+        Wait(500)
+        while true do
+            if LocalPlayer.state.isLoggedIn then
+                local pos = GetEntityCoords(PlayerPedId())
+                local isPointInside = combo:isPointInside(pos)
+                UseParkedLocationNames = combo:isPointInside(pos)
+                UseParkedVehicleNames = combo:isPointInside(pos)
+                InParking = combo:isPointInside(pos)
+            end
+            Wait(1000)
+        end
+    end)
+end
+
+CreateThread(function()
+    for k, v in pairs(Config.Parkzones) do
+        if v.showBlip then
+            local Parking = AddBlipForCoord(v.enter)
+            SetBlipSprite(Parking, 357)
+            SetBlipDisplay(Parking, 4)
+            SetBlipScale(Parking, 0.7)
+            SetBlipAsShortRange(Parking, true)
+            SetBlipColour(Parking, 3)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentSubstringPlayerName(v.name)
+            EndTextCommandSetBlipName(Parking)
+        end
+    end
+end)

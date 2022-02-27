@@ -28,8 +28,10 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - ✅ [qb-garages](https://github.com/MaDHouSe79/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
+Polyzone
 
 ## 💪 Optional
+- ✅ [PolyZone](https://github.com/mkafrin/PolyZone)
 - ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
 - ✅ [qb-target](https://github.com/qbcore-framework/qb-target)
 - ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
@@ -90,8 +92,8 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 - If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
 
-
 ## 🙈 Youtube & Discord & Twitter
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
 - [Twitter](https://twitter.com/madhouse1979)
+
