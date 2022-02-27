@@ -35,8 +35,8 @@ Config.ReservedParkList = {}                  -- 👉 DONT EDIT OR REMOVE THIS!!
 
 
 Config.Parkzones = {}                         -- 👉 DONT EDIT OR REMOVE THIS!!!.
-Config.DebugPolyzone = true                   -- 👉 display polyzones
-Config.UseParkZones  = true                   -- 👉 Polyzone zones
+Config.DebugPolyzone = false                  -- 👉 display polyzones
+Config.UseParkZones  = false                  -- 👉 Polyzone zones
 
 
 Config.BuildModeDisplayDistance   = 50        -- 👉 View Distance In Build Mode, You are able to see more markers to line up new park zones.
