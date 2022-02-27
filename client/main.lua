@@ -467,6 +467,10 @@ local function Drive(player, vehicle, warp)
             vehicle = false
             while IsDeleting do Wait(Config.TimeDelay) end
             local veh = VehicleSpawn(callback, warp)
+
+            doCarDamage(veh, callback.vehicle.health)
+            SetFuel(veh, callback.fuel)
+
             FreezeEntityPosition(veh, false)
             SetEntityCanBeDamaged(veh, true)
             SetVehicleEngineOn(veh, true, true, true)
