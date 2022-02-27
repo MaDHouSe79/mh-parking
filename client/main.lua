@@ -368,6 +368,7 @@ local function SpawnVehicles(vehicles)
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
 				DeleteLocalVehicle(vehicles[i].vehicle)
+                if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
                 Spawn(vehicles[i], false)
                 createVehParkingZone()
 			end
@@ -383,6 +384,7 @@ local function SpawnVehicle(vehicleData)
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
 			DeleteLocalVehicle(vehicleData.vehicle)
+            if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
             Spawn(vehicleData, false)
 		end
     end)

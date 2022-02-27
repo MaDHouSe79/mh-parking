@@ -20,6 +20,7 @@ Config.UseRoleplayName            = true      -- 👉 If you want to use Rolepla
 Config.UseStopSpeedForPark        = true      -- 👉 Default true
 Config.MinSpeedToPark             = 0.9       -- 👉 Default 0.9 the min speed to be able to park
 
+
 Config.UseSpawnDelay              = true      -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
 Config.TimeDelay                  = 500       -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 
