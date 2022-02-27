@@ -65,6 +65,8 @@ local function RefreshVehicles(src)
     end)
 end
 
+
+
 local function checkVersion(err, responseText, headers)
     curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
     if responseText == nil then
@@ -370,6 +372,16 @@ QBCore.Functions.CreateCallback('qb-parking:server:payparkspace', function(sourc
 		end
     end
 end)
+
+QBCore.Functions.CreateCallback('qb-parking:server:haspermission', function(source, cb)
+    local src = source
+    if QBCore.Functions.HasPermission(src, 'admin') then
+        cb(true)
+    else
+        cb(false)
+    end
+end)
+
 
 -- Save vip player to database
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)

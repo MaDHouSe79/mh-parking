@@ -546,19 +546,25 @@ local function GetStreetName()
     return street
 end
 
+local function GetRealModel(vehicle)
+    local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
+    local currentModel = GetDisplayNameFromVehicleModel(vehicleProps["model"])
+    if Config.Trailers[currentModel] then
+        currentModel = Config.Trailers[currentModel].model
+    end
+    return currentModel
+end
+
 -- Save
 local function Save(player, vehicle, warp)
     ParkCar(player, vehicle, warp)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    if displaytext == "TRAILER" then
-        displaytext = "TRAILERS"
-    end
     local carModelName = GetLabelText(displaytext)
     action             = 'park'
     LastUsedPlate      = plate
     local offset       = trailerOffset(vehicle)
-
+    local currenModel  = GetRealModel(vehicle)
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
         if callback.status then
             IsDeleting = true
@@ -589,7 +595,7 @@ local function Save(player, vehicle, warp)
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
         fuel        = GetVehicleFuelLevel(vehicle),
-        model       = displaytext,
+        model       = currenModel,
         modelname   = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
         location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
@@ -738,10 +744,40 @@ RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
 end, false)
 
--- Refresh Vehicles By Command
---RegisterCommand('park-refresh', function()
---    TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
---end, false)
+
+RegisterCommand(Config.Command.buildmode, function()
+    local haspermission = false
+    QBCore.Functions.TriggerCallback('qb-parking:server:haspermission', function(cb)
+        haspermission = true
+    end)
+    if Config.JobToCreateParkSpaces[PlayerData.job.name] or haspermission then
+        if PlayerData.job.onduty or haspermission then
+            CreateMode = not CreateMode
+            if CreateMode then
+                QBCore.Functions.Notify(Lang:t('system.enable', {type = "Build Mode"}), "success", 1500)
+            else
+                QBCore.Functions.Notify(Lang:t('system.disable', {type = "Build Mode"}), "error", 1500)
+            end
+        else
+            QBCore.Functions.Notify("You must be onduty to use this.", "error", 1500)
+        end
+    end
+end, false)
+
+RegisterCommand(Config.Command.createmenu, function()
+    local haspermission = false
+    QBCore.Functions.TriggerCallback('qb-parking:server:haspermission', function(cb)
+        haspermission = true
+    end)
+
+    if Config.JobToCreateParkSpaces[PlayerData.job.name] or haspermission then
+        if PlayerData.job.onduty or haspermission then
+            TriggerEvent("qb-parking:client:openmenu", source)
+        end
+    else
+        QBCore.Functions.Notify("You dont have the right job to do this.", "error", 1500)
+    end
+end, false)
 
 RegisterCommand(Config.Command.parknames, function()
     UseParkedVehicleNames = not UseParkedVehicleNames
