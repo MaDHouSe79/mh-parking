@@ -188,7 +188,7 @@ local function VehicleSpawn(data, warp)
         SetVehicleDirtLevel(veh, 0)
         doCarDamage(veh, data.vehicle.health)
         SetFuel(veh, data.fuel)
-        SetVehicleOilLevel(veh,(data.oil/3)-0.5)
+        SetVehicleOilLevel(veh, data.oil)
         QBCore.Functions.SetVehicleProperties(veh, data.vehicle.props)
     end, data.vehicle.location, true)
     return tmpvehicle
