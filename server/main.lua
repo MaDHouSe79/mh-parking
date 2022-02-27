@@ -87,10 +87,22 @@ local function CreateParkingLocation(source, config, id, parkname, display, radi
 	file:write(label)
    	file:close()
 	local data = {}
-	data = {["name"] = name, ["display"] = display, ["citizenid"] = citizenid, ["cost"] = cost, ["job"] = job, ["radius"] = radius, ["parktype"] = parktype, ["marker"] = marker, ["coords"] = vector3(coords.x, coords.y, coords.z),["markcoords"] = vector3(markerOffset.x, markerOffset.y, markerOffset.z) }
+	data = {
+		["name"]       = name, 
+		["display"]    = display, 
+		["citizenid"]  = citizenid, 
+		["cost"]       = cost, 
+		["job"]        = job, 
+		["radius"]     = radius, 
+		["parktype"]   = parktype, 
+		["marker"]     = marker,
+		["coords"]     = vector3(coords.x, coords.y, coords.z),
+		["markcoords"] = vector3(markerOffset.x, markerOffset.y, markerOffset.z) 
+	}
 	Config.ReservedParkList[parkname] = data
 	TriggerClientEvent('qb-parking:client:newParkConfigAdded', -1, parkname, data)
 end
+
 
 -- Save the car to database
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
