@@ -556,7 +556,7 @@ local function Save(player, vehicle, warp)
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
         fuel        = GetVehicleFuelLevel(vehicle),
-        oil         = (GetVehicleOilLevel(vehicle) / 3) -0.5,
+        oil         = GetVehicleOilLevel(vehicle),
         model       = currenModel,
         modelname   = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
@@ -832,6 +832,7 @@ RegisterNetEvent("qb-parking:client:closemenu", function(source)
     hideNUI()
     SendNUIMessage({type = "hide", enable = false})
 end)
+
 
 RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
     SpawnVehicle(vehicle)
