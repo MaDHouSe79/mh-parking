@@ -20,16 +20,20 @@ local action             = 'none'
 local ParkOwnerName      = nil
 local extraRadius        = 3
 local IsInParkZone       = false
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
     TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
 end)
+
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
     PlayerJob = job
 end)
+
 RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
     OnDuty = duty
 end)
+
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
@@ -70,6 +74,10 @@ local function CreateParkDisPlay(vehicleData, type)
     plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     info  = string.format("%s", model..plate..owner)
     return info
+end
+
+local function round(input, decimalPlaces)
+    return tonumber(string.format("%." .. (decimalPlaces or 0) .. "f", input))
 end
 
 -- Do Vehicle damage
@@ -155,6 +163,16 @@ local function SetFuel(vehicle, fuel)
 	end
 end
 
+local function trailerOffset(vehicle)
+    local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
+    local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
+    local offset = 0.0
+    if Config.Trailers[displaytext] then
+        offset = Config.Trailers[displaytext].offset
+    end
+    return offset
+end
+
 -- Vehicle Spawn
 local function VehicleSpawn(data, warp)
     local tmpvehicle
@@ -166,7 +184,10 @@ local function VehicleSpawn(data, warp)
         SetVehicleNumberPlateText(veh, data.plate)
         SetEntityAsMissionEntity(veh, true, true)
         SetEntityHeading(veh, data.vehicle.location.w)
-        SetEntityCoords(veh, data.vehicle.location.x, data.vehicle.location.y, data.vehicle.location.z, false, false, false, true);
+
+        local offset = trailerOffset(veh)
+
+        SetEntityCoords(veh, data.vehicle.location.x, data.vehicle.location.y, data.vehicle.location.z - offset, false, false, false, true);
         SetVehicleOnGroundProperly(veh)
         --if PlayerData.citizenid ~= data.citizenid then
             SetVehicleDoorsLocked(veh, 2)
@@ -334,32 +355,42 @@ local function DeleteLocalVehicle(vehicle)
 end
 
 local function createVehParkingZone()
-    if Config.UseParkZones then
-        if Config.UsingTargetEye then
-            exports['qb-target']:AddGlobalVehicle({
-                options = {
-                    {
-                        type = "client",
-                        event = "qb-parking:client:unlock",
-                        icon = "fas fa-car",
-                        label = "Unlock Vecihle",
-                    },
-                    {
-                        type = "client",
-                        event = "qb-parking:client:parking",
-                        icon = "fas fa-car",
-                        label = "Park Vehicle",
-                    },
-                    {
-                        type = "client",
-                        event = "qb-parking:client:unparking",
-                        icon = "fas fa-car",
-                        label = "Drive Vecihle",
-                    },
+    if Config.UsingTargetEye then
+        exports['qb-target']:AddGlobalVehicle({
+            options = {
+                {
+                    type = "client",
+                    event = "qb-parking:client:unlock",
+                    icon = "fas fa-car",
+                    label = "Unlock Vecihle",
                 },
-                distance = 2.0
-            })
-        end
+                {
+                    type = "client",
+                    event = "qb-parking:client:parking",
+                    icon = "fas fa-car",
+                    label = "Park Vehicle",
+                },
+                {
+                    type = "client",
+                    event = "qb-parking:client:unparking",
+                    icon = "fas fa-car",
+                    label = "Drive Vecihle",
+                },
+                {
+                    type = "client",
+                    event = "qb-parking:client:parking",
+                    icon = "fas fa-car",
+                    label = "Park Trailer",
+                },
+                {
+                    type = "client",
+                    event = "qb-parking:client:unparking",
+                    icon = "fas fa-car",
+                    label = "Unpark Trailer",
+                },
+            },
+            distance = 2.0
+        })
     end
 end
 
@@ -518,9 +549,14 @@ local function Save(player, vehicle, warp)
     ParkCar(player, vehicle, warp)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
+    if displaytext == "TRAILER" then
+        displaytext = "TRAILERS"
+    end
     local carModelName = GetLabelText(displaytext)
     action             = 'park'
     LastUsedPlate      = plate
+    local offset       = trailerOffset(vehicle)
+
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
         if callback.status then
             IsDeleting = true
@@ -554,7 +590,7 @@ local function Save(player, vehicle, warp)
         model       = displaytext,
         modelname   = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
-        location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z, GetEntityHeading(vehicle)),
+        location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
     })
 end
 
@@ -666,7 +702,8 @@ local function checkDistanceToForceGrounded(distance)
                 if DoesEntityExist(LocalVehicles[i].entity) then
                     if #(GetEntityCoords(PlayerPedId()) - vector3(tmp.location.x, tmp.location.y, tmp.location.z)) < distance then
                         if not tmp.isGrounded then
-                            SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z)
+                            local offset = trailerOffset(LocalVehicles[i].entity)
+                            SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z - offset)
                             SetVehicleOnGroundProperly(tmp.entity)
                             LocalVehicles[i].isGrounded = true
                             --print("Parking Force Grounded - Plate ("..tmp.plate..") Model ("..tmp.modelname ..") Grounded ("..tostring(LocalVehicles[i].isGrounded)..") ")
