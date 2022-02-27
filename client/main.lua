@@ -17,7 +17,7 @@ local LastUsedPlate      = nil
 local VehicleEntity      = nil
 local action             = 'none'
 local ParkOwnerName      = nil
-
+local extraRadius        = 3
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
     TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
@@ -608,10 +608,15 @@ end
 
 local function DrawParkedLocation(coords)
     if UseParkedLocationNames then
-        local extraRadius = 3
+        
         for _, data in pairs(Config.ReservedParkList) do
-            if CreateMode then extraRadius = Config.BuildModeDisplayDistance else extraRadius = Config.DisplayMarkerDistance end
-            if #(coords - data.coords) < tonumber(data.radius) + extraRadius then
+            if CreateMode then 
+                extraRadius = tonumber(data.radius) + tonumber(Config.BuildModeDisplayDistance)
+            else
+                extraRadius = tonumber(data.radius) + tonumber(Config.DisplayMarkerDistance) 
+            end
+
+            if #(coords - data.coords) < tonumber(extraRadius) then
                 if data.marker == true then
                     local r, g, b = 0, 0, 0
                     if data.parktype == 'paid' then

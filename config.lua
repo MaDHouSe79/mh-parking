@@ -48,7 +48,7 @@ Config.UseParkedLocationNames     = true      -- 👉 if you want to see markers
 Config.ReservedParkList = {}                  -- 👉 DONT EDIT OR REMOVE THIS!!!.
 
 Config.BuildModeDisplayDistance   = 25        -- 👉 View Distance In Build Mode, You are able to see more markers to line up new park zones.
-Config.DisplayMarkerRadius        = 3         -- 👉 When you see the markers, lower is less distane, a higher value, you are able to the markers from more distance.
+Config.DisplayMarkerDistance      = 3         -- 👉 When you see the markers, lower is less distane, a higher value, you are able to the markers from more distance.
 
 Config.IgnoreJobs = {                         -- 👉 if true this job wil be iqnore by the system then parking
     ['police']    = true,
