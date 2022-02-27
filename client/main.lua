@@ -445,7 +445,7 @@ local function Drive(player, vehicle, warp)
 
             doCarDamage(veh, callback.vehicle.health)
             SetFuel(veh, callback.fuel)
-
+            SetVehicleOilLevel(veh, callback.oil)
             FreezeEntityPosition(veh, false)
             SetEntityCanBeDamaged(veh, true)
             SetVehicleEngineOn(veh, true, true, true)
