@@ -188,7 +188,7 @@ local function VehicleSpawn(data, warp)
         SetVehicleDirtLevel(veh, 0)
         doCarDamage(veh, data.vehicle.health)
         SetFuel(veh, data.fuel)
-        SetVehicleOilLevel(veh, data.oil)
+        SetVehicleOilLevel(veh,(data.oil/3)-0.5)
         QBCore.Functions.SetVehicleProperties(veh, data.vehicle.props)
     end, data.vehicle.location, true)
     return tmpvehicle
@@ -301,29 +301,6 @@ local function GetParkeddCar(vehicle)
     return findVehicle
 end
 
--- UnlockVehicle
-local function UnlockVehicle(player, vehicle)
-    for i = 1, #LocalVehicles do
-        if LocalVehicles[i].entity and LocalVehicles[i].entity == vehicle then
-            for i=1,5 do 
-                SetVehicleDoorsLocked(veh, i)
-            end
-        end
-    end
-    RequestAnimSet("anim@mp_player_intmenu@key_fob@")
-    TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
-    Wait(2000)
-    ClearPedTasks(player)
-    SetVehicleLights(vehicle, 2)
-    Wait(150)
-    SetVehicleLights(vehicle, 0)
-    Wait(150)
-    SetVehicleLights(vehicle, 2)
-    Wait(150)
-    SetVehicleLights(vehicle, 0)
-    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
-end
-
 -- Delete single vehicle
 local function DeleteLocalVehicle(vehicle)
     IsDeleting = true
@@ -344,12 +321,6 @@ local function createVehParkingZone()
     if Config.UsingTargetEye then
         exports['qb-target']:AddGlobalVehicle({
             options = {
-                {
-                    type = "client",
-                    event = "qb-parking:client:unlock",
-                    icon = "fas fa-car",
-                    label = "Unlock Vecihle",
-                },
                 {
                     type = "client",
                     event = "qb-parking:client:parking",
@@ -585,7 +556,7 @@ local function Save(player, vehicle, warp)
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
         fuel        = GetVehicleFuelLevel(vehicle),
-        oil         = GetVehicleOilLevel(vehicle),
+        oil         = (GetVehicleOilLevel(vehicle) / 3) -0.5,
         model       = currenModel,
         modelname   = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
@@ -860,10 +831,6 @@ end)
 RegisterNetEvent("qb-parking:client:closemenu", function(source)
     hideNUI()
     SendNUIMessage({type = "hide", enable = false})
-end)
-
-RegisterNetEvent("qb-parking:client:unlock", function(vehicle)
-    UnlockVehicle(vehicle)
 end)
 
 RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
