@@ -6,6 +6,12 @@
 - police but only onduty, wil be iqnored and can park anywere, even on other players parking spots or not parking spots free of paid.
 
 
+## Add This to your database
+```sql
+ALTER TABLE `player_parking` ADD COLUMN `oil` INT(15) NOT NULL DEFAULT '100' AFTER `fuel`;
+```
+
+
 ## Polyzone NOTE
 - Vehicles only showup when you inside a park zone, the same for the park markers and names.
 - You can sill add park spaces that are paid or free or just no park space at all.

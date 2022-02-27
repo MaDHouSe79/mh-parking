@@ -121,11 +121,12 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 										message = Lang:t("info.car_already_parked"),
 									})
 								else
-									MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @modelname, @data, @time)", {
+									MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, oil, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @oil, @model, @modelname, @data, @time)", {
 										["@citizenid"]   = GetCitizenid(Player),
 										["@citizenname"] = GetUsername(Player),
 										["@plate"]       = plate,
 										["@fuel"]        = vehicleData.fuel,
+										["@oil"]         = vehicleData.oil,
 										['@model']       = vehicleData.model,
 										["@modelname"]   = vehicleData.modelname,
 										["@data"]        = json.encode(vehicleData),
@@ -143,6 +144,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 										vehicle     = vehicleData,
 										plate       = plate, 
 										fuel        = vehicleData.fuel,
+										oil         = vehicleData.oil,
 										citizenid   = GetCitizenid(Player), 
 										citizenname = GetUsername(Player),
 										model       = vehicleData.model,
@@ -182,11 +184,12 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								message = Lang:t("info.car_already_parked"),
 							})
 						else
-							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @model, @modelname, @data, @time)", {
+							MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, oil, model, modelname, data, time) VALUES (@citizenid, @citizenname, @plate, @fuel, @oil, @model, @modelname, @data, @time)", {
 								["@citizenid"]   = GetCitizenid(Player),
 								["@citizenname"] = GetUsername(Player),
 								["@plate"]       = plate,
 								["@fuel"]        = vehicleData.fuel,
+								["@oil"]         = vehicleData.oil,
 								['@model']       = vehicleData.model,
 								["@modelname"]   = vehicleData.modelname,
 								["@data"]        = json.encode(vehicleData),
@@ -204,6 +207,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 								vehicle     = vehicleData,
 								plate       = plate, 
 								fuel        = vehicleData.fuel,
+								oil         = vehicleData.oil,
 								citizenid   = GetCitizenid(Player), 
 								citizenname = GetUsername(Player),
 								model       = vehicleData.model,
@@ -260,6 +264,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 							vehicle     = json.decode(rs[1].data),
 							plate       = rs[1].plate, 
 							fuel        = rs[1].fuel,
+							oil         = rs[1].oil,
 							citizenid   = GetCitizenid(Player), 
 							citizenname = GetUsername(Player),
 							model       = rs[1].model,

@@ -137,6 +137,7 @@ local function CreateParkedBlip(label, location)
     return blip
 end
 
+
 -- Set No Collission between 2 entities
 local function NoColission(entity, location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
@@ -148,6 +149,7 @@ end
 -- Set fuel
 local function SetFuel(vehicle, fuel)
 	if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
+        exports['LegacyFuel']:SetFuel(vehicle, fuel)
 		SetVehicleFuelLevel(vehicle, fuel + 0.0)
 		DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
 	end
@@ -186,6 +188,7 @@ local function VehicleSpawn(data, warp)
         SetVehicleDirtLevel(veh, 0)
         doCarDamage(veh, data.vehicle.health)
         SetFuel(veh, data.fuel)
+        SetVehicleOilLevel(veh, data.oil)
         QBCore.Functions.SetVehicleProperties(veh, data.vehicle.props)
     end, data.vehicle.location, true)
     return tmpvehicle
@@ -207,6 +210,7 @@ local function Spawn(vehicleData, warp)
 		vehicle     = vehicleData.mods,
 		plate       = vehicleData.plate,
         fuel        = vehicleData.fuel,
+        oil         = vehicleData.oil, 
 		citizenid   = vehicleData.citizenid,
 		citizenname = vehicleData.citizenname,
 		livery      = vehicleData.vehicle.livery,
@@ -581,6 +585,7 @@ local function Save(player, vehicle, warp)
         citizenid   = PlayerData.citizenid,
         plate       = vehicleProps.plate,
         fuel        = GetVehicleFuelLevel(vehicle),
+        oil         = GetVehicleOilLevel(vehicle),
         model       = currenModel,
         modelname   = carModelName,
         health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
