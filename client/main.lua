@@ -55,10 +55,6 @@ local function CreateParkDisPlay(vehicleData, type)
     return info
 end
 
-local function round(input, decimalPlaces)
-    return tonumber(string.format("%." .. (decimalPlaces or 0) .. "f", input))
-end
-
 -- Do Vehicle damage
 local function doCarDamage(vehicle, health)
 	local engine = health.engine + 0.0
