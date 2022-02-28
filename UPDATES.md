@@ -6,7 +6,7 @@
 - police but only onduty, wil be iqnored and can park anywere, even on other players parking spots or not parking spots free of paid.
 
 
-## Update your database 
+## Update your database (New Database Table Row (coords) Added)
 ```sql
 CREATE TABLE IF NOT EXISTS `player_parking` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
