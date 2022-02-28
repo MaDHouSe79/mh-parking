@@ -10,7 +10,6 @@ shared_scripts {
     'locales/en.lua', -- change en to your language
     'config.lua',
     'configs/*.lua',
-    'shared/variables.lua',
 }
 
 client_scripts {
