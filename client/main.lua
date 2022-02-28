@@ -221,7 +221,7 @@ local function Spawn(vehicleData, warp)
         blip        = tmpBlip,
         isGrounded  = false,
     }
-    Wait(1000)
+    Wait(10)
     if ParkAction then
 		ParkAction = false
 		if LastUsedPlate and vehicleData.plate == LastUsedPlate then
@@ -625,20 +625,20 @@ local function DrawParkedLocation(coords)
                 extraRadius = tonumber(data.radius) + tonumber(Config.DisplayMarkerDistance) 
             end
             if #(coords - data.coords) < tonumber(extraRadius) then
-                if data.marker == true then
+                if data.marker then
                     local r, g, b = 0, 0, 0
                     if data.parktype == 'paid' then
                         r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
-                    elseif data.parktype == 'prived' then 
-                        if PlayerData.citizenid == data.citizenid then 
+                    elseif data.parktype == 'prived' then
+                        if PlayerData.citizenid == data.citizenid then
                             r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
-                        else  --red
+                        else
                             r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
                         end
-                    elseif data.parktype == 'job' then 
+                    elseif data.parktype == 'job' then
                         if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
                             r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
-                        else  --red
+                        else
                             r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
                         end
                     else
@@ -867,6 +867,13 @@ end)
 
 RegisterNetEvent('qb-parking:client:newParkConfigAdded', function(parkname, data)
     Config.ReservedParkList[parkname] = data
+    print("--------------------------------")
+    print(parkname) 
+    --print(json.encode(data, {indent = true}))
+    print("--------------------------------")
+    for _, data in pairs(Config.ReservedParkList) do
+        print(json.encode(data, {indent = true}))
+    end
     QBCore.Functions.Notify("New park configuration is addedd to the park list.", 'success')
 end)
 

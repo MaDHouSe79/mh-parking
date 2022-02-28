@@ -76,28 +76,32 @@ end
 local function CreateParkingLocation(source, config, id, parkname, display, radius, cost, job, marker, markerOffset, parktype)
 	local citizenid = 0
     local cid = 0
-	if tonumber(id) > 0 then cid = tonumber(id) end
-	if cid ~= 0 then citizenid = QBCore.Functions.GetPlayer(cid).PlayerData.citizenid end
+	if tonumber(id) > 0 then 
+		cid = tonumber(id) 
+		if cid ~= 0 then 
+			citizenid = QBCore.Functions.GetPlayer(cid).PlayerData.citizenid 
+		end
+	end
 	local sender = QBCore.Functions.GetPlayer(source).PlayerData
 	local coords = vector3(GetEntityCoords(GetPlayerPed(source)).x, GetEntityCoords(GetPlayerPed(source)).y, GetEntityCoords(GetPlayerPed(source)).z)
     local path   = GetResourcePath(GetCurrentResourceName())
 	if config ~= '' then path = path:gsub('//', '/')..'/configs/'..string.gsub(config, ".lua", "")..'.lua' else path = path:gsub('//', '/')..'/config.lua' end
     local file = io.open(path, 'a+')
-    local label = '\n-- '..parkname.. ' created by '..sender.name..' in game with command\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = '..cost..',\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
+    local label = '\n-- '..parkname.. ' created by '..sender.name..' in game with command\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = "'..cost..'",\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
 	file:write(label)
    	file:close()
 	local data = {}
 	data = {
-		["name"]       = name, 
-		["display"]    = display, 
-		["citizenid"]  = citizenid, 
-		["cost"]       = cost, 
-		["job"]        = job, 
-		["radius"]     = radius, 
-		["parktype"]   = parktype, 
-		["marker"]     = marker,
-		["coords"]     = vector3(coords.x, coords.y, coords.z),
-		["markcoords"] = vector3(markerOffset.x, markerOffset.y, markerOffset.z) 
+		name       = parkname, 
+		display    = display, 
+		citizenid  = citizenid, 
+		cost       = cost, 
+		job        = job, 
+		radius     = radius, 
+		parktype   = parktype, 
+		marker     = marker,
+		coords     = coords,
+		markcoords = markerOffset
 	}
 	Config.ReservedParkList[parkname] = data
 	TriggerClientEvent('qb-parking:client:newParkConfigAdded', -1, parkname, data)
@@ -438,7 +442,7 @@ AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         Wait(2000)
 		print("[qb-parking] - parked vehicles state check reset.")
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = @state", {["@state"] = 3}, function(rs)
+		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 or state = 3", {}, function(rs)
 			if type(rs) == 'table' and #rs > 0 then
 				for _, v in pairs(rs) do
 					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
