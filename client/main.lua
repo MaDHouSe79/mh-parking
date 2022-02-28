@@ -677,6 +677,7 @@ local function checkDistanceToForceGrounded(distance)
     end
 end
 
+
 local function CreateState()
     if CreateMode then
         local currentVehicle = GetVehiclePedIsIn(PlayerPedId(), 0)
