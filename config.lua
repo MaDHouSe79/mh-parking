@@ -19,8 +19,12 @@ Config.UseParkedLocationNames     = true         -- 👉 If you want to see mark
 Config.UseRoleplayName            = true         -- 👉 If you want to use Roleplay name above the cars (firstname lastname) set this on true
 Config.UseStopSpeedForPark        = true         -- 👉 Default true
 Config.MinSpeedToPark             = 0.9          -- 👉 Default 0.9 the min speed to be able to park
+
+
 Config.UseSpawnDelay              = true         -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
-Config.TimeDelay                  = 100          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+Config.TimeDelay                  = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+
+
 Config.DisplayPlayerAndPolice     = false        -- 👉 If you want to see the police vehicle info or citizen vehicle info.
 Config.ForceGroundedDistane       = 100          -- 👉 Force vehicle to the ground in a amount of distace, default is 100 this is 50mtr, make this higher will cost proccess
 Config.ForceGroundenInMilSec      = 1500         -- 👉 Force vehicle to the ground in a amount of miliseconds, default is 1500.
@@ -28,6 +32,9 @@ Config.DebugPolyzone              = false        -- 👉 display polyzones
 Config.UseParkZones               = false        -- 👉 Polyzone zones
 Config.BuildModeDisplayDistance   = 50           -- 👉 View Distance In Build Mode, You are able to see more markers to line up new park zones.
 Config.DisplayMarkerDistance      = 3            -- 👉 When you see the markers, lower is less distane, a higher value, you are able to the markers from more distance.
+
+
+Config.RefreshOnPlayerLoad        = false        -- 👉 Default false
 
 
 Config.JobToCreateParkSpaces = {                 -- 👉 The job that you need to able to create parking places.

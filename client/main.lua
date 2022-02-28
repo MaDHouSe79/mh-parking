@@ -2,40 +2,20 @@
 --[[      QBCore Realistic Parking Script by MaDHouSe      ]]--
 --[[ ===================================================== ]]--
 
-local QBCore             = exports['qb-core']:GetCoreObject()
-local PlayerData         = {}
-local LocalVehicles      = {}
-local GlobalVehicles     = {}
-local ParkZones          = {}
-local UpdateAvailable    = false
-local SpawnedVehicles    = false
-local isUsingParkCommand = false
-local IsDeleting         = false
-local OnDuty             = false
-local InParking          = false
-local CreateMode         = false
-local LastUsedPlate      = nil
-local VehicleEntity      = nil
-local action             = 'none'
-local ParkOwnerName      = nil
-local extraRadius        = 3
-local IsInParkZone       = false
+local QBCore = exports['qb-core']:GetCoreObject()
+local PlayerData, LocalVehicles, GlobalVehicles, ParkZones = {}, {}, {}, {}
+local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting, OnDuty, InParking, CreateMode, IsInParkZone = false, false, false, false, false, false, false, false
+local LastUsedPlate, VehicleEntity, ParkOwnerName = nil, nil, nil
+local action, extraRadius = 'none', 3
 
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job) PlayerJob = job end)
+RegisterNetEvent('QBCore:Client:SetDuty', function(duty) OnDuty = duty end)
+RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
-end)
-
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
-    PlayerJob = job
-end)
-
-RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
-    OnDuty = duty
-end)
-
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
-    PlayerData = data
+    if Config.RefreshOnPlayerLoad then
+        TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
+    end
 end)
 
 -- NUI Menu
@@ -220,7 +200,7 @@ local function Spawn(vehicleData, warp)
         blip        = tmpBlip,
         isGrounded  = false,
     }
-    Wait(10)
+    Wait(25)
     if ParkAction then
 		ParkAction = false
 		if LastUsedPlate and vehicleData.plate == LastUsedPlate then
@@ -256,7 +236,7 @@ end
 
 --Display Parked Owner Text
 local function DisplayParkedOwnerText()
-    if UseParkedVehicleNames then -- for performes
+    if Config.UseParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
 		for k, vehicle in pairs(LocalVehicles) do
@@ -344,11 +324,7 @@ local function SpawnVehicles(vehicles)
 		while IsDeleting do Wait(Config.TimeDelay) end
 		if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
 			for i = 1, #vehicles, 1 do
-                SetEntityCollision(vehicles[i].vehicle, false, true)
-                SetEntityVisible(vehicles[i].vehicle, false, 0)
-                if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
 				DeleteLocalVehicle(vehicles[i].vehicle)
-                if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
                 Spawn(vehicles[i], false)
                 createVehParkingZone()
 			end
@@ -361,11 +337,7 @@ local function SpawnVehicle(vehicleData)
     CreateThread(function()
         while IsDeleting do Wait(Config.TimeDelay) end
 		if LocalPlayer.state.isLoggedIn then
-            SetEntityCollision(vehicleData.vehicle, false, true)
-            SetEntityVisible(vehicleData.vehicle, false, 0)
-            if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
 			DeleteLocalVehicle(vehicleData.vehicle)
-            if Config.UseSpawnDelay then Wait(Config.TimeDelay) end
             Spawn(vehicleData, false)
 		end
     end)
@@ -383,7 +355,7 @@ local function RemoveVehicles(vehicles)
 					local tmpModel = GetEntityModel(vehicle)
 					SetModelAsNoLongerNeeded(tmpModel)
 					DeleteEntity(vehicle)
-					Citizen.Wait(300)
+					Wait(100)
 				end
 			end
 			vehicle, distance, driver, tmpModel = nil
@@ -427,9 +399,7 @@ local function Drive(player, vehicle, warp)
             DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
             if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             vehicle = false
-            while IsDeleting do Wait(Config.TimeDelay) end
             local veh = VehicleSpawn(callback, warp)
-
             doCarDamage(veh, callback.vehicle.health)
             SetFuel(veh, callback.fuel)
             SetVehicleOilLevel(veh, callback.oil)
@@ -604,7 +574,7 @@ local function IsNotReservedPosition(coords)
 end
 
 local function DrawParkedLocation(coords)
-    if UseParkedLocationNames then
+    if Config.UseParkedLocationNames then
         for _, data in pairs(Config.ReservedParkList) do
             if CreateMode then 
                 extraRadius = tonumber(data.radius) + tonumber(Config.BuildModeDisplayDistance)
@@ -742,8 +712,8 @@ end, false)
 
 
 RegisterCommand(Config.Command.parknames, function()
-    UseParkedVehicleNames = not UseParkedVehicleNames
-    if UseParkedVehicleNames then
+    Config.UseParkedVehicleNames = not Config.UseParkedVehicleNames
+    if Config.UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "success", 1500)
     else
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "error", 1500)
@@ -751,8 +721,8 @@ RegisterCommand(Config.Command.parknames, function()
 end, false)
 
 RegisterCommand(Config.Command.parkspotnames, function()
-    UseParkedLocationNames = not UseParkedLocationNames
-    if UseParkedLocationNames then
+    Config.UseParkedLocationNames = not Config.UseParkedLocationNames
+    if Config.UseParkedLocationNames then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "park location names"}), "success", 1500)
     else
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "park location names"}), "error", 1500)
@@ -760,8 +730,8 @@ RegisterCommand(Config.Command.parkspotnames, function()
 end, false)
 
 RegisterCommand(Config.Command.notification, function()
-    PhoneNotification = not PhoneNotification
-    if PhoneNotification then
+    Config.PhoneNotification = not Config.PhoneNotification
+    if Config.PhoneNotification then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "notifications"}), "success", 1500)
     else
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "notifications"}), "error", 1500)
@@ -865,13 +835,6 @@ end)
 
 RegisterNetEvent('qb-parking:client:newParkConfigAdded', function(parkname, data)
     Config.ReservedParkList[parkname] = data
-    print("--------------------------------")
-    print(parkname) 
-    --print(json.encode(data, {indent = true}))
-    print("--------------------------------")
-    for _, data in pairs(Config.ReservedParkList) do
-        print(json.encode(data, {indent = true}))
-    end
     QBCore.Functions.Notify("New park configuration is addedd to the park list.", 'success')
 end)
 
@@ -890,7 +853,7 @@ end)
 
 CreateThread(function()
     while true do
-        if not UseParkZones then
+        if not Config.UseParkZones then
             local pl = GetEntityCoords(PlayerPedId())
             if #(pl - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.ParkingLocation.s then
             	InParking = true
@@ -916,7 +879,7 @@ end)
 
 
 CreateThread(function()
-    if UseParkingSystem then
+    if Config.UseParkingSystem then
 		while true do
             local position = nil
 			local player = PlayerPedId()
@@ -969,7 +932,7 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-    if UseParkingSystem and UseParkedVehicleNames then
+    if Config.UseParkingSystem and Config.UseParkedVehicleNames then
         while true do
             DisplayParkedOwnerText()
             Wait(0)
@@ -986,19 +949,19 @@ end)
 
 
 
-if UseParkZones then
+if Config.UseParkZones then
     for k, v in pairs(Config.Parkzones) do
         ParkZones[#ParkZones + 1] = PolyZone:Create({table.unpack(v.zones)}, { name = v.name })
     end
-    combo = ComboZone:Create(ParkZones, { name = "parkCombo", debugPoly = DebugPolyzone })
+    combo = ComboZone:Create(ParkZones, { name = "parkCombo", debugPoly = Config.DebugPolyzone })
     CreateThread(function()
         Wait(500)
         while true do
             if LocalPlayer.state.isLoggedIn then
                 local pos = GetEntityCoords(PlayerPedId())
                 local isPointInside = combo:isPointInside(pos)
-                UseParkedLocationNames = combo:isPointInside(pos)
-                UseParkedVehicleNames = combo:isPointInside(pos)
+                Config.UseParkedLocationNames = combo:isPointInside(pos)
+                Config.UseParkedVehicleNames = combo:isPointInside(pos)
                 InParking = combo:isPointInside(pos)
             end
             Wait(1000)
@@ -1007,7 +970,7 @@ if UseParkZones then
 end
 
 CreateThread(function()
-    if UseParkZones then
+    if Config.UseParkZones then
         for k, v in pairs(Config.Parkzones) do
             if v.showBlip then
                 local Parking = AddBlipForCoord(v.enter)
