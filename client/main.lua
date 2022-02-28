@@ -48,7 +48,6 @@ local function closeNUI()
     SetNuiFocus(false, false)
     SendNUIMessage({type = "newParkSetup", enable = false})
     Wait(10)
-    CreateMode = false
     receivedDoorData = nil
 end
 
