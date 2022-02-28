@@ -539,35 +539,55 @@ local function ActionVehicle(plate, action)
 end
 
 
+
 local function IsNotReservedPosition(coords)
-    local freeSpot = true
+    freeSpot = true
+    
     local haspaid  = false
     for _, data in pairs(Config.ReservedParkList) do
         if #(coords - data.coords) <= tonumber(data.radius) then
-            if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
-                freeSpot = true
+
+            if data.parktype == 'nopark' then
+                freeSpot = false
             else
-                if data.parktype == 'paid' then
-                    QBCore.Functions.TriggerCallback("qb-parking:server:payparkspace", function(cb)
-                        if cb.status then 
-                            freeSpot = true
-                            QBCore.Functions.Notify(cb.message, "primary", 3000)
-                        else
-                            freeSpot = false
-                            QBCore.Functions.Notify(cb.message, "error", 3000)
-                        end
-                    end, data.cost)
-                end
-                if data.parktype == 'free' then
+
+                if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
                     freeSpot = true
-                end
-                if data.parktype == 'prived' then
-                    if PlayerData.citizenid ~= data.citizenid then
-                        freeSpot = false
+                else
+
+                    if data.parktype == 'prived' then
+                        if PlayerData.citizenid ~= data.citizenid then
+                            freeSpot = false
+                        end
                     end
+
+
+                    if data.parktype == 'job' then
+                        if not Config.IgnoreJobs[PlayerData.job.name] and not PlayerData.job.onduty then
+                            freeSpot = false
+                        end
+                    end
+
+
+                    if data.parktype == 'paid' then
+                        QBCore.Functions.TriggerCallback("qb-parking:server:payparkspace", function(cb)
+                            if cb.status then 
+                                QBCore.Functions.Notify(cb.message, "primary", 3000)
+                            else
+                                freeSpot = false
+                                QBCore.Functions.Notify(cb.message, "error", 3000)
+                            end
+                        end, data.cost)
+                    end
+
+                    if data.parktype == 'free' then
+                        freeSpot = true
+                    end
+
+                    ParkOwnerName = data.name
                 end
+               
             end
-            ParkOwnerName = data.name
         end
     end
    return freeSpot
@@ -582,7 +602,7 @@ local function DrawParkedLocation(coords)
                 extraRadius = tonumber(data.radius) + tonumber(Config.DisplayMarkerDistance) 
             end
             if #(coords - data.coords) < tonumber(extraRadius) then
-                if data.marker then
+                if data.marker == true then
                     local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
                     local r, g, b = 0, 0, 0
                     
@@ -632,6 +652,7 @@ local function DrawParkedLocation(coords)
 end
 
 
+
 local function checkDistanceToForceGrounded(distance)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
         for i = 1, #LocalVehicles do
@@ -676,36 +697,28 @@ end, false)
 
 
 RegisterCommand(Config.Command.buildmode, function()
-    local haspermission = false
     QBCore.Functions.TriggerCallback('qb-parking:server:haspermission', function(cb)
-        haspermission = cb
+        if cb then CreateMode = not CreateMode end
     end)
-    if Config.JobToCreateParkSpaces[PlayerData.job.name] or haspermission then
-        if PlayerData.job.onduty or haspermission then
-            CreateMode = not CreateMode
-            if CreateMode then
-                QBCore.Functions.Notify(Lang:t('system.enable', {type = "Build Mode"}), "success", 1500)
-            else
-                QBCore.Functions.Notify(Lang:t('system.disable', {type = "Build Mode"}), "error", 1500)
-            end
-        else
-            QBCore.Functions.Notify("You must be onduty to use this.", "error", 1500)
-        end
+    if Config.JobToCreateParkSpaces[PlayerData.job.name] then
+        if PlayerData.job.onduty then CreateMode = not CreateMode end
     end
+    if CreateMode then
+        QBCore.Functions.Notify(Lang:t('system.enable', {type = "Build Mode"}), "success", 1500)
+    else
+        QBCore.Functions.Notify(Lang:t('system.disable', {type = "Build Mode"}), "error", 1500)
+    end
+
 end, false)
 
 RegisterCommand(Config.Command.createmenu, function()
-    local haspermission = false
     QBCore.Functions.TriggerCallback('qb-parking:server:haspermission', function(cb)
-        haspermission = true
+        if cb then CreateMode = not CreateMode end
     end)
-
-    if Config.JobToCreateParkSpaces[PlayerData.job.name] or haspermission then
-        if PlayerData.job.onduty or haspermission then
-            TriggerEvent("qb-parking:client:openmenu", source)
+    if Config.JobToCreateParkSpaces[PlayerData.job.name] then
+        if PlayerData.job.onduty then 
+            TriggerEvent("qb-parking:client:openmenu", source) 
         end
-    else
-        QBCore.Functions.Notify("You dont have the right job to do this.", "error", 1500)
     end
 end, false)
 
