@@ -613,15 +613,19 @@ local function DrawParkedLocation(coords)
             end
             if #(coords - data.coords) < tonumber(extraRadius) then
                 if data.marker then
+                    local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
                     local r, g, b = 0, 0, 0
+                    
                     if data.parktype == 'paid' then
                         r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
+                   
                     elseif data.parktype == 'prived' then
                         if PlayerData.citizenid == data.citizenid then
                             r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                         else
                             r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
                         end
+
                     elseif data.parktype == 'job' then
                         if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
                             r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
@@ -629,8 +633,14 @@ local function DrawParkedLocation(coords)
                             r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
                         end
                     else
-                        r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
+                        if data.parktype == 'free' then
+                            r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
+                            if vehicle and distance <= 1 then
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                            end
+                        end
                     end
+
                     DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,r, g, b, 222, false, false, false, true, false, false, false)
                     if data.parktype ~= 'free' then
                         Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~ParkSpace Reserved~s~", 0, 0.04, 0.04)
@@ -644,6 +654,7 @@ local function DrawParkedLocation(coords)
                             Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~".. data.display.."~s~", 0, 0.04, 0.04)
                         end
                     end
+                   
                 end
             end
         end
