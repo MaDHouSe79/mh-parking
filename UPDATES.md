@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `player_parking` (
 ```
 - OR
 ```sql
+ALTER TABLE `player_parking` ADD COLUMN `coords` TEXT NULL AFTER `fuel`;
 ALTER TABLE `player_parking` ADD COLUMN `oil` INT(15) NOT NULL DEFAULT '100' AFTER `fuel`;
 ```
 
