@@ -87,7 +87,7 @@ local function CreateParkingLocation(source, config, id, parkname, display, radi
     local path   = GetResourcePath(GetCurrentResourceName())
 	if config ~= '' then path = path:gsub('//', '/')..'/configs/'..string.gsub(config, ".lua", "")..'.lua' else path = path:gsub('//', '/')..'/config.lua' end
     local file = io.open(path, 'a+')
-    local label = '\n-- '..parkname.. ' created by '..sender.name..' in game with command\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = "'..cost..'",\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
+    local label = '\n-- '..parkname.. ' created by '..sender.name..'\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = "'..cost..'",\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
 	file:write(label)
    	file:close()
 	local data = {}
