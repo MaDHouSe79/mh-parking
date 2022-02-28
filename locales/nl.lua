@@ -9,6 +9,7 @@ local Translations = {
         ["removevip"]           = "Remove", 
     },
     system = {
+        ['update']              = "There is a update for qb-parking", 
         ['enable']              = "Park systeen %{type} is nu enable",
         ["disable"]             = "Park systeem %{type} is nu disable",
         ["freeforall"]          = "Park systeem: ingeschakelt voor iedereen.",
@@ -25,6 +26,9 @@ local Translations = {
         ["already_reserved"]    = "Deze parkeerplaats is al gereserveerd.",
         ["parked_blip_info"]    = "Parked: %{modelname}",
         ["to_far_from_vehicle"] = "You are to far from the vehicle",
+        ["open_create_menu"]    = "Open park create menu (Admin only)",
+        ["must_be_onduty"]      = "You must be onduty to use this.",
+        ["not_the_right_job"]   = "You dont have the right job to do this.",
     }, 
     success = {
         ["parked"]              = "Je voertuig is gepakeerd",
@@ -45,8 +49,9 @@ local Translations = {
         ["stop_car"]            = "Stop het voertuig voor dat je het wilt parkeren...",
         ["police_info"]         = "~r~Politie~s~ Voertuig Info\n",
         ["citizen_info"]        = "~g~Citizen~s~ Voertuig Info\n",
-        ["paid_park_space"]     = "Je huurt deze parkeer plek voor %{paid} p/h",
-        
+        ["paid_park_space"]     = "Je huurt deze parkeer plek voor %{paid} p/h",  
+        ["drive"]               = "Rijden",
+        ["park"]                = "Parkeren",
     },
     mail = {
         ["sender"]              = "%{company}",

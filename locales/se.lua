@@ -9,6 +9,7 @@ local Translations = {
         ["removevip"]           = "Ta bort", 
     },
     system = {
+        ['update']              = "There is a update for qb-parking", 
         ['enable']              = "Parkerings system %{type} är nu aktiverat",
         ["disable"]             = "Parkerings system %{type} är nu avaktiverat",
         ["freeforall"]          = "Parkerings system: är nu tillgänglig för alla spelare.",
@@ -25,6 +26,9 @@ local Translations = {
         ["already_reserved"]    = "Den här parkeringen är reserverad.",
         ["parked_blip_info"]    = "Parked: %{modelname}",
         ["to_far_from_vehicle"] = "You are to far from the vehicle",
+        ["open_create_menu"]    = "Open park create menu (Admin only)",
+        ["must_be_onduty"]      = "You must be onduty to use this.",
+        ["not_the_right_job"]   = "You dont have the right job to do this.",
     },
     success = {
         ["parked"]              = "Ditt fordon är parkerad",
@@ -46,6 +50,8 @@ local Translations = {
         ["police_info"]         = "~r~Polis~s~ Fordons Info\n",
         ["citizen_info"]        = "~g~Medborgare~s~ Fordons Info\n",
         ["paid_park_space"]     = "You rent this parking space for $%{paid} p/h",
+        ["drive"]               = "Drive Vecihle",
+        ["park"]                = "Park Vehicle",
     },
     mail = {
         ["sender"]              = "%{company}",

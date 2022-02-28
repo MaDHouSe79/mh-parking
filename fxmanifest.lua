@@ -5,6 +5,14 @@ author 'MaDHouSe'
 description 'QB Realistic Vehicle Parking'
 version '1.4'
 
+ui_page 'html/index.html'
+
+files {
+	'html/*.html',
+	'html/*.js',
+	'html/*.css',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua', -- change en to your language
@@ -31,12 +39,5 @@ dependencies {
     'qb-core',
 }
 
-ui_page 'html/index.html'
-
-files {
-	'html/*.html',
-	'html/*.js',
-	'html/*.css',
-}
 
 lua54 'yes'

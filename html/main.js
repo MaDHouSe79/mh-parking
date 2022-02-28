@@ -4,7 +4,7 @@ const parkContainer = document.getElementById('container');
 const park = document.getElementById('park');
 
 var formInfo = {
-    config: document.getElementById('config'),
+    config: document.getElementById('parktype'),
     parkname: document.getElementById('parkname'),
     display: document.getElementById('display'),
     parktype: document.getElementById('parktype'),
@@ -49,7 +49,7 @@ document.addEventListener('keyup', (e) => {
 document.getElementById('newPark').addEventListener('submit', (e) => {
     e.preventDefault();
     sendNUICB('newParkLocation', {
-        config: formInfo.config.value,
+        config: formInfo.parktype.value,
         parkname: formInfo.parkname.value,
         display: formInfo.display.value,
         parktype: formInfo.parktype.value,
