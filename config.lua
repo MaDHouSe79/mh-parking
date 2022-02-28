@@ -3,7 +3,8 @@ Config.ReservedParkList           = {}           -- 👉 DONT EDIT OR REMOVE THI
 Config.Trailers                   = {}           -- 👉 DONT EDIT OR REMOVE THIS!!!.
 Config.Parkzones                  = {}           -- 👉 DONT EDIT OR REMOVE THIS!!!.
 Config.CheckForUpdates            = true         -- 👉 If you want to stay updated keep it on true.
-Config.UsingTargetEye             = true         -- 👉 If you have target eye 
+Config.UsingTargetEye             = false        -- 👉 Default false, but if you have target eye set this to true. 
+Config.InteractDistance           = 3            -- 👉 Default 3, Vehicle interact distance for target or non target interactins 
 Config.DisplayDistance            = 20.0         -- 👉 Distence to see text above parked vehicles (player dependent)
 Config.KeyBindButton              = "F5"         -- 👉 If you want to change the drive and park button. (you must use /binds for this)
 Config.ParkingButton              = 166          -- 👉 F5 (vehicle exit and or park)
@@ -19,7 +20,7 @@ Config.UseRoleplayName            = true         -- 👉 If you want to use Role
 Config.UseStopSpeedForPark        = true         -- 👉 Default true
 Config.MinSpeedToPark             = 0.9          -- 👉 Default 0.9 the min speed to be able to park
 Config.UseSpawnDelay              = true         -- 👉 Default true, if your vehicles spawn on top of each other, set this to true
-Config.TimeDelay                  = 500          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+Config.TimeDelay                  = 100          -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.DisplayPlayerAndPolice     = false        -- 👉 If you want to see the police vehicle info or citizen vehicle info.
 Config.ForceGroundedDistane       = 100          -- 👉 Force vehicle to the ground in a amount of distace, default is 100 this is 50mtr, make this higher will cost proccess
 Config.ForceGroundenInMilSec      = 1500         -- 👉 Force vehicle to the ground in a amount of miliseconds, default is 1500.

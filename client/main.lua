@@ -332,20 +332,8 @@ local function createVehParkingZone()
                     icon = "fas fa-car",
                     label = "Drive Vecihle",
                 },
-                {
-                    type = "client",
-                    event = "qb-parking:client:parking",
-                    icon = "fas fa-car",
-                    label = "Park Trailer",
-                },
-                {
-                    type = "client",
-                    event = "qb-parking:client:unparking",
-                    icon = "fas fa-car",
-                    label = "Unpark Trailer",
-                },
             },
-            distance = 2.0
+            distance = Config.InteractDistance + 0.0
         })
     end
 end
@@ -796,7 +784,7 @@ end)
 
 RegisterNetEvent("qb-parking:client:unparking", function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId())) 
-    if distance <= 3 then
+    if distance <= Config.InteractDistance then
         Drive(PlayerPedId(), GetParkeddCar(vehicle), false)
         QBCore.Functions.Notify("Your vehicle is unparked", "success", 1000)
     else
@@ -806,7 +794,7 @@ end)
 
 RegisterNetEvent("qb-parking:client:parking", function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
-    if distance <= 3 then
+    if distance <= Config.InteractDistance then
         if IsNotReservedPosition(GetEntityCoords(vehicle)) then
             Save(PlayerPedId(), vehicle, false)
             QBCore.Functions.Notify("Your vehicle is parked", "success", 1000)
