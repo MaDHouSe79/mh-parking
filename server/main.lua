@@ -66,6 +66,23 @@ local function CheckVersion(err, responseText, headers)
     end
 end
 
+local function addZeroForLessThan10(number)
+	if number < 10 then
+		return 0 .. number
+	else
+		return number
+	end
+end
+
+local function generateDateTime()
+	local dateTimeTable = os.date('*t')
+	local dateTime = 'Year:'..dateTimeTable.year .. ' Month:' .. addZeroForLessThan10(dateTimeTable.month) .. ' Day:' .. addZeroForLessThan10(dateTimeTable.day).. ' Time:' .. addZeroForLessThan10(dateTimeTable.hour) .. ':' ..  addZeroForLessThan10(dateTimeTable.min) .. ':' .. addZeroForLessThan10(dateTimeTable.sec)
+	return dateTime
+end
+   
+
+
+   
 -- Create a park location
 local function CreateParkingLocation(source, config, id, parkname, display, radius, cost, job, marker, markerOffset, parktype)
 	local citizenid = 0
@@ -79,7 +96,7 @@ local function CreateParkingLocation(source, config, id, parkname, display, radi
     local path = GetResourcePath(GetCurrentResourceName())
 	if config ~= '' then path = path:gsub('//', '/')..'/configs/'..string.gsub(config, ".lua", "")..'.lua' else path = path:gsub('//', '/')..'/config.lua' end
     local file = io.open(path, 'a+')
-    local label = '\n-- '..parkname.. ' created by '..sender.name..' time: '..os.time()..'\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = "'..cost..'",\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
+    local label = '\n-- '..parkname.. ' created by '..sender.name..' time: '..generateDateTime()..'\nConfig.ReservedParkList["'..parkname..'"] = {\n    ["name"]       = "'..parkname..'",\n    ["display"]    = "'..display..'",\n    ["citizenid"]  = "'..citizenid..'",\n    ["cost"]       = "'..cost..'",\n    ["job"]        = "'..job..'",\n    ["radius"]     = '..radius..'.0,\n    ["parktype"]   = "'..parktype..'",\n    ["marker"]     = '..marker..',\n    ["coords"]     = '..coords..',\n    ["markcoords"] = '..markerOffset..',\n}'
 	file:write(label)
    	file:close()
 	local data = {}
