@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `player_parking` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=235 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 ```
-- OR
+- or do this if you already have a player_parking table in your database.
 ```sql
 ALTER TABLE `player_parking` ADD COLUMN `coords` TEXT NULL AFTER `fuel`;
 ALTER TABLE `player_parking` ADD COLUMN `oil` INT(15) NOT NULL DEFAULT '100' AFTER `fuel`;
