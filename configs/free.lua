@@ -64,3 +64,16 @@ Config.ReservedParkList["free5"] = {
     ["coords"]     = vec3(223.806595, -799.200012, 30.307739),
     ["markcoords"] = vec3(221.468994, -798.334656, 30.369371),
 }
+-- hiii created by MaDHouSe time: Year:2022 Month:02 Day:28 Time:15:52:52
+Config.ReservedParkList["hiii"] = {
+    ["name"]       = "hiii",
+    ["display"]    = "ssdfsdf",
+    ["citizenid"]  = "0",
+    ["cost"]       = "0",
+    ["job"]        = "none",
+    ["radius"]     = 2.0,
+    ["parktype"]   = "free",
+    ["marker"]     = true,
+    ["coords"]     = vec3(231.230774, -779.010986, 30.358276),
+    ["markcoords"] = vec3(228.914551, -778.067383, 30.403839),
+}
