@@ -24,7 +24,7 @@ Config.ResetState                 = 1            -- Default 1, 1 is stored in ga
 
 Config.CheckForUpdates            = true         -- Default true
 Config.UseParkingSystem           = true         -- Default true
-Config.UseParkZones               = false        -- Default false
+Config.UseParkZones               = true        -- Default false
 Config.UsePhoneNotification       = false        -- Default false
 Config.UseParkingBlips            = true         -- Default true
 Config.UseParkedVehicleNames      = true         -- Default false 
@@ -36,7 +36,7 @@ Config.UseOnplayerLoad            = false        -- Default false
 Config.UseTargetEye               = true         -- Default true
 Config.DisplayPlayerAndPolice     = false        -- Default false
 
-Config.DebugPolyzone              = false        -- Default false
+Config.DebugPolyzone              = true        -- Default false
 Config.BuildMode                  = false
 
 Config.JobToCreateParkSpaces = {                 -- The job that you need to able to create parking places.

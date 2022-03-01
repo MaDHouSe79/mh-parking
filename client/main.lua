@@ -14,18 +14,16 @@ local isUsingParkCommand = false
 local IsDeleting         = false
 local OnDuty             = false
 local InParking          = false
-local LastUsedPlate      = nil
-local ParkAction         = 'none'
-local ParkOwnerName      = nil
-local extraRadius        = 3
 local IsInParkZone       = false
 local CreateMode         = false
+local LastUsedPlate      = nil
+local ParkOwnerName      = nil
+local ParkAction         = 'none'
+local extraRadius        = 3
+
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    if Config.UseOnplayerLoad then
-        TriggerServerEvent("qb-parking:server:onjoin", PlayerData.source)
-    end
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
@@ -40,29 +38,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
 
--- NUI Menu
-local function displayNUIText(text)
-    SendNUIMessage({type = "display", text = text, color = selectedColor})
-    Wait(1)
-end
-
-local function closeNUI()
-    SetNuiFocus(false, false)
-    SendNUIMessage({type = "newParkSetup", enable = false})
-    Wait(10)
-end
-
-local function hideNUI()
-    SetNuiFocus(false, false)
-    SendNUIMessage({type = "hide"})
-    Wait(1)
-end
-
-local function openNUI()
-    SetNuiFocus(true, true)
-    SendNUIMessage({type = "newDoorSetup", enable = true})
-    Wait(1)
-end
 
 local function CreateParkDisPlay(vehicleData, type)
     local info, model, owner, plate = nil
@@ -84,7 +59,8 @@ end
 local function doCarDamage(vehicle, health)
 	local engine = health.engine + 0.0
 	local body = health.body + 0.0
-    Wait(100)
+    if body < 150 then body = 150 end
+    if engine < 150 then engine = 150 end
     if body < 900.0 then
 		SmashVehicleWindow(vehicle, 0)
 		SmashVehicleWindow(vehicle, 1)
@@ -398,7 +374,7 @@ local function RemoveVehicles(vehicles)
 		end
     end
     LocalVehicles = {}
-    IsDeleting    = false
+    IsDeleting = false
 end
 
 -- Just some help text
@@ -450,7 +426,7 @@ local function Drive(player, vehicle, warp)
 end
 
 -- Park
-local function ParkCar(player, vehicle, warp)
+local function Park(player, vehicle, warp)
     if warp then
         SetVehicleEngineOn(vehicle, false, false, true)
         TaskLeaveVehicle(player, vehicle)
@@ -500,6 +476,7 @@ local function GetStreetName()
     return street
 end
 
+-- Get Real Model Name Config.lua to add more
 local function GetRealModel(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local currentModel = GetDisplayNameFromVehicleModel(vehicleProps["model"])
@@ -514,7 +491,7 @@ end
 
 -- Save
 local function Save(player, vehicle, warp)
-    ParkCar(player, vehicle, warp)
+    Park(player, vehicle, warp)
     PlayerData = QBCore.Functions.GetPlayerData()
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
@@ -585,11 +562,11 @@ local function IsNotReservedPosition(coords)
     local haspaid  = false
     for _, data in pairs(Config.ReservedParkList) do
         if #(coords - data.coords) <= tonumber(data.radius) then
-            if data.parktype == 'nopark' then
-                freeSpot = false
+            if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
+                freeSpot = true
             else
-                if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
-                    freeSpot = true
+                if data.parktype == 'nopark' then
+                    freeSpot = false
                 else
                     if data.parktype == 'prived' then
                         if PlayerData.citizenid ~= data.citizenid then
@@ -710,11 +687,31 @@ local function CreateState()
     end
 end
 
+-- NUI Menu
+local function closeNUI()
+    SetNuiFocus(false, false)
+    SendNUIMessage({type = "newParkSetup", enable = false})
+    Wait(10)
+end
+
+local function hideNUI()
+    SetNuiFocus(false, false)
+    SendNUIMessage({type = "hide"})
+    Wait(1)
+end
+
+local function openNUI()
+    SetNuiFocus(true, true)
+    SendNUIMessage({type = "newDoorSetup", enable = true})
+    Wait(1)
+end
+
 -- Commands
 RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton) 
 RegisterKeyMapping(Config.Command.createmenu, Lang:t('system.open_create_menu'), 'keyboard', Config.KeyParkMenuBindButton) 
 
--- Events
+
+-- NUI Callbacks
 RegisterNUICallback('newParkLocation', function(data, cb)
     closeNUI()
     cb('ok')
@@ -725,10 +722,27 @@ RegisterNUICallback('newParkLocation', function(data, cb)
     TriggerServerEvent('qb-parking:server:AddNewParkingSpot', QBCore.Functions.GetPlayerData().source, data, markerOffset)
 end)
 
+RegisterNetEvent("qb-parking:client:openmenu", function(source)
+    openNUI()
+    SendNUIMessage({type = "newParkSetup", enable = true})
+end)
+
+RegisterNetEvent("qb-parking:client:closemenu", function(source)
+    hideNUI()
+    SendNUIMessage({type = "hide", enable = false})
+end)
+
 RegisterNUICallback('close', function(data, cb)
     closeNUI()
     cb('ok')
 end)
+
+-- Events
+RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle) SpawnVehicle(vehicle) end)
+RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle) DeleteLocalVehicle(vehicle) end)
+RegisterNetEvent("qb-parking:client:impound",  function(plate) ActionVehicle(plate, 'impound') end)
+RegisterNetEvent("qb-parking:client:stolen",  function(plate) ActionVehicle(plate, 'stolen') end)
+RegisterNetEvent("qb-parking:client:unpark", function(plate) ActionVehicle(plate, 'unpark') end)
 
 RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
     GlobalVehicles = vehicles
@@ -762,34 +776,18 @@ RegisterNetEvent("qb-parking:client:parking", function()
     end
 end)
 
-RegisterNetEvent("qb-parking:client:openmenu", function(source)
-    openNUI()
-    SendNUIMessage({type = "newParkSetup", enable = true})
-end)
-
-RegisterNetEvent("qb-parking:client:closemenu", function(source)
-    hideNUI()
-    SendNUIMessage({type = "hide", enable = false})
-end)
-
-RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle) SpawnVehicle(vehicle) end)
-RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle) DeleteLocalVehicle(vehicle) end)
-RegisterNetEvent("qb-parking:client:impound",  function(plate) ActionVehicle(plate, 'impound') end)
-RegisterNetEvent("qb-parking:client:stolen",  function(plate) ActionVehicle(plate, 'stolen') end)
-RegisterNetEvent("qb-parking:client:unpark", function(plate) ActionVehicle(plate, 'unpark') end)
-
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
 
 RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
-    PlayerData = QBCore.Functions.GetPlayerData()
-    if PlayerData.citizenid == citizenid then 
+    if QBCore.Functions.GetPlayerData().citizenid == citizenid then 
         TriggerEvent('vehiclekeys:client:SetOwner', plate) 
     end
 end)
 
+-- Server To Client Events
 RegisterNetEvent('qb-parking:client:newParkConfigAdded', function(parkname, data)
     Config.ReservedParkList[parkname] = data
     QBCore.Functions.Notify("New park configuration is addedd to the park list.", 'success')
