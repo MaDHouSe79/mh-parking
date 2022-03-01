@@ -513,7 +513,7 @@ end)
 
 QBCore.Commands.Add(Config.Command.buildmode, "Park Build Mode On/Off", {}, true, function(source)
 	PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if PlayerData.job.name == 'realestate' or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
 		if PlayerData.job.onduty or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
 			Config.BuildMode = not Config.BuildMode
 			if Config.BuildMode then
@@ -531,9 +531,10 @@ QBCore.Commands.Add(Config.Command.buildmode, "Park Build Mode On/Off", {}, true
 	end
 end)
 
+
 QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, function(source)
     PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if PlayerData.job.name == 'realestate' or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
 		if PlayerData.job.onduty or Config.SystemAdmins[PlayerData.citizenid].isAdmin then
 			TriggerClientEvent("qb-parking:client:openmenu", source)
 		else

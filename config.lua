@@ -38,6 +38,7 @@ Config.DisplayPlayerAndPolice     = false        -- Default false
 
 Config.DebugPolyzone              = false        -- Default false
 Config.BuildMode                  = false
+
 Config.JobToCreateParkSpaces = {                 -- The job that you need to able to create parking places.
     ['realestate'] = true,
     ['police']    = false, 
@@ -76,7 +77,6 @@ Config.Command = {                               -- DONT EDIT OR REMOVE THIS!!!.
 
 
 Config.IgnoreJobs = {                            -- 👉 If true this job wil be iqnore by the system then parking
-
     ['police']    = true,
     ['ambulance'] = true,
     ['mechanic']  = true,
