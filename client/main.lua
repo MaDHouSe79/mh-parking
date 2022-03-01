@@ -50,6 +50,10 @@ local function CreateParkDisPlay(vehicleData, type)
     info  = string.format("%s", model..plate..owner)
     return info
 end
+-- round
+local function round(input, decimalPlaces)
+    return tonumber(string.format("%." .. (decimalPlaces or 0) .. "f", input))
+end
 
 -- Do Vehicle damage
 local function doCarDamage(vehicle, health)
