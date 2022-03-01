@@ -36,7 +36,7 @@ local function FindPlayerVehicles(citizenid, cb)
 				fuel = v.fuel,
 				coords = json.decode(v.coords), 
 			}
-			if Player.PlayerData.citizenid == v.citizenid then
+			if PlayerData.citizenid == v.citizenid then
 				TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
 			end
         end
