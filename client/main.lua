@@ -636,7 +636,7 @@ local function DrawParkedLocation(coords)
                     
                     DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,r, g, b, 222, false, false, false, true, false, false, false)
                     if data.parktype ~= 'free' then
-                        if data.parktype ~= 'nopark' and data.parktype ~= 'paid'then
+                        if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
                             Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~Reserved~s~", 0, 0.04, 0.04)
                         end
                         if PlayerData.citizenid ~= data.citizenid then

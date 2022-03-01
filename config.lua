@@ -4,7 +4,6 @@ Config.Parkzones                  = {}           -- DONT EDIT CHANGE OR REMOVE T
 Config.ReservedParkList           = {}           -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 Config.Parkzones                  = {}           -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
-
 Config.KeyParkBindButton          = "F5"         -- Default F5
 Config.KeyParkMenuBindButton      = "F6"         -- Default F6
 Config.ParkingButton              = 166          -- Default 166, [F5] 
