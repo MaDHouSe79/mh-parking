@@ -44,6 +44,17 @@ Config.JobToCreateParkSpaces = {                 -- The job that you need to abl
     ['mechanic']  = false,
 }
 
+Config.Trailers = {                              -- 👉 Allowed trailers you can use
+    ['TRAILER'] = {                              -- 👉 real model name
+        ['model'] = 'Trailers',                  -- 👉 in case the modelname does not work propperly, use this as model name
+        ['offset'] = 2.0,                        -- 👉 offset of the trailer. this is on the Z axes and it wil force minus offset
+    },
+    ['boattrailer'] = {
+        ['model'] = 'boattrailer',
+        ['offset'] = 2.0,
+    },
+}
+
 Config.Vehicles = {                              -- Allowed Vehicles that are not spawn back cause of the real model name.
     ['ADDER'] = {                                -- real model name
         ['model'] = 'adder',                     -- in case the modelname does not work propperly, use this as model name
