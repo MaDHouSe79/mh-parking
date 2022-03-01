@@ -23,7 +23,6 @@ Config.ResetState                 = 1            -- Default 1, 1 is stored in ga
 
 Config.CheckForUpdates            = true         -- Default true
 Config.UseParkingSystem           = true         -- Default true
-Config.UseParkZones               = false        -- Default false
 Config.UsePhoneNotification       = false        -- Default false
 Config.UseParkingBlips            = true         -- Default true
 Config.UseParkedVehicleNames      = true         -- Default false 
@@ -35,7 +34,7 @@ Config.UseOnplayerLoad            = false        -- Default false
 Config.UseTargetEye               = true         -- Default true
 Config.DisplayPlayerAndPolice     = false        -- Default false
 
-Config.DebugPolyzone              = false        -- Default false
+
 Config.BuildMode                  = false
 
 Config.JobToCreateParkSpaces = {                 -- The job that you need to able to create parking places.
@@ -44,10 +43,10 @@ Config.JobToCreateParkSpaces = {                 -- The job that you need to abl
     ['mechanic']  = false,
 }
 
-Config.Trailers = {                              -- 👉 Allowed trailers you can use
-    ['TRAILER'] = {                              -- 👉 real model name
-        ['model'] = 'Trailers',                  -- 👉 in case the modelname does not work propperly, use this as model name
-        ['offset'] = 2.0,                        -- 👉 offset of the trailer. this is on the Z axes and it wil force minus offset
+Config.Trailers = {                              -- Allowed trailers you can use
+    ['TRAILER'] = {                              -- Real model name
+        ['model'] = 'Trailers',                  -- In case the modelname does not work propperly, use this as model name
+        ['offset'] = 2.0,                        -- Offset of the trailer. this is on the Z axes and it wil force minus offset
     },
     ['boattrailer'] = {
         ['model'] = 'boattrailer',
@@ -56,8 +55,8 @@ Config.Trailers = {                              -- 👉 Allowed trailers you ca
 }
 
 Config.Vehicles = {                              -- Allowed Vehicles that are not spawn back cause of the real model name.
-    ['ADDER'] = {                                -- real model name
-        ['model'] = 'adder',                     -- in case the modelname does not work propperly, use this as model name
+    ['ADDER'] = {                                -- Real model name
+        ['model'] = 'adder',                     -- In case the modelname does not work propperly, use this as model name
     },
 }
 
@@ -75,28 +74,32 @@ Config.Command = {                               -- DONT EDIT OR REMOVE THIS!!!.
 }
 
 
-Config.IgnoreJobs = {                            -- 👉 If true this job wil be iqnore by the system then parking
+Config.IgnoreJobs = {                            -- If true this job wil be iqnore by the system then parking
     ['police']    = true,
     ['ambulance'] = true,
     ['mechanic']  = true,
 }
 
 
-Config.ParkColours = {                           -- 👉 Marker colours
-    ['white']  = { r = 255, g = 255, b = 255 },  -- 👉 white
-    ['green']  = { r = 9,   g = 255, b = 0   },  -- 👉 green
-    ['blue']   = { r = 9,   g = 9,   b = 255 },  -- 👉 blue
-    ['yellow'] = { r = 255, g = 230, b = 0   },  -- 👉 yellow
-    ['orange'] = { r = 255, g = 128, b = 0   },  -- 👉 orange
-    ['grey']   = { r = 148, g = 148, b = 148 },  -- 👉 grey
-    ['black']  = { r = 6,   g = 5,   b = 5   },  -- 👉 black
-    ['red']    = { r = 255, g = 0,   b = 0   },  -- 👉 red
+Config.ParkColours = {                           -- Marker colours
+    ['white']  = { r = 255, g = 255, b = 255 },  -- White
+    ['green']  = { r = 9,   g = 255, b = 0   },  -- Green
+    ['blue']   = { r = 9,   g = 9,   b = 255 },  -- Blue
+    ['yellow'] = { r = 255, g = 230, b = 0   },  -- Yellow
+    ['orange'] = { r = 255, g = 128, b = 0   },  -- Orange
+    ['grey']   = { r = 148, g = 148, b = 148 },  -- Grey
+    ['black']  = { r = 6,   g = 5,   b = 5   },  -- Black
+    ['red']    = { r = 255, g = 0,   b = 0   },  -- Ted
 }
+
 
 Config.ParkingLocation  = {x = 232.11, y = -770.14, z = 0.0, w = 900.10, s = 99999099.0}
 
 
 -- Poly Parking zones
+Config.DebugPolyzone              = false        -- Default false
+Config.UseParkZones               = false        -- Default false
+
 Config.Parkzones["blokkenpark"] = { 
     ['name']     = 'Blokkenpark Parking',
     ['showBlip'] = true,
