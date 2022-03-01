@@ -70,9 +70,7 @@ local function RefreshVehicles(source)
 						fuel        = v.fuel,
 						coords      = json.decode(v.coords), 
 					}
-					if Player.PlayerData.citizenid == v.citizenid then
-						TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
-					end
+					TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
 				end
 				TriggerClientEvent("qb-parking:client:refreshVehicles", source, vehicles)
 			end
