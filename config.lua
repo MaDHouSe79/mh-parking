@@ -38,13 +38,6 @@ Config.UseOnJoinRefresh           = true
 
 Config.BuildMode                  = false        -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
-Config.SystemAdmins = {
-    ["RJS90852"] = {                             -- <--------- the player citizen id
-        username  = "MaDHouSe",                  -- <--------- the player username just so we know who it is.
-        isAdmin   = true,                        -- <--------- is the player a system admin
-    }
-}
-
 Config.JobToCreateParkSpaces = {                 -- The job that you need to able to create parking places.
     ['realestate'] = true,
     ['police']    = false, 
