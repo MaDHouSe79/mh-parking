@@ -114,6 +114,14 @@ local function checkVersion(err, responseText, headers)
     end
 end
 
+--source, data.cid, data.parkname, data.display, data.radius, data.cost, data.job, data.marker, markerOffset, data.parktype
+local function SaveParkPlace(source, data, markerOffset)
+	local coords = vector3(GetEntityCoords(GetPlayerPed(source)).x, GetEntityCoords(GetPlayerPed(source)).y, GetEntityCoords(GetPlayerPed(source)).z)
+	--MySQL.Async.execute("INSERT INTO player_parking_reserved (citizenid, display, cost, radius, parktype, marker, coords, markcoords, time, job) VALUES (?,?,?,?,?,?,?,?,?,?)", {
+	--	data.cid, data.display, data.cost, data.radius, data.parktype, data.marker, json.encode(coords), json.encode(markerOffset), os.time(), data.job
+	--})
+end
+
 -- Create a park location
 local function CreateParkingLocation(source, id, parkname, display, radius, cost, job, marker, markerOffset, parktype)
 	local citizenid = 0
@@ -137,10 +145,23 @@ local function CreateParkingLocation(source, id, parkname, display, radius, cost
 	file:write(label)
    	file:close()
 	local data = {}
-	data = {["name"] = parkname, ["display"] = display, ["citizenid"] = citizenid, ["coords"] = vector3(coords.x, coords.y, coords.z), ["cost"] = cost, ["job"] = job, ["radius"] = radius, ["parktype"] = parktype, ["marker"] = marker, ["markcoords"] = vector3(markerOffset.x, markerOffset.y, markerOffset.z) }
+	data = {
+		["name"]       = parkname, 
+		["display"]    = display, 
+		["citizenid"]  = citizenid, 
+		["cost"]       = cost, 
+		["job"]        = job, 
+		["radius"]     = radius, 
+		["parktype"]   = parktype, 
+		["marker"]     = marker, 
+		["coords"]     = vector3(coords.x, coords.y, coords.z), 
+		["markcoords"] = vector3(markerOffset.x, markerOffset.y, markerOffset.z), 
+	}
 	Config.ReservedParkList[parkname] = data
 	TriggerClientEvent('qb-parking:client:newParkConfigAdded', -1, parkname, data)
+	
 end
+
 
 
 local function SaveData(Player, vehicleData)
@@ -598,5 +619,6 @@ RegisterServerEvent('qb-parking:server:AddNewParkingSpot', function(source, data
 		TriggerClientEvent('QBCore:Notify', source, "Parking space not saved", "error")
 	else
 		CreateParkingLocation(source, data.cid, data.parkname, data.display, data.radius, data.cost, data.job, data.marker, markerOffset, data.parktype)
+		SaveParkPlace(source, data, markerOffset)
 	end
 end)

@@ -75,17 +75,20 @@ Polyzone
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
 - ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
 ````lua
-{ table = 'player_parking' },
+{ table = 'player_parking_vehicles' },
+{ table = 'player_parking_vips' },
+
+--NOT IN USE YET, YOU DONT HAVE TO ADD THIS
+{ table = 'player_parking_reserved'}
 ````
+## Impound Trigger, to unpark the vehicle.
+```lua
+ TriggerEvent("qb-parking:client:impound", plate) 
+```
 
 ## Stolen Trigger, to unpark the vehicle for lockpicking.
 ```lua
  TriggerEvent("qb-parking:client:stolen", plate) 
-```
-
-## Impound Trigger, to unpark the vehicle.
-```lua
- TriggerEvent("qb-parking:client:impound", plate) 
 ```
 
 ## 🐞 Any bugs issues or suggestions, let my know.
@@ -95,5 +98,4 @@ Polyzone
 ## 🙈 Youtube & Discord & Twitter
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
 - [Discord](https://discord.gg/cEMSeE9dgS)
-- [Twitter](https://twitter.com/madhouse1979)
 
