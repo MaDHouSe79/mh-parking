@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css?family=Staatliches');
+* {
+    margin: 0;
+    outline: 0;
+    font-weight: normal;
+    box-sizing: border-box;
+    color: rgba(255, 255, 255, 0.8);
+    user-select: none;
+    overflow: hidden;
+}
+
+#container {
+    width: 30vw;
+    position: absolute;
+    top: 40vh;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    text-shadow: 0.05vh 0.05vh 0.01vh rgba(0, 0, 0, 0.389);
+}
+
+#park {
+    display: none;
+    position: relative;
+    padding: 0.9vh;
+    width: fit-content;
+    border-radius: .4vh;
+    font-family: "Staatliches";
+    font-size: 1.7vh;
+    float: left;
+    color: #fff;
+    right: 13vh;
+}
+
+.slide-in {
+    animation: slide-in 1s forwards;
+}
+
+.slide-out {
+    animation: slide-out 1s forwards;
+}
+
+@keyframes slide-in {
+    0% {
+        right: 13vh;
+    }
+    100% {
+        right: -0.7vh;
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        right: -0.7vh;
+    }
+    100% {
+        right: 13vh;
+    }
+}
+
+#formContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#newPark {
+    display: grid;
+    grid-template-rows: auto;
+    width: 35vh;
+    padding: 1vh;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 1vh;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5vh;
+    text-align: center;
+}
+
+#newPark div {
+    height: fit-content;
+}
+
+text {
+    vertical-align: middle;
+    font-weight: 500;
+    font-size: 1.5vh;
+}
+
+option {
+    color: black;
+}
+
+#submit {
+    border: 0;
+    width: 100%;
+    height: 3.5vh;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5vh;
+    color: white;
+    border-radius: 1vh;
+    background-color: rgba(240, 240, 240, 0.10);
+}
+
+input[type=text],
+.dropdown {
+    border: 0;
+    padding: 3%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5vh;
+    color: white;
+    width: 100%;
+    text-align: center;
+    border-radius: 1vh;
+    background-color: rgba(240, 240, 240, 0.10);
+}
+
+.customCheckBox {
+    cursor: pointer;
+    font-size: 1.5vh;
+}
+
+.customCheckBox input {
+    vertical-align: middle;
+    height: 1.5vh;
+    width: 1.5vh;
+}
