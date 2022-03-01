@@ -32,7 +32,3 @@ CREATE TABLE `player_parking_reserved`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
-
-/* if you dont have this */;
-ALTER TABLE `player_vehicles` ADD COLUMN `location` TEXT NULL DEFAULT NULL
-ALTER TABLE `player_vehicles` ADD COLUMN `citizenname` TEXT NULL DEFAULT NULL

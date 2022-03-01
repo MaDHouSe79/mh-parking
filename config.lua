@@ -32,7 +32,7 @@ Config.UseOnlyForVipPlayers       = false        -- Default false
 Config.UseParkedLocationNames     = true         -- Default true
 Config.UseRoleplayName            = true         -- Default true
 Config.UseStopSpeedForPark        = true         -- Default true
-
+Config.UseOnplayerLoad            = false        -- Default false
 Config.UseTargetEye               = true         -- Default true
 Config.DisplayPlayerAndPolice     = false        -- Default false
 

@@ -23,7 +23,9 @@ local CreateMode         = false
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    TriggerServerEvent("qb-parking:server:onjoin", PlayerData.source)
+    if Config.UseOnplayerLoad then
+        TriggerServerEvent("qb-parking:server:onjoin", PlayerData.source)
+    end
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
@@ -627,7 +629,6 @@ local function DrawParkedLocation(coords)
             if #(coords - data.coords) < tonumber(extraRadius) then
                 if data.marker then
                     local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
-
                     local r, g, b = 0, 0, 0
                     if data.parktype == 'paid' then
                         r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
@@ -669,7 +670,7 @@ local function DrawParkedLocation(coords)
         end
     end
 end
-
+-- Check Distance To Force Vehicle to the Ground
 local function checkDistanceToForceGrounded(distance)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
         for i = 1, #LocalVehicles do
@@ -694,6 +695,7 @@ local function checkDistanceToForceGrounded(distance)
     end
 end
 
+-- Build Mode Create State
 local function CreateState()
     if Config.BuildMode then
         local currentVehicle = GetVehiclePedIsIn(PlayerPedId(), 0)
@@ -766,25 +768,11 @@ RegisterNetEvent("qb-parking:client:closemenu", function(source)
     SendNUIMessage({type = "hide", enable = false})
 end)
 
-RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
-    SpawnVehicle(vehicle)
-end)
-
-RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
-    DeleteLocalVehicle(vehicle)
-end)
-
-RegisterNetEvent("qb-parking:client:impound",  function(plate)
-    ActionVehicle(plate, 'impound')
-end)
-
-RegisterNetEvent("qb-parking:client:stolen",  function(plate)
-    ActionVehicle(plate, 'stolen')
-end)
-
-RegisterNetEvent("qb-parking:client:unpark", function(plate)
-    ActionVehicle(plate, 'unpark')
-end)
+RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle) SpawnVehicle(vehicle) end)
+RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle) DeleteLocalVehicle(vehicle) end)
+RegisterNetEvent("qb-parking:client:impound",  function(plate) ActionVehicle(plate, 'impound') end)
+RegisterNetEvent("qb-parking:client:stolen",  function(plate) ActionVehicle(plate, 'stolen') end)
+RegisterNetEvent("qb-parking:client:unpark", function(plate) ActionVehicle(plate, 'unpark') end)
 
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
