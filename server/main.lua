@@ -539,8 +539,8 @@ end)
 
 QBCore.Commands.Add(Config.Command.buildmode, "Park Build Mode On/Off", {}, true, function(source)
 	PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if Config.JobToCreateParkSpaces[PlayerData.job.name] or QBCore.Functions.HasPermission(source, 'admin') then
-		if PlayerData.job.onduty or QBCore.Functions.HasPermission(source, 'admin') then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or QBCore.Functions.HasPermission(source, 'admin') or QBCore.Functions.HasPermission(source, 'god') then
+		if PlayerData.job.onduty or QBCore.Functions.HasPermission(source, 'admin') or QBCore.Functions.HasPermission(source, 'god') then
 			Config.BuildMode = not Config.BuildMode
 			if Config.BuildMode then
 				TriggerClientEvent("qb-parking:client:buildmode", source)
@@ -560,8 +560,8 @@ end)
 
 QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, function(source)
     PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if Config.JobToCreateParkSpaces[PlayerData.job.name] or QBCore.Functions.HasPermission(source, 'admin') then
-		if PlayerData.job.onduty or QBCore.Functions.HasPermission(source, 'admin') then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or QBCore.Functions.HasPermission(source, 'admin') or QBCore.Functions.HasPermission(source, 'god') then
+		if PlayerData.job.onduty or QBCore.Functions.HasPermission(source, 'admin') or QBCore.Functions.HasPermission(source, 'god') then
 			TriggerClientEvent("qb-parking:client:openmenu", source)
 		else
 			TriggerClientEvent('QBCore:Notify', source, Lang:t('system.must_be_onduty'), "error")
