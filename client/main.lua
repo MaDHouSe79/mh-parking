@@ -20,10 +20,13 @@ local LastUsedPlate      = nil
 local ParkOwnerName      = nil
 local ParkAction         = 'none'
 local extraRadius        = 3
-
+local citizenid          = 0
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
+    if Config.UseOnJoinRefresh then
+        TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
+    end
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
@@ -148,7 +151,6 @@ local function VehicleSpawn(data, warp)
         SetEntityHeading(veh, data.vehicle.coords.w)
         local offset = trailerOffset(veh)
         SetEntityCoords(veh, data.vehicle.coords.x, data.vehicle.coords.y, data.vehicle.coords.z - offset, false, false, false, true);
-        TriggerEvent('qb-parking:client:addkey', data.plate, data.citizenid) 
         SetVehicleOnGroundProperly(veh)
         SetVehicleDoorsLocked(veh, 2)
         if warp then 
@@ -173,7 +175,6 @@ end
 
 -- Spawn 
 local function Spawn(vehicleData, warp)
-    PlayerData = QBCore.Functions.GetPlayerData()
     local model = vehicleData.model
     ClearAreaOfVehicles(vehicleData.vehicle.coords.x, vehicleData.vehicle.coords.y, vehicleData.vehicle.coords.z, 2, false, false, false, false, false)
     Wait(30)
@@ -488,7 +489,6 @@ end
 -- Save
 local function Save(player, vehicle, warp)
     Park(player, vehicle, warp)
-    PlayerData = QBCore.Functions.GetPlayerData()
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
     local carModelName = GetLabelText(displaytext)
@@ -553,7 +553,6 @@ local function ActionVehicle(plate, action)
 end
 
 local function IsNotReservedPosition(coords)
-    PlayerData = QBCore.Functions.GetPlayerData()
     freeSpot = true
     local haspaid  = false
     for _, data in pairs(Config.ReservedParkList) do
@@ -779,8 +778,11 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
 
-RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
-    if QBCore.Functions.GetPlayerData().citizenid == citizenid then 
+RegisterNetEvent('qb-parking:client:addkey', function(plate, cid)
+    if citizenid == 0 or citizenid == nil then
+        citizenid = QBCore.Functions.GetPlayerData().citizenid
+    end
+    if citizenid == cid then 
         TriggerEvent('vehiclekeys:client:SetOwner', plate) 
     end
 end)
@@ -817,6 +819,10 @@ RegisterNetEvent("qb-parking:client:buildmode", function(state)
 end)
 
 -- Threads
+CreateThread(function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+end)
+
 CreateThread(function()
     while true do
         if not Config.UseParkZones then

@@ -34,6 +34,7 @@ Config.UseOnplayerLoad            = false        -- Default false
 Config.UseTargetEye               = false        -- Default true
 Config.DisplayPlayerAndPolice     = false        -- Default false
 
+Config.UseOnJoinRefresh           = true
 
 Config.BuildMode                  = false        -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
