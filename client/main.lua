@@ -486,51 +486,58 @@ end
 
 -- Save
 local function Save(player, vehicle, warp)
-    Park(player, vehicle, warp)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
-    local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    local carModelName = GetLabelText(displaytext)
-    ParkAction         = 'park'
-    LastUsedPlate      = plate
-    local offset       = trailerOffset(vehicle)
-    local currenModel  = GetRealModel(vehicle)
-    QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
-        if callback.status then
-            IsDeleting = true
-            QBCore.Functions.DeleteVehicle(vehicle)
-            SendMail(
-                Lang:t('mail.sender' , {
-                    company   = Lang:t('info.companyName'),
-                }),
-                Lang:t('mail.subject', {
-                    model     = carModelName,
-                    plate     = LastUsedPlate,
-                }),
-                Lang:t('mail.message', {
-                    street    = GetStreetName(),
-                    company   = Lang:t('info.companyName'),
-                    username  = PlayerData.charinfo.firstname,
-                    model     = carModelName,
-                    plate     = LastUsedPlate,
-                })
-            )
-            IsDeleting = false
+    QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicleOwner', function(owned)
+        if owned then
+            Park(player, vehicle, warp)
+            local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
+            local carModelName = GetLabelText(displaytext)
+            ParkAction         = 'park'
+            LastUsedPlate      = plate
+            local offset       = trailerOffset(vehicle)
+            local currenModel  = GetRealModel(vehicle)
+            QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
+                if callback.status then
+                    IsDeleting = true
+                    QBCore.Functions.DeleteVehicle(vehicle)
+                    SendMail(
+                        Lang:t('mail.sender' , {
+                            company   = Lang:t('info.companyName'),
+                        }),
+                        Lang:t('mail.subject', {
+                            model     = carModelName,
+                            plate     = LastUsedPlate,
+                        }),
+                        Lang:t('mail.message', {
+                            street    = GetStreetName(),
+                            company   = Lang:t('info.companyName'),
+                            username  = PlayerData.charinfo.firstname,
+                            model     = carModelName,
+                            plate     = LastUsedPlate,
+                        })
+                    )
+                    IsDeleting = false
+                else
+                    QBCore.Functions.Notify(callback.message, "error", 5000)
+                end
+            end, {
+                props       = vehicleProps,
+                livery      = GetVehicleLivery(vehicle),
+                citizenid   = PlayerData.citizenid,
+                plate       = vehicleProps.plate,
+                fuel        = GetVehicleFuelLevel(vehicle),
+                oil         = GetVehicleOilLevel(vehicle),
+                model       = currenModel,
+                modelname   = carModelName,
+                health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
+                location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+                coords      = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+            })
         else
-            QBCore.Functions.Notify(callback.message, "error", 5000)
+            QBCore.Functions.Notify('You can only park vehicles that you own!', 'error')
+            return
         end
-    end, {
-        props       = vehicleProps,
-        livery      = GetVehicleLivery(vehicle),
-        citizenid   = PlayerData.citizenid,
-        plate       = vehicleProps.plate,
-        fuel        = GetVehicleFuelLevel(vehicle),
-        oil         = GetVehicleOilLevel(vehicle),
-        model       = currenModel,
-        modelname   = carModelName,
-        health      = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
-        location    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-        coords      = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-    })
+    end, vehicleProps.plate)
 end
 
 -- Impound/Stolen/UnPark
@@ -881,6 +888,8 @@ CreateThread(function()
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
                             elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
+
+
                                     Save(PlayerPedId(), vehicle, true)
                                     QBCore.Functions.Notify(Lang:t("success.parked"), 'success', 1000)
                                 else
