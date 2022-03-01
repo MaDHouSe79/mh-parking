@@ -35,7 +35,7 @@ Config.UseTargetEye               = true         -- Default true
 Config.DisplayPlayerAndPolice     = false        -- Default false
 
 
-Config.BuildMode                  = false
+Config.BuildMode                  = false        -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
 Config.JobToCreateParkSpaces = {                 -- The job that you need to able to create parking places.
     ['realestate'] = true,
