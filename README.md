@@ -12,7 +12,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ## Read The Updates.md for updates and changes.
 
 ## 📸 Screenshot 👊😁👍
-![foto1](https://www.madirc.nl/fivem/new6.png)
+![foto1](https://www.madirc.nl/fivem/new7.png)
 ![foto1](https://www.madirc.nl/fivem/new1.png)
 ![foto1](https://www.madirc.nl/fivem/new2.png)
 ![foto1](https://www.madirc.nl/fivem/new3.png)
