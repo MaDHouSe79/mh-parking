@@ -18,6 +18,7 @@ This is my second mod i make public, so please by kind to my 😁 i still have m
 ![foto1](https://www.madirc.nl/fivem/new3.png)
 ![foto1](https://www.madirc.nl/fivem/new4.png)
 ![foto1](https://www.madirc.nl/fivem/new5.png)
+![foto1](https://www.madirc.nl/fivem/new8.png)
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
 ![foto1](https://www.madirc.nl/fivem/foto9.png)
 ![foto1](https://www.madirc.nl/fivem/foto11.png)
