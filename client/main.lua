@@ -179,10 +179,14 @@ local function VehicleSpawn(data, warp)
         TriggerEvent('qb-parking:client:addkey', data.plate, data.citizenid) 
         SetVehicleOnGroundProperly(veh)
         SetVehicleDoorsLocked(veh, 2)
-        if warp then TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1) end
+        if warp then 
+            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+            SetVehicleEngineOn(veh, true, true, true) 
+        else
+            SetVehicleDoorsLocked(veh, 0)
+        end
         FreezeEntityPosition(veh, true)
         SetEntityCanBeDamaged(veh, false)
-        SetVehicleEngineOn(veh, false, false, true)
         SetCanClimbOnEntity(veh, false)
         SetEntityInvincible(veh, false)
         SetVehRadioStation(veh, 'OFF')
