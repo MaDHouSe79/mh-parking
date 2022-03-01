@@ -156,8 +156,6 @@ local function VehicleSpawn(data, warp)
         if warp then 
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             SetVehicleEngineOn(veh, true, true, true) 
-        else
-            SetVehicleDoorsLocked(veh, 0)
         end
         FreezeEntityPosition(veh, true)
         SetEntityCanBeDamaged(veh, false)
