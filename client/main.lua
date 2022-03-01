@@ -711,8 +711,8 @@ local function CreateState()
 end
 
 -- Commands
-RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
-RegisterKeyMapping(Config.Command.createmenu, Lang:t('system.open_create_menu'), 'keyboard', 'F6') 
+RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton) 
+RegisterKeyMapping(Config.Command.createmenu, Lang:t('system.open_create_menu'), 'keyboard', Config.KeyParkMenuBindButton) 
 
 -- Events
 RegisterNUICallback('newParkLocation', function(data, cb)
