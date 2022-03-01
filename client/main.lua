@@ -633,7 +633,6 @@ local function DrawParkedLocation(coords)
                             end
                         end
                     end
-                    
                     DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,r, g, b, 222, false, false, false, true, false, false, false)
                     if data.parktype ~= 'free' then
                         if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
