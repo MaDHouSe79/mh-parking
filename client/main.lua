@@ -534,7 +534,7 @@ local function Save(player, vehicle, warp)
                 coords      = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
             })
         else
-            QBCore.Functions.Notify('You can only park vehicles that you own!', 'error')
+            QBCore.Functions.Notify(LAng:t('info.must_own_car'), 'error')
             return
         end
     end, vehicleProps.plate)
