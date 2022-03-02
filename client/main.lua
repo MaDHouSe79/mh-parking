@@ -886,23 +886,23 @@ CreateThread(function()
                             local vehicleCoords = GetEntityCoords(vehicle)
                             if speed > Config.MinSpeedToPark and Config.UseStopSpeedForPark then
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
+
                             elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
-
-
                                     Save(PlayerPedId(), vehicle, true)
                                     QBCore.Functions.Notify(Lang:t("success.parked"), 'success', 1000)
                                 else
                                     QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
                                 end
-                            elseif IsThisModelABoat(GetEntityModel(vehicle)) then
+                            elseif IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
                                     Save(PlayerPedId(), vehicle, true)
                                     QBCore.Functions.Notify(Lang:t("success.parked"), 'success', 1000)
                                 else
                                     QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
                                 end
-                            end				
+                            end	
+  
 						end
 					end
 				end
