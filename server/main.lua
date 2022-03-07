@@ -183,7 +183,7 @@ local function SaveData(Player, vehicleData)
 		["coords"]       = json.encode(vehicleData.coords),
 	})
 	MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = @plate AND citizenid = @citizenid', {
-		["@plate"]       = plate,
+		["@plate"]       = vehicleData.plate,
 		["@citizenid"]   = GetCitizenid(Player)
 	})
 	TriggerClientEvent("qb-parking:client:addVehicle", -1, {
