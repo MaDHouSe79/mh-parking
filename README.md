@@ -55,9 +55,9 @@ Polyzone
 ## 🎮 How To Use
 - 👉 Typ "/park" to park or drive your vehicle where you are at that moment. (Users and Admins)
 - 👉 Typ "/park-names if you want to display the names ontop of the vehicle that is parked. (Users and Admins)
-- 👉 Typ "/park-notification" to turn on or of the phone notification (Users and Admins)
-- 👉 Typ "/park-create" to create a new parking space (Admin only)
-- 👉 Typ "/park-build" to go in to build mode (Admin only)
+- 👉 Typ "/park-lotnames if you want to display the names of the parking lots. (Users and Admins)
+- 👉 Typ "/park-cmenu" to create a new parking space (Admin only)
+- 👉 Typ "/park-bmode" to go in to build mode (Admin only)
 - 👉 Typ "/park-system" if you want to turn on or off the system. (Admin Only)
 - 👉 Typ "/park-usevip" to turn on and of the vip system
 - 👉 Typ "/park-addvip [id]" if you want to add a vip. (Admin Only)
