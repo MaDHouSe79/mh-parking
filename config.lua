@@ -28,6 +28,7 @@ Config.UseParkingSystem          = true         -- Default true,  this turn the 
 Config.UseOnlyPreCreatedSpots    = true         -- Default true,  if you only want to use pre-created locations.
 Config.UseParkingBlips           = true         -- Default true,  if you want to see parking blips 
 Config.UseParkedVehicleNames     = true         -- Default false  if you want parking vehicles names.
+Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset this higher
 Config.UseOnlyForVipPlayers      = false        -- Default false  if you only want that vip players can park.
 Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
 Config.UseRoleplayName           = true         -- Default true   if you want to use roleplay names
@@ -40,15 +41,12 @@ Config.MaxStreetParkingPerPlayer = 1            -- Default 1, total allowed park
 Config.UseMaxParkingOnServer     = true         -- Default true if you want to use a max amount of vehicles that can park on the server.
 Config.MaxServerParkedVehicles   = 50           -- Default 50, total allowed parked vehicles on the server.
 
-
 Config.UseTimeDelay              = true         -- Default true if vehicles duplicate use this.
 Config.TimeDelay                 = 100          -- Default 100 if vehicle still duplicate set this higher but not to hight.
-
 
 -- just for parking log to your discord
 Config.UseDiscoordLog            = false        -- default false (this only works if you have a discord webhook url added in Config.Webhook)
 Config.Webhook                   = ""           -- discord webhook link, to create a webhook go to [https://discord.com/developers/applications]
-
 
 
 Config.JobToCreateParkSpaces = {                -- The job that you need to able to create parking places.
