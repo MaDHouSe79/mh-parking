@@ -32,7 +32,7 @@ Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset thi
 Config.UseOnlyForVipPlayers      = false        -- Default false  if you only want that vip players can park.
 Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
 Config.UseRoleplayName           = true         -- Default true   if you want to use roleplay names
-Config.UseTargetEye              = true         -- Default true   if you want to use target eye, to park a trailer you need target eye.
+Config.UseTargetEye              = false        -- Default false  if you want to use target eye, to park a trailer you need target eye.
 
 
 -- only for server performance
