@@ -25,9 +25,9 @@ Config.DisplayMarkerDistance     = 15           -- Default 10
 Config.PayTimeInSecs             = 10           -- 10 secs
 
 Config.UseParkingSystem          = true         -- Default true,  this turn the parking system On or Off.
-Config.UseOnlyPreCreatedSpots    = false        -- Default true,  if you only want to use pre-created locations.
+Config.UseOnlyPreCreatedSpots    = false        -- Default false,  if you only want to use pre-created locations.
 Config.UseParkingBlips           = true         -- Default true,  if you want to see parking blips 
-Config.UseParkedVehicleNames     = true         -- Default false  if you want parking vehicles names.
+Config.UseParkedVehicleNames     = true         -- Default true  if you want parking vehicles names.
 Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset this higher
 Config.UseOnlyForVipPlayers      = false        -- Default false  if you only want that vip players can park.
 Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
