@@ -512,6 +512,7 @@ local function ActionVehicle(plate, action)
 end
 
 local function IsNotReservedPosition(coords)
+    local freeSpot = true
     local haspaid  = false
     ParkTime = 0
     Cost = 0
