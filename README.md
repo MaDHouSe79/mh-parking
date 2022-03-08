@@ -15,7 +15,6 @@ and you have parked your vehicle, then you never have to get your vehicle from t
 ![foto1](https://www.madirc.nl/fivem/new3.png)
 ![foto1](https://www.madirc.nl/fivem/new4.png)
 ![foto1](https://www.madirc.nl/fivem/new5.png)
-![foto1](https://www.madirc.nl/fivem/new8.png)
 ![foto1](https://www.madirc.nl/fivem/new9.png)
 ![foto1](https://www.madirc.nl/fivem/new10.png)
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
