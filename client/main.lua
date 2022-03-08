@@ -174,6 +174,8 @@ local function Spawn(vehicleData, warp)
 		vehicle     = vehicleData.mods,
 		plate       = vehicleData.plate,
         fuel        = vehicleData.fuel,
+        body        = vehicleData.body,
+        engine      = vehicleData.engine,
         oil         = vehicleData.oil, 
 		citizenid   = vehicleData.citizenid,
 		citizenname = vehicleData.citizenname,
@@ -793,10 +795,6 @@ end)
 
 RegisterNetEvent("qb-parking:client:buildmode", function(state)
     Config.BuildMode = not Config.BuildMode
-end)
-
-CreateThread(function()
-    PlayerData = QBCore.Functions.GetPlayerData()
 end)
 
 -- Threads

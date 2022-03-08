@@ -32,12 +32,12 @@ Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset thi
 Config.UseOnlyForVipPlayers      = false        -- Default false  if you only want that vip players can park.
 Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
 Config.UseRoleplayName           = true         -- Default true   if you want to use roleplay names
-Config.UseTargetEye              = false        -- Default false  if you want to use target eye, to park a trailer you need target eye.
+Config.UseTargetEye              = true         -- Default false  if you want to use target eye, to park a trailer you need target eye.
 
 
 -- only for server performance
 Config.UseMaxParkingPerPlayer    = true         -- Default true if you want to use a max amount of parked vehicles per player
-Config.MaxStreetParkingPerPlayer = 1            -- Default 1, total allowed parked vehicles per player in world
+Config.MaxStreetParkingPerPlayer = 2            -- Default 2, total allowed parked vehicles per player in world
 Config.UseMaxParkingOnServer     = true         -- Default true if you want to use a max amount of vehicles that can park on the server.
 Config.MaxServerParkedVehicles   = 50           -- Default 50, total allowed parked vehicles on the server.
 
