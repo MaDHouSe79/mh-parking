@@ -522,7 +522,7 @@ local function IsNotReservedPosition(coords)
         if #(coords - data.coords) <= tonumber(data.radius) then
             if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
                 freeSpot = true
-                QBCore.Functions.Notify(Lang:t('system.parked'), "success", 5000)
+                QBCore.Functions.Notify(Lang:t('success.parked'), "success", 5000)
             else
                 if data.parktype == 'nopark' then
                     freeSpot = false
