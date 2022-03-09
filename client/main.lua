@@ -276,7 +276,7 @@ local function DeleteLocalVehicle(vehicle)
 end
 
 -- Create Vehicle Park Target Zone
-local function createVehParkingZone()
+local function CreateVehParkingZone()
     if Config.UseTargetEye then
         exports['qb-target']:AddGlobalVehicle({
             options = {
@@ -309,7 +309,7 @@ local function SpawnVehicles(vehicles)
 				DeleteLocalVehicle(vehicles[i].vehicle)
                 if Config.UseTimeDelay then Wait(Config.TimeDelay) end
                 Spawn(vehicles[i], false)
-                createVehParkingZone()
+                CreateVehParkingZone()
 			end
 		end
     end)
@@ -325,7 +325,7 @@ local function SpawnVehicle(vehicleData)
 			DeleteLocalVehicle(vehicleData.vehicle)
             if Config.UseTimeDelay then Wait(Config.TimeDelay) end
             Spawn(vehicleData, false)
-            createVehParkingZone()
+            CreateVehParkingZone()
 		end
     end)
 end
