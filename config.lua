@@ -84,7 +84,7 @@ Config.Command = {                              -- DONT EDIT OR REMOVE THIS!!!.
     buildmode     = 'park-bmode',               -- Admin permission (Build Mode Markers)
 }
 
-Config.IgnoreJobs = {                           -- If true this job wil be iqnore by the system then parking
+Config.IgnoreJobs = {                           -- If true this job wil be iqnore by the system when parking
     ['police']    = true,
     ['ambulance'] = true,
     ['mechanic']  = true,

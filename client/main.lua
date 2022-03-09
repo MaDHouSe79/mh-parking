@@ -514,7 +514,6 @@ end
 
 local function IsNotReservedPosition(coords)
     local freeSpot = true
-    local haspaid  = false
     ParkTime = 0
     Cost = 0
     if Config.UseOnlyPreCreatedSpots then freeSpot = false end
