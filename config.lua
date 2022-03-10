@@ -5,7 +5,7 @@ Config.ReservedParkList          = {}           -- DONT EDIT CHANGE OR REMOVE TH
 Config.Parkzones                 = {}           -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 Config.BuildMode                 = false        -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
-Config.UseOnJoinRefresh           = true
+Config.UseOnJoinRefresh          = false
 
 Config.CheckForUpdates           = true         -- Default true
 Config.ResetState                = 1            -- Default 1, 1 is stored in garage, 2 is police impound. 
