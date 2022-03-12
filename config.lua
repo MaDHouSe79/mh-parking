@@ -22,7 +22,7 @@ Config.VehicleOwnerKeyTrigger    = "vehiclekeys:client:SetOwner" -- in case you 
 
 
 Config.DisplayMarkerDistance     = 15           -- Default 10
-Config.PayTimeInSecs             = 10           -- 10 secs
+Config.PayTimeInSecs             = 3600         -- 1 hour
 
 Config.UseParkingSystem          = true         -- Default true,  this turn the parking system On or Off.
 Config.UseOnlyPreCreatedSpots    = false        -- Default false,  if you only want to use pre-created locations.
