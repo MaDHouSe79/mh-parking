@@ -691,6 +691,9 @@ end
 -- Command
 RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton) 
 
+RegisterCommand(Config.Command.park, function()
+    isUsingParkCommand = true
+end, false)
 
 RegisterNUICallback('newParkLocation', function(data, cb)
     closeNUI()
