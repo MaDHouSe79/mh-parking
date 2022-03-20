@@ -2,7 +2,6 @@
 --[[      QBCore Realistic Parking Script by MaDHouSe      ]]--
 --[[ ===================================================== ]]--
 
-
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, PlayerJob, LocalVehicles, GlobalVehicles = {}, {}, {}, {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
@@ -25,7 +24,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
     PlayerData = data
 end)
 
-
 local function CreateParkDisPlay(vehicleData)
     local info, model, owner, plate = nil
     owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
@@ -36,7 +34,6 @@ local function CreateParkDisPlay(vehicleData)
 end
 
 -- Do Vehicle damage
-
 local function doCarDamage(vehicle, body, engine)
 	local engine = engine + 0.0
 	local body = body + 0.0
@@ -159,10 +156,8 @@ local function Spawn(vehicleData, warp)
     Wait(30)
     local entity = VehicleSpawn(vehicleData, warp)
     local tmpBlip = nil
-    if PlayerData.citizenid == vehicleData.citizenid then
-        if Config.UseParkingBlips then
-            tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
-        end
+    if Config.UseParkingBlips then
+        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
     end
     TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     LocalVehicles[#LocalVehicles+1] = {
@@ -458,10 +453,8 @@ local function Save(player, vehicle, warp)
                 if callback.status then
                     IsDeleting = true
                     QBCore.Functions.DeleteVehicle(vehicle)
-
                     IsDeleting = false
                     QBCore.Functions.Notify(callback.message, "success", 1000)
-
                 else
                     QBCore.Functions.Notify(callback.message, "error", 5000)
                 end
@@ -687,7 +680,6 @@ end
 
 -- Command
 RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton) 
-
 RegisterCommand(Config.Command.park, function()
     isUsingParkCommand = true
 end, false)
