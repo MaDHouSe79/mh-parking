@@ -66,6 +66,33 @@ Polyzone
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
 
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
+````lua
+RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
+end)
+````
+
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
+````lua
+RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    if VehicleList then
+        local val = VehicleList[plate]
+        if val then
+            VehicleList[plate].owners[citizenid] = true
+        else
+            VehicleList[plate] = { owners = {} }
+            VehicleList[plate].owners[citizenid] = true
+        end
+    else
+        VehicleList = {}
+        VehicleList[plate] = { owners = {} }
+        VehicleList[plate].owners[citizenid] = true
+    end
+end)
+````
+
+
 ## 💯 Police and Mechanic Impound Trigger
 - ✅ You can impound this vehicles, if a user park their vehicle incorrectly, and you added the trigger correctly...
 - ✅ You can give a fine, and then if you want, you can still impound this vehicle.
