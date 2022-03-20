@@ -11,9 +11,6 @@ local ParkAction, extraRadius, Cost, ParkTime = 'none', 3, 0, 0
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-    if Config.UseOnJoinRefresh then
-        TriggerServerEvent("qb-parking:server:refreshVehicles", 'allparking')
-    end
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
