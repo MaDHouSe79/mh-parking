@@ -1,3 +1,36 @@
+## --------------------------------------------Update Fix----------------------------------------------
+
+#extra code again cause the vehicle keys wil not workj
+- you have to put some extra code
+- 
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
+````lua
+RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
+end)
+````
+
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
+````lua
+RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    if VehicleList then
+        local val = VehicleList[plate]
+        if val then
+            VehicleList[plate].owners[citizenid] = true
+        else
+            VehicleList[plate] = { owners = {} }
+            VehicleList[plate].owners[citizenid] = true
+        end
+    else
+        VehicleList = {}
+        VehicleList[plate] = { owners = {} }
+        VehicleList[plate].owners[citizenid] = true
+    end
+end)
+````
+
+
+
 ## ---------------------------------------------Updates------------------------------------------------
 - Again a huge update, added parking time expired, when this happens the vehicle wil be impounded automatically by the police.
 - Added a max amount of parking vehicles per player.
