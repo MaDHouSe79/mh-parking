@@ -9,6 +9,12 @@ and you have parked your vehicle, then you never have to get your vehicle from t
 
 if you only want to use free for al parking 👉 https://github.com/MaDHouSe79/qb-parkinglite
 
+## NOTE 
+if parking give you any issues with spawning, i know this i'm trying to find a fix for it,
+you can use parking-lite if you still want to use this, this is a very lite version of this parking
+Link: https://github.com/MaDHouSe79/qb-parkinglite
+
+
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/new7.png)
 ![foto1](https://www.madirc.nl/fivem/new1.png)
