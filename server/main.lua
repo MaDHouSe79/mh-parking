@@ -496,6 +496,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 					["@citizenid"] = rs[1].citizenid,
 					["@garage"]    = 'impoundlot',
 				})
+				TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 			else
 				local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 				if cost < 0 then cost = 0 end
