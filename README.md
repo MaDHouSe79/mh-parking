@@ -128,6 +128,21 @@ end)
  TriggerEvent("qb-parking:client:stolen", plate) 
 ```
 
+## if you mis the table player_boats
+```sql
+CREATE TABLE IF NOT EXISTS `player_boats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `citizenid` varchar(50) DEFAULT NULL,
+  `model` varchar(50) DEFAULT NULL,
+  `plate` varchar(50) DEFAULT NULL,
+  `boathouse` varchar(50) DEFAULT NULL,
+  `fuel` int(11) NOT NULL DEFAULT 100,
+  `state` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `citizenid` (`citizenid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
 ## 🐞 Any bugs issues or suggestions, let my know.
 - If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
