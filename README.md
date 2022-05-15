@@ -80,6 +80,7 @@ end)
 ````
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
+- (For the old vehiclekey script)
 ````lua
 RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     if VehicleList then
@@ -95,6 +96,20 @@ RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate
         VehicleList[plate] = { owners = {} }
         VehicleList[plate].owners[citizenid] = true
     end
+end)
+````
+
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua. 
+- (For the new vehiclekey script)
+````lua
+RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
+    local src = source
+    if not VehicleList[plate] then 
+        VehicleList[plate] = {} 
+    end
+    VehicleList[plate][citizenid] = true
+    TriggerClientEvent('QBCore:Notify', src, "You get keys to the vehicle!")
+    TriggerClientEvent('qb-vehiclekeys:client:AddKeys', src, plate)
 end)
 ````
 
