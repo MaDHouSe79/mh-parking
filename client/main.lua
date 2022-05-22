@@ -156,7 +156,9 @@ local function Spawn(vehicleData, warp)
     local entity = VehicleSpawn(vehicleData, warp)
     local tmpBlip = nil
     if Config.UseParkingBlips then
-        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
+	if vehicleData.citizenid == QBCore.Functions.GetPlayerData().citizenid then	
+        	tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
+	end
     end
     TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     LocalVehicles[#LocalVehicles+1] = {
