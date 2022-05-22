@@ -26,12 +26,13 @@ end)
 
 local function CreateParkDisPlay(vehicleData)
     local info, model, owner, plate = nil
-    owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
-    model = string.format(Lang:t("info.model", {model = vehicleData.modelname}))..'\n'
+    if Config.UseOwnerNames then owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n' end
+    model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
     plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
-    info  = string.format("%s", model..plate..owner)
+    if Config.UseOwnerNames then info  = string.format("%s", model..plate..owner) else info  = string.format("%s", model..plate) end    
     return info
 end
+
 
 -- Do Vehicle damage
 local function doCarDamage(vehicle, body, engine)
