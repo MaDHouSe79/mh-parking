@@ -46,6 +46,7 @@ Config.TimeDelay                 = 100          -- Default 100 if vehicle still 
 Config.UseDiscoordLog            = false        -- default false (this only works if you have a discord webhook url added in Config.Webhook)
 Config.Webhook                   = ""           -- discord webhook link, to create a webhook go to [https://discord.com/developers/applications]
 
+Config.UseOwnerNames             = false
 
 Config.JobToCreateParkSpaces = {                -- The job that you need to able to create parking places.
     ['realestate'] = true,
