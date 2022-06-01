@@ -74,6 +74,7 @@ Polyzone
 - 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
+![foto1](https://naskho.org/images/ReadPlease.gif)
 
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
 ````lua
