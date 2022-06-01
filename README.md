@@ -7,7 +7,10 @@ you can use the build in build mode to correctly place your markers.
 This mod is also good if players crashes or if the server gets a reboot, and if you have permission to park,
 and you have parked your vehicle, then you never have to get your vehicle from the garage again, but if you do forget to park your vehicle, your vehicle can be found in garage or impound.
 
-if you only want to use free for al parking 👉 https://github.com/MaDHouSe79/qb-parkinglite
+
+![foto1](https://naskho.org/images/ReadPlease.gif)
+
+If you only want to use the lite version parking 👉 https://github.com/MaDHouSe79/qb-parkinglite
 
 ## NOTE 
 if parking give you any issues with spawning, i know this i'm trying to find a fix for it,
