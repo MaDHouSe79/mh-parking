@@ -447,6 +447,7 @@ local function Save(player, vehicle, warp)
 
             local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
             local carModelName = GetLabelText(displaytext)
+            local carmodel     = QBShared.Vehicles[displaytext]['model']
             ParkAction         = 'park'
             LastUsedPlate      = plate
             local offset       = trailerOffset(vehicle)
@@ -469,7 +470,7 @@ local function Save(player, vehicle, warp)
                 body        = GetVehicleBodyHealth(vehicle),
                 engine      = GetVehicleEngineHealth(vehicle),
                 oil         = GetVehicleOilLevel(vehicle),
-                model       = currenModel,
+                model       = carmodel,
                 modelname   = carModelName,
                 cost        = Cost,
                 parktime    = ParkTime,
