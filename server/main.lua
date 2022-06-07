@@ -706,21 +706,28 @@ AddEventHandler('onResourceStart', function(resource)
 		local total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles')
 		local count = 0
 		
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {
-		}, function(vehicles)
+			MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {}, function(vehicles)
 			if type(vehicles) == 'table' and #vehicles > 0 then
 				for _, vehicle in pairs(vehicles) do
-					MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE plate = @plate", {
-						['@plate'] = vehicle.plate
-					}, function(rs)
+					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {vehicle.plate}, function(rs)
 						if type(rs) == 'table' and #rs > 0 then
 							for _, v in pairs(rs) do
-								MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate', {["@plate"] = vehicle.plate})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {["@state"] = Config.ResetState, ["@plate"] = vehicle.plate})					
-								count = count + 1
+								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {vehicle.plate})
+								MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {Config.ResetState, vehicle.plate})					
 							end
 						end
 					end)
+				end
+			end
+		end)
+		Wait(2000)
+		print("[qb-parking] - lost parked vehicles garage check reset.")
+		MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(vehicles)
+			if type(vehicles) == 'table' and #vehicles > 0 then
+				for _, vehicle in pairs(vehicles) do
+					if vehicle.garage == nil then
+						MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {1, 'pillboxgarage'})
+					end
 				end
 			end
 		end)
