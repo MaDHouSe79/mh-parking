@@ -445,9 +445,9 @@ local function Save(player, vehicle, warp)
             PlayerData = QBCore.Functions.GetPlayerData()
             local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
 
-            local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
+            local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps.model)
             local carModelName = GetLabelText(displaytext)
-            local carmodel     = QBCore.Shared.Vehicles[displaytext]['model']
+            
             ParkAction         = 'park'
             LastUsedPlate      = plate
             local offset       = trailerOffset(vehicle)
@@ -470,7 +470,7 @@ local function Save(player, vehicle, warp)
                 body        = GetVehicleBodyHealth(vehicle),
                 engine      = GetVehicleEngineHealth(vehicle),
                 oil         = GetVehicleOilLevel(vehicle),
-                model       = carModelName,
+                model       = vehicleProps.model,
                 modelname   = carModelName,
                 cost        = Cost,
                 parktime    = ParkTime,
