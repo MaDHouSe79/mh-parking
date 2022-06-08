@@ -6,15 +6,15 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, updateavail, buildMode, ParkOwnerName = {}, false, false, nil
 
 local function GetUsername(player)
-	local tmpName = player.PlayerData.name
-	if Config.UseRoleplayName then
-		tmpName = player.PlayerData.charinfo.firstname ..' '.. player.PlayerData.charinfo.lastname
-	end
+    local tmpName = player.PlayerData.name
+    if Config.UseRoleplayName then
+        tmpName = player.PlayerData.charinfo.firstname ..' '.. player.PlayerData.charinfo.lastname
+    end
     return tmpName
 end
 
 local function GetCitizenid(player)
-	return player.PlayerData.citizenid
+    return player.PlayerData.citizenid
 end
 
 local function hasPerMission(source, type)
@@ -22,20 +22,21 @@ local function hasPerMission(source, type)
 end
 
 local function addZeroForLessThan10(number)
-	if(number < 10) then return 0 .. number else  return number end
+     if(number < 10) then return 0 .. number else return number end
 end
 
 local function FindPlayerVehicles(citizenid, cb)
     local vehicles = {}
     MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
         for k, v in pairs(rs) do
-			vehicles[#vehicles+1] = { 
-				plate = v.plate, 
-				citizenid = v.citizenid, 
-			}
-			if PlayerData.citizenid == v.citizenid then
-				TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
-			end
+            vehicles[#vehicles+1] = { 
+                plate = v.plate, 
+                citizenid = v.citizenid,
+                model = v.vehicle	
+            }
+            if PlayerData.citizenid == v.citizenid then
+                TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
+            end
         end
         cb(vehicles)
     end)
@@ -45,7 +46,7 @@ local function FindPlayerBoats(citizenid, cb)
     local boats = {}
     MySQL.Async.fetchAll("SELECT * FROM player_boats WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
         for k, v in pairs(rs) do
-			boats[#boats+1] = { citizenid = v.citizenid, plate = v.plate}
+            boats[#boats+1] = { citizenid = v.citizenid, plate = v.plate, model = v.model}
         end
         cb(boats)
     end)
@@ -53,45 +54,45 @@ end
 
 local function RefreshVehicles(source)
     if source ~= nil then 
-		local Player = QBCore.Functions.GetPlayer(source)
+	local Player = QBCore.Functions.GetPlayer(source)
         local vehicles = {}
         MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles", {}, function(rs)
-			if type(rs) == 'table' and #rs > 0 then
-				for k, v in pairs(rs) do
-					vehicles[#vehicles+1] = { 
-						vehicle     = json.decode(v.data), 
-						plate       = v.plate, 
-						citizenid   = v.citizenid, 
-						citizenname = v.citizenname, 
-						model       = v.model, 
-						modelname   = v.modelname,
-						fuel        = v.fuel,
-						body        = v.body,
-						engine      = v.engine,
-						coords      = json.decode(v.coords), 
-					}
-					TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
-				end
-				TriggerClientEvent("qb-parking:client:refreshVehicles", source, vehicles)
-			end
-		end)
-	end
+            if type(rs) == 'table' and #rs > 0 then
+                for k, v in pairs(rs) do
+                    vehicles[#vehicles+1] = { 
+                        vehicle     = json.decode(v.data), 
+                        plate       = v.plate, 
+                        citizenid   = v.citizenid, 
+                        citizenname = v.citizenname, 
+                        model       = v.model, 
+                        modelname   = v.modelname,
+                        fuel        = v.fuel,
+                        body        = v.body,
+                        engine      = v.engine,
+                        coords      = json.decode(v.coords), 
+                    }
+                    TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid) 
+                end
+                TriggerClientEvent("qb-parking:client:refreshVehicles", source, vehicles)
+            end
+        end)
+    end
 end
 
 function sendWebHookMessage(message)
-	if Config.UseDiscoordLog then
-		if Config.Webhook == "" then
-			print("you have no webhook, create one on discord [https://discord.com/developers/applications] and place this in the config.lua (Config.Webhook)")
-		else
-			if message == nil or message == '' then return end
-			local txt = "```[qb-parking] - "..message.."```"
-			PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({ content = txt }), { ['Content-Type'] = 'application/json' })
-		end
-	end
+    if Config.UseDiscoordLog then
+        if Config.Webhook == "" then
+            print("you have no webhook, create one on discord [https://discord.com/developers/applications] and place this in the config.lua (Config.Webhook)")
+        else
+            if message == nil or message == '' then return end
+            local txt = "```[qb-parking] - "..message.."```"
+            PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({ content = txt }), { ['Content-Type'] = 'application/json' })
+        end
+    end
 end
 
 local function sendLogs(title, message)
-	if Config.UseDiscoordLog then
+     if Config.UseDiscoordLog then
 		if Config.Webhook == "" then
 			print("you have no webhook, create one on discord [https://discord.com/developers/applications] and place this in the config.lua (Config.Webhook)")
 		else
@@ -274,11 +275,12 @@ local function SaveData(Player, vehicleData)
 	})
 end
 
-QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
+QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, data)
     if Config.UseParkingSystem then
 		local src     = source
 		local Player  = QBCore.Functions.GetPlayer(src)
 		local isFound = false
+		local model = nil
 		if Config.UseOnlyForVipPlayers then -- only allow for vip players
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = GetCitizenid(Player),
@@ -286,31 +288,35 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 				if type(rs) == 'table' and #rs > 0 then
 					FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
 						for k, v in pairs(vehicles) do
-							if type(v.plate) and vehicleData.plate == v.plate then
+							if type(v.plate) and data.plate == v.plate then
+								model = v.model
 								isFound = true
 							end		
 						end
 						if isFound then
 							MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
 								['@citizenid'] = GetCitizenid(Player),
-								['@plate']     = vehicleData.plate
+								['@plate']     = data.plate
 							}, function(rs)
 								if type(rs) == 'table' and #rs > 0 then
 									cb({status  = false, message = Lang:t("info.car_already_parked")})
 								else
-									SaveData(Player, vehicleData)
+									data.model = model
+									SaveData(Player, data)
 									cb({status  = true, message = Lang:t("success.parked")})
 								end
 							end)
 						else
 							FindPlayerBoats(GetCitizenid(Player), function(boats) 
 								for k, v in pairs(boats) do
-									if type(v.plate) and vehicleData.plate == v.plate then
+									if type(v.plate) and data.plate == v.plate then
+										model = v.model
 										isFound = true
 									end		
 								end
 								if isFound then
-									SaveData(Player, vehicleData)
+									data.model = model
+									SaveData(Player, data)
 									cb({status  = true, message = Lang:t("success.parked")})
 								else
 									cb({status  = false, message = Lang:t("info.must_own_car")})
@@ -323,31 +329,35 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 		else 
 			FindPlayerVehicles(GetCitizenid(Player), function(vehicles) -- free for all
 				for k, v in pairs(vehicles) do
-					if type(v.plate) and vehicleData.plate == v.plate then
+					if type(v.plate) and data.plate == v.plate then
+						model = v.model
 						isFound = true
 					end		
 				end
 				if isFound then
 					MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
 						['@citizenid'] = GetCitizenid(Player),
-						['@plate'] = vehicleData.plate
+						['@plate'] = data.plate
 					}, function(rs)
 						if type(rs) == 'table' and #rs > 0 then
 							cb({status = false, message = Lang:t("info.car_already_parked")})
 						else
-							SaveData(Player, vehicleData)
+							data.model = model
+							SaveData(Player, data)
 							cb({status  = true, message = Lang:t("success.parked")})
 						end
 					end)	
 				else 
 					FindPlayerBoats(GetCitizenid(Player), function(boats) 
 						for k, v in pairs(boats) do
-							if type(v.plate) and vehicleData.plate == v.plate then
+							if type(v.plate) anddata.plate == v.plate then
+								model = v.model
 								isFound = true
 							end		
 						end
 						if isFound then
-							SaveData(Player, vehicleData)
+							data.model = model
+							SaveData(Player, data)
 							cb({status  = true, message = Lang:t("success.parked")})
 						else
 							cb({status = false, message = Lang:t("info.must_own_car")})
