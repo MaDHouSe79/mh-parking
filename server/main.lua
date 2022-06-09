@@ -350,7 +350,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, d
 				else 
 					FindPlayerBoats(GetCitizenid(Player), function(boats) 
 						for k, v in pairs(boats) do
-							if type(v.plate) anddata.plate == v.plate then
+							if type(v.plate) and data.plate == v.plate then
 								model = v.model
 								isFound = true
 							end		
