@@ -45,11 +45,7 @@ Link: https://github.com/MaDHouSe79/qb-parkinglite
 Polyzone
 
 ## 💪 Optional
-- ✅ [qb-phone](https://github.com/qbcore-framework/qb-phone)
-- ✅ [qb-target](https://github.com/qbcore-framework/qb-target)
-- ✅ [cc-fuel](https://github.com/CQC-Scripting/cc-fuel)
 - ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
-- ✅ you can also use other vehiclekey scripts, change this in the config file.
 
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
