@@ -129,9 +129,6 @@ end)
 ````lua
 { table = 'player_parking_vehicles' },
 { table = 'player_parking_vips' },
-
---NOT IN USE YET, YOU DONT HAVE TO ADD THIS
-{ table = 'player_parking_reserved'}
 ````
 ## Impound Trigger, to unpark the vehicle.
 ```lua
