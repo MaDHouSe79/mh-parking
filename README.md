@@ -160,5 +160,5 @@ CREATE TABLE IF NOT EXISTS `player_boats` (
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
 
 ## 🙈 Youtube & Discord
-- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+- [Youtube](https://www.youtube.com/c/MaDHouSe79)
 - [Discord](https://discord.gg/cEMSeE9dgS)
