@@ -11,7 +11,7 @@ local ParkAction, extraRadius, Cost, ParkTime = 'none', 3, 0, 0
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     local id = GetPlayerServerId(PlayerId())
     PlayerData = QBCore.Functions.GetPlayerData()
-    TriggerServerEvent('mh-parking:server:onjoin', id, PlayerData.citizenid)
+    TriggerServerEvent('qb-parking:server:onjoin', id, PlayerData.citizenid)
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
