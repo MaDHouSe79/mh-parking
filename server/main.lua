@@ -374,49 +374,6 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 	end)
 end)
 
-QBCore.Functions.CreateCallback("mh-parking:server:vehicle_action", function(source, cb, plate, action)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
-		['@plate'] = plate
-    }, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			if action == 'impound' then
-				MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
-					["@plate"] = plate,
-				})
-				MySQL.Async.execute('UPDATE player_vehicles SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
-					["@plate"]     = plate,
-					["@citizenid"] = rs[1].citizenid,
-					["@garage"]    = 'impoundlot',
-				})
-				TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = plate })
-			else
-				local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
-				if cost < 0 then cost = 0 end
-				if Pay(source, cost) then
-					MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
-						["@plate"] = plate,
-					})	
-					MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
-						["@plate"] = plate,
-					})
-					cb({ status  = true })
-					TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = plate })
-				else
-					cb({
-						status      = false,
-						message     = Lang:t('error.not_enough_money'),
-						cost        = cost,
-					})
-				end
-			end
-		else
-			cb({
-				status  = false,
-				message = Lang:t("info.car_not_found"),
-			})
-		end
-    end)
-end)
 
 QBCore.Functions.CreateCallback('mh-parking:server:payparkspace', function(source, cb, cost)
     local Player = QBCore.Functions.GetPlayer(source)
