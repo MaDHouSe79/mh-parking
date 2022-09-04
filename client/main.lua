@@ -522,54 +522,56 @@ end
 
 local function DrawParkedLocation(coords)
     if Config.UseParkedLocationNames then
-        for _, data in pairs(Config.ReservedParkList) do
-            if Config.BuildMode then 
-                extraRadius = tonumber(data.radius) + tonumber(50)
-            else
-                extraRadius = tonumber(data.radius) + tonumber(25) 
-            end
-            if #(coords - data.coords) < tonumber(extraRadius) then
-                if data.marker then
-                    local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
-                    local r, g, b = 0, 0, 0
-                    if data.parktype == 'paid' then
-                        r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
-                        if vehicle and distance <= 1 then
-                            r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
-                        end
-                    elseif data.parktype == 'prived' then
-                        if PlayerData.citizenid == data.citizenid then
-                            r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
-                        else
-                            r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
-                        end
-                    elseif data.parktype == 'job' then
-                        if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
-                            r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
-                        else
-                            r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
-                        end
-                    else
-                        if data.parktype == 'free' then
-                            r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
+        if Config.UseOnlyPreCreatedSpots then
+            for _, data in pairs(Config.ReservedParkList) do
+                if Config.BuildMode then 
+                    extraRadius = tonumber(data.radius) + tonumber(50)
+                else
+                    extraRadius = tonumber(data.radius) + tonumber(25) 
+                end
+                if #(coords - data.coords) < tonumber(extraRadius) then
+                    if data.marker then
+                        local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
+                        local r, g, b = 0, 0, 0
+                        if data.parktype == 'paid' then
+                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
                             if vehicle and distance <= 1 then
                                 r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                             end
-                        end
-                    end
-                    DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,r, g, b, 222, false, false, false, true, false, false, false)
-                    if data.parktype ~= 'free' then
-                        if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
-                            Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~Reserved~s~", 0, 0.04, 0.04)
-                        end
-                        if PlayerData.citizenid ~= data.citizenid then
-                            Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~y~".. data.display.."~s~", 0, 0.04, 0.04)
+                        elseif data.parktype == 'prived' then
+                            if PlayerData.citizenid == data.citizenid then
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                            else
+                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
+                            end
+                        elseif data.parktype == 'job' then
+                            if Config.IgnoreJobs[PlayerData.job.name] and PlayerData.job.onduty then
+                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
+                            else
+                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
+                            end
                         else
-                            Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~b~".. data.display.."~s~", 0, 0.04, 0.04)
+                            if data.parktype == 'free' then
+                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
+                                if vehicle and distance <= 1 then
+                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                                end
+                            end
                         end
-                    else
-                        if data.parktype == 'free' then
-                            Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~".. data.display.."~s~", 0, 0.04, 0.04)
+                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,r, g, b, 222, false, false, false, true, false, false, false)
+                        if data.parktype ~= 'free' then
+                            if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~Reserved~s~", 0, 0.04, 0.04)
+                            end
+                            if PlayerData.citizenid ~= data.citizenid then
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~y~".. data.display.."~s~", 0, 0.04, 0.04)
+                            else
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~b~".. data.display.."~s~", 0, 0.04, 0.04)
+                            end
+                        else
+                            if data.parktype == 'free' then
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~".. data.display.."~s~", 0, 0.04, 0.04)
+                            end
                         end
                     end
                 end
@@ -577,6 +579,7 @@ local function DrawParkedLocation(coords)
         end
     end
 end
+
 -- Check Distance To Force Vehicle to the Ground
 local function CheckDistanceToForceGrounded(distance)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
