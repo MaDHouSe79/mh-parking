@@ -29,13 +29,11 @@
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server. 😁
-- 👉 Step 2: Copy the directory qb-parking to resources/[qb]/
+- 👉 Step 2: Copy the directory mh-parking to resources/[qb]/
 - 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
-- 👉 Step 4: Add any recommended extra code what I say you should add.
-- 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
-- 👉 Step 6: Start your server.  
-- 👉 Step 7: Add your self or other as vip, you can use the command: /park-addvip [id]
-- 👉 Step 8: Most important step -> Enjoy 👊😎👍
+- 👉 Step 4: Start your server.  
+- 👉 Step 5: Add your self or other players as vip, use the command: /park-addvip [id]
+- 👉 Step 6: Most important step -> Enjoy 👊😎👍
 
 
 ## 🎮 Commands
