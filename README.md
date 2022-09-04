@@ -2,11 +2,8 @@
 - An Advanced Parking System build by MaDHouSe79.
 
 
-╔═╦╗╔╦╗╔═╦═╦╦╦╦╗╔═╗
-║╚╣║║║╚╣╚╣╔╣╔╣║╚╣═╣ 
-╠╗║╚╝║║╠╗║╚╣║║║║║═╣
-╚═╩══╩═╩═╩═╩╝╚╩═╩═╝
-[Youtube](https://www.youtube.com/c/MaDHouSe79) for more videos
+subscribe to my channel It helps the channel grow
+[Youtube](https://www.youtube.com/c/MaDHouSe79)
 
 
 ## 📸 Screenshot 👊😁👍
