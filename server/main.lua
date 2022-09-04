@@ -784,10 +784,14 @@ RegisterServerEvent("qb-parking:server:CheckVersion", function()
     end
 end)
 
--- When the client request to refresh the vehicles.
-RegisterServerEvent('qb-parking:server:onjoin', function(source)
-	PlayerData = QBCore.Functions.GetPlayer(source)
-    RefreshVehicles(source)
+RegisterServerEvent('qb-parking:server:onjoin', function(id, citizenid)
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
+        for k, v in pairs(vehicles) do
+            if v.citizenid == citizenid then
+                TriggerClientEvent('qb-parking:client:addkey', id, v.plate, v.citizenid)
+            end
+        end
+    end)
 end)
 
 RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName)
