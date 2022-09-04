@@ -355,6 +355,20 @@ local function DeleteNearByVehicle(location)
     IsDeleting = false
 end
 
+local function UnparkVehicle(plate)
+    IsDeleting = true
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
+	for i = 1, #LocalVehicles do
+            if type(LocalVehicles[i].plate) ~= 'nil' then
+		if plate == LocalVehicles[i].plate then
+                    table.remove(LocalVehicles, i)
+		end
+	    end
+	end
+    end
+    IsDeleting = false
+end
+
 -- Drive 
 local function Drive(player, vehicle, warp)
     ParkAction = 'drive'
@@ -687,6 +701,10 @@ end)
 
 RegisterNetEvent("mh-parking:client:deleteVehicle", function(vehicle) 
     DeleteLocalVehicle(vehicle) 
+end)
+
+RegisterNetEvent("mh-parking:client:unparkVehicle", function(plate) 
+    UnparkVehicle(plate) 
 end)
 
 RegisterNetEvent("mh-parking:client:refreshVehicles", function(vehicles)
