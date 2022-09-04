@@ -5,7 +5,7 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, LocalVehicles, GlobalVehicles = {}, {}, {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
-local InParking, CreateMode, LastUsedPlate, ParkOwnerName = false, false, nil, nil
+local InParking, CreateMode, LastUsedPlate, ParkOwnerName = true, false, nil, nil
 local extraRadius, Cost, ParkTime = 3, 0, 0
 
 local entityEnumerator = {
