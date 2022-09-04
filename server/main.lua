@@ -42,21 +42,12 @@ local function FindPlayerVehicles(citizenid, cb)
     end)
 end
 
-local function FindPlayerBoats(citizenid, cb)
-    local boats = {}
-    MySQL.Async.fetchAll("SELECT * FROM player_boats WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
-        for k, v in pairs(rs) do
-            boats[#boats+1] = { citizenid = v.citizenid, plate = v.plate, model = v.model}
-        end
-        cb(boats)
-    end)
-end
 
 local function RefreshVehicles(source)
     if source ~= nil then 
 	local Player = QBCore.Functions.GetPlayer(source)
         local vehicles = {}
-        MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles", {}, function(rs)
+        MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
             if type(rs) == 'table' and #rs > 0 then
                 for k, v in pairs(rs) do
                     vehicles[#vehicles+1] = { 
@@ -140,7 +131,7 @@ function ParkingTimeCheckLoop()
 					end
 					local cost = (math.floor(((os.time() - v.time) / Config.PayTimeInSecs) * v.cost))
 					TriggerEvent("police:server:Impound", v.plate, true, cost, v.body, v.engine, v.fuel)					
-					MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = ?', {v.plate})
+					MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {v.plate})
 					MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {2,  v.plate})
 					message = message .." vehicle with Plate " .. v.plate..' has just impound by the police.\nThis due to the expiration of the parking time'
 					countImpounded = countImpounded + 1
@@ -238,7 +229,7 @@ local function Pay(source, cost)
 end
 
 local function SaveData(Player, vehicleData)
-	MySQL.Async.execute("INSERT INTO player_parking_vehicles (citizenid, citizenname, plate, fuel, body, engine, oil, model, modelname, data, time, coords, cost, parktime, parking) VALUES (@citizenid, @citizenname, @plate, @fuel, @body, @engine, @oil, @model, @modelname, @data, @time, @coords, @cost, @parktime, @parking)", {
+	MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, body, engine, oil, model, modelname, data, time, coords, cost, parktime, parking) VALUES (@citizenid, @citizenname, @plate, @fuel, @body, @engine, @oil, @model, @modelname, @data, @time, @coords, @cost, @parktime, @parking)", {
 		["@citizenid"]   = GetCitizenid(Player),
 		["@citizenname"] = GetUsername(Player),
 		["@plate"]       = vehicleData.plate,
@@ -294,7 +285,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, d
 							end		
 						end
 						if isFound then
-							MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
+							MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
 								['@citizenid'] = GetCitizenid(Player),
 								['@plate']     = data.plate
 							}, function(rs)
@@ -335,7 +326,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, d
 					end		
 				end
 				if isFound then
-					MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
+					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
 						['@citizenid'] = GetCitizenid(Player),
 						['@plate'] = data.plate
 					}, function(rs)
@@ -383,7 +374,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 				end
 			end
 			if isFound then
-				MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
+				MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
 					['@citizenid'] = GetCitizenid(Player),
 					['@plate'] = vehicleData.plate
 				}, function(rs)
@@ -391,7 +382,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 						if cost < 0 then cost = 0 end
 						if Pay(source, cost) then
-							MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate AND citizenid = @citizenid', {
+							MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 								["@plate"]     = vehicleData.plate,
 								["@citizenid"] = GetCitizenid(Player)
 							})
@@ -433,7 +424,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						end
 					end
 					if isFound then
-						MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE citizenid = @citizenid AND plate = @plate", {
+						MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
 							['@citizenid'] = GetCitizenid(Player),
 							['@plate'] = vehicleData.plate
 						}, function(rs)
@@ -441,7 +432,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 								local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 								if cost < 0 then cost = 0 end
 								if Pay(source, cost) then
-									MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate AND citizenid = @citizenid', {
+									MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 										["@plate"]     = vehicleData.plate,
 										["@citizenid"] = GetCitizenid(Player)
 									})
@@ -498,7 +489,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
 			if action == 'impound' then
-				MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate', {
+				MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 					["@plate"] = plate,
 				})
 				MySQL.Async.execute('UPDATE player_vehicles SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
@@ -511,7 +502,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 				local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 				if cost < 0 then cost = 0 end
 				if Pay(source, cost) then
-					MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate', {
+					MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 						["@plate"] = plate,
 					})	
 					MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
