@@ -5,6 +5,10 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, updateavail = {}, false
 
+-- Discoord webhook
+local UseDiscoordLog = false
+local Webhook = ""
+
 local function GetUsername(player)
     local tmpName = player.PlayerData.name
     if Config.UseRoleplayName then
@@ -66,8 +70,8 @@ local function RefreshVehicles(source)
 end
 
 local function sendLogs(title, message)
-     if Config.UseDiscoordLog then
-		if Config.Webhook == "" then
+     if UseDiscoordLog then
+		if Webhook == "" then
 			print("you have no webhook, create one on discord [https://discord.com/developers/applications] and place this in the config.lua (Config.Webhook)")
 		else
 			if message == nil or message == '' then return end
@@ -629,7 +633,7 @@ AddEventHandler('onResourceStart', function(resource)
         	print(Lang:t('discoord.spawntime', {colour = spawnColour,spawntime = totalTimeToSpawn}))
 			print(Lang:t('discoord.timeloop'))
 		end
-		if Config.UseDiscoordLog then
+		if UseDiscoordLog then
 			local log  = Lang:t('discoord.version', {version = currenversion})
 			local log1 = Lang:t('discoord.found', {count = count, total =total})
 			local log2 = Lang:t('discoord.spawntime', {colour = spawnColour,spawntime = totalTimeToSpawn})
