@@ -16,7 +16,7 @@ Config.ParkingButton             = 166          -- Default 166, [F5]
 
 -- just if you use other sripts than default qb
 Config.FuelScript                = "LegacyFuel" -- Default LegacyFuel, but you can use cc-fuel aswell ot a other fuel scirpt
-Config.VehicleOwnerKeyTrigger    = "vehiclekeys:client:SetOwner" -- in case you have a other key script
+Config.KeyScriptTrigger          = "qb-vehiclekeys:server:AcquireVehicleKeys" -- in case you have a other key script
 
 
 Config.DisplayMarkerDistance     = 15           -- Default 10
