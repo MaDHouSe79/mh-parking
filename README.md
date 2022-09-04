@@ -1,5 +1,5 @@
-## QB-Parking is a Advanced Parking system Created By MaDHouSe79
-
+## mh-parking 
+- An Advanced Parking System build by MaDHouSe79.
 
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/new7.png)
@@ -18,7 +18,6 @@
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
 [![Watch the video1](https://www.madirc.nl/fivem/foto11.png)](https://youtu.be/QRJZ2r7FD4w )
 
-
 ## 💪 Dependencies
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
@@ -26,15 +25,13 @@
 ## 💪 Optional
 - ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 
-
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server. 😁
 - 👉 Step 2: Copy the directory mh-parking to resources/[qb]/
 - 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
 - 👉 Step 4: Start your server.  
-- 👉 Step 5: Add your self or other players as vip, use the command: /park-addvip [id]
+- 👉 Step 5: Add your self or other as vip, you can use the command: /park-addvip [id]
 - 👉 Step 6: Most important step -> Enjoy 👊😎👍
-
 
 ## 🎮 Commands
 - 👉 Typ "/park" to park or drive your vehicle where you are at that moment. (Users and Admins)
@@ -48,10 +45,22 @@
 - 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
+## Unpark trigger event (use this client side)
+- this only unpark the vehicle, it does not delete the entity from the gameworld.
+```lua
+TriggerServerEvent('mh-parking:server:unpark', plate)
+```
 
+## 👇 To keep things nice and clean for the qb-core system and database.
+- ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
+- ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
+- ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
+````lua
+{ table = 'player_parking' },
+{ table = 'player_parking_vips' },
+````
 
-## 🐞 Any bugs or issues, let my know.
-
+## 🐞 Any bugs issues or suggestions, let my know. 👊😎
 
 ## 🙈 Youtube & Discord
 - [Youtube](https://www.youtube.com/c/MaDHouSe79)
