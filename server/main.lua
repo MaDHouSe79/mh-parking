@@ -676,7 +676,7 @@ end)
 RegisterServerEvent('mh-parking:server:unpark', function(plate)
 	MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})	
 	MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
-	TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = plate })
+	TriggerClientEvent("mh-parking:client:unparkVehicle", -1, plate)
 end)
 
 RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
