@@ -119,8 +119,55 @@ local function trailerOffset(vehicle)
     return offset
 end
 
+local entityEnumerator = {
+    __gc = function(enum)
+        if enum.destructor and enum.handle then
+            enum.destructor(enum.handle)
+        end
+        enum.destructor = nil
+        enum.handle = nil
+    end
+}
+local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
+    return coroutine.wrap(function()
+        local iter, id = initFunc()
+        if not id or id == 0 then
+            disposeFunc(iter)
+            return
+        end
+        local enum = {handle = iter, destructor = disposeFunc}
+        setmetatable(enum, entityEnumerator)
+        local next = true
+        repeat
+            coroutine.yield(id)
+            next, id = moveFunc(iter)
+        until not next
+        enum.destructor, enum.handle = nil, nil
+        disposeFunc(iter)
+    end)
+end
+
+local function EnumerateVehicles()
+  return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
+end
+
+local function VehicleAlreayExsist(plate)
+    local isExsist = false
+    for vehicle in EnumerateVehicles() do
+        if DoesEntityExist(vehicle) then
+            local mods = QBCore.Functions.GetVehicleProperties(vehicle)
+            if mods.plate == plate then
+                isExsist = true
+            end
+        end
+    end
+    return isExsist
+end
+
+
 -- Vehicle Spawn
 local function VehicleSpawn(data, warp)
+    if VehicleAlreayExsist(data.plate) then return end
     local tmpvehicle
     QBCore.Functions.LoadModel(data.model)
     QBCore.Functions.SpawnVehicle(data.model, function(veh)
