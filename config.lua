@@ -9,6 +9,9 @@ Config.CheckForUpdates           = true         -- Default true
 Config.ResetState                = 1            -- Default 1, 1 is stored in garage, 2 is police impound. 
 
 
+Config.ImpoundPrice              = 1000
+
+
 Config.KeyParkBindButton         = "F5"         -- Default F5
 Config.KeyParkMenuBindButton     = "F6"         -- Default F6
 Config.ParkingButton             = 166          -- Default 166, [F5] 
@@ -18,17 +21,19 @@ Config.ParkingButton             = 166          -- Default 166, [F5]
 Config.FuelScript                = "LegacyFuel" -- Default LegacyFuel, but you can use cc-fuel aswell ot a other fuel scirpt
 Config.KeyScriptTrigger          = "qb-vehiclekeys:server:AcquireVehicleKeys" -- in case you have a other key script
 
-
 Config.DisplayMarkerDistance     = 15           -- Default 10
 Config.PayTimeInSecs             = 3600         -- 1 hour
 
 Config.UseParkingSystem          = true         -- Default true,  this turn the parking system On or Off.
-Config.UseOnlyPreCreatedSpots    = false        -- Default false,  if you only want to use pre-created locations.
+Config.UseOnlyPreCreatedSpots    = true         -- Default false,  if you only want to use pre-created locations.
 Config.UseParkingBlips           = true         -- Default true,  if you want to see parking blips 
 Config.UseParkedVehicleNames     = true         -- Default true  if you want parking vehicles names.
 Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset this higher
 Config.UseOnlyForVipPlayers      = false        -- Default false  if you only want that vip players can park.
 Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
+
+
+Config.UseOwnerNames             = true         -- Default true   if you want to use owner names
 Config.UseRoleplayName           = true         -- Default true   if you want to use roleplay names
 Config.UseTargetEye              = true         -- Default false  if you want to use target eye, to park a trailer you need target eye.
 
@@ -40,13 +45,7 @@ Config.UseMaxParkingOnServer     = true         -- Default true if you want to u
 Config.MaxServerParkedVehicles   = 50           -- Default 50, total allowed parked vehicles on the server.
 
 Config.UseTimeDelay              = true         -- Default true if vehicles duplicate use this.
-Config.TimeDelay                 = 100          -- Default 100 if vehicle still duplicate set this higher but not to hight.
-
--- just for parking log to your discord
-Config.UseDiscoordLog            = false        -- default false (this only works if you have a discord webhook url added in Config.Webhook)
-Config.Webhook                   = ""           -- discord webhook link, to create a webhook go to [https://discord.com/developers/applications]
-
-Config.UseOwnerNames             = false
+Config.TimeDelay                 = 500          -- Default 100 if vehicle still duplicate set this higher but not to hight.
 
 Config.JobToCreateParkSpaces = {                -- The job that you need to able to create parking places.
     ['realestate'] = true,
