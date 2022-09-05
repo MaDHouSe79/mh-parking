@@ -384,7 +384,6 @@ end
 
 local function Drive(player, vehicle, warp)
     QBCore.Functions.TriggerCallback("mh-parking:server:drive", function(callback)
-        print(json.encode(callback, {indent = true}))
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
