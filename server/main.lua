@@ -4,8 +4,6 @@
 
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, updateavail = {}, false
-local firstJoin = true
-local parkedVehicles = {}
 
 -- Discoord webhook
 local UseDiscoordLog = false
