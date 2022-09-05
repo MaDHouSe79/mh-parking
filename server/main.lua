@@ -4,6 +4,8 @@
 
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData, updateavail = {}, false
+local firstJoin = true
+local parkedVehicles = {}
 
 -- Discoord webhook
 local UseDiscoordLog = false
@@ -21,8 +23,18 @@ local function GetCitizenid(player)
     return player.PlayerData.citizenid
 end
 
+local function countPlayers()
+    local count = 0
+    for k, v in pairs(QBCore.Functions.GetPlayers()) do count = count + 1  end
+    return count
+end
+
 local function hasPerMission(source, type)
-    if QBCore.Functions.HasPermission(source, type) then return true else return false end
+	local result = false
+    if IsPlayerAceAllowed(source, 'command') then 
+		result = true 
+	end
+	return result
 end
 
 local function addZeroForLessThan10(number)
@@ -31,7 +43,7 @@ end
 
 local function FindPlayerVehicles(citizenid, cb)
     local vehicles = {}
-    MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
+    MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ?", {citizenid}, function(rs)
         for k, v in pairs(rs) do
             vehicles[#vehicles+1] = { 
                 plate = v.plate, 
@@ -97,7 +109,7 @@ local function sendLogs(title, message)
 					}
 				}
 			}
-			PerformHttpRequest(Config.Webhook , function(err, text, headers) end, 'POST', json.encode({username = "ParkingBot", embeds = LogArray}), { ['Content-Type'] = 'application/json' })
+			PerformHttpRequest(Webhook , function(err, text, headers) end, 'POST', json.encode({username = "ParkingBot", embeds = LogArray}), { ['Content-Type'] = 'application/json' })
 		end
 	end
 end
@@ -258,7 +270,6 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 		local Player = QBCore.Functions.GetPlayer(src)
 		local isFound = false
 		local model = nil
-
 		if Config.UseOnlyForVipPlayers then -- only allow for vip players
 			MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 				['@citizenid'] = Player.PlayerData.citizenid,
@@ -317,31 +328,31 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
     end
 end)
 
-QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, vehicleData)
+QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, data)
 	local src = source
 	local Player = QBCore.Functions.GetPlayer(src)
 	local isFound = false
 	FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
 		for k, v in pairs(vehicles) do
-			if type(v.plate) and vehicleData.plate == v.plate then
+			if type(v.plate) and data.plate == v.plate then
 				isFound = true
 			end
 		end
 		if isFound then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
 				['@citizenid'] = Player.PlayerData.citizenid,
-				['@plate'] = vehicleData.plate
+				['@plate'] = data.plate
 			}, function(rs)
 				if type(rs) == 'table' and #rs > 0 and rs[1] then
 					local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 					if cost < 0 then cost = 0 end
-					if Pay(source, cost) then
+					if Pay(src, cost) then
 						MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
-							["@plate"]     = vehicleData.plate,
+							["@plate"]     = data.plate,
 							["@citizenid"] = Player.PlayerData.citizenid
 						})
 						MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
-							["@plate"]     = vehicleData.plate,
+							["@plate"]     = data.plate,
 							["@citizenid"] = Player.PlayerData.citizenid
 						})
 						cb({
@@ -360,7 +371,7 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 							coords      = json.decode(rs[1].coords),
 							cost        = rs[1].cost,
 						})
-						TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = vehicleData.plate })
+						TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = data.plate })
 					else
 						cb({
 							status      = false,
@@ -374,26 +385,19 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 	end)
 end)
 
-
 QBCore.Functions.CreateCallback('mh-parking:server:payparkspace', function(source, cb, cost)
     local Player = QBCore.Functions.GetPlayer(source)
     if Pay(source, cost) then
-		cb({
-			status = true,
-			message = Lang:t('info.paid_park_space', { paid = cost }) 
-	    })
+		cb({status = true, message = Lang:t('info.paid_park_space', { paid = cost })})
     else
-		cb({
-			status = false, 
-			message = Lang:t('error.not_enough_money')
-		})
+		cb({status = false, message = Lang:t('error.not_enough_money')})
     end
 end)
 
 QBCore.Functions.CreateCallback('mh-parking:server:allowtopark', function(source, cb)
 	local server_allowed, player_allowed, allowed, text = false, false, false, nil
-	local Player       = QBCore.Functions.GetPlayer(source)
-	local citizenid    = Player.PlayerData.citizenid
+	local Player = QBCore.Functions.GetPlayer(source)
+	local citizenid = Player.PlayerData.citizenid
 	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = 3')
 	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid=? AND state = ?', {citizenid, 3})
 	if Config.UseMaxParkingOnServer then
@@ -428,10 +432,7 @@ QBCore.Functions.CreateCallback('mh-parking:server:allowtopark', function(source
 			text = nil
 		end
 	end
-	cb({
-		status = allowed, 
-		message = text
-	})
+	cb({status = allowed, message = text})
 end)
 
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)
@@ -515,8 +516,8 @@ end)
 
 QBCore.Commands.Add(Config.Command.buildmode, "Park Build Mode On/Off", {}, true, function(source)
 	PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if Config.JobToCreateParkSpaces[PlayerData.job.name] or hasPerMission(source, 'admin') then
-		if PlayerData.job.onduty or hasPerMission(source, 'admin') then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or hasPerMission(source, 'command') then
+		if PlayerData.job.onduty or hasPerMission(source, 'command') then
 			Config.BuildMode = not Config.BuildMode
 			if Config.BuildMode then
 				TriggerClientEvent("mh-parking:client:buildmode", source)
@@ -535,8 +536,8 @@ end)
 
 QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, function(source)
     PlayerData = QBCore.Functions.GetPlayer(source).PlayerData
-	if Config.JobToCreateParkSpaces[PlayerData.job.name] or hasPerMission(source, 'admin') then
-		if PlayerData.job.onduty or hasPerMission(source, 'admin') then
+	if Config.JobToCreateParkSpaces[PlayerData.job.name] or hasPerMission(source, 'command') then
+		if PlayerData.job.onduty or hasPerMission(source, 'command') then
 			TriggerClientEvent("mh-parking:client:openmenu", source)
 		else
 			TriggerClientEvent('QBCore:Notify', source, Lang:t('system.must_be_onduty'), "error")
@@ -590,6 +591,7 @@ AddEventHandler('onResourceStart', function(resource)
         	print(Lang:t('discoord.spawntime', {colour = spawnColour,spawntime = totalTimeToSpawn}))
 			print(Lang:t('discoord.timeloop'))
 		end
+
 		if UseDiscoordLog then
 			local log  = Lang:t('discoord.version', {version = currenversion})
 			local log1 = Lang:t('discoord.found', {count = count, total =total})
@@ -618,16 +620,6 @@ RegisterServerEvent("mh-parking:server:CheckVersion", function()
     else
         TriggerClientEvent("mh-parking:client:GetUpdate", source, false)
     end
-end)
-
-RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
-        for k, v in pairs(vehicles) do
-            if v.citizenid == citizenid then
-                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
-            end
-        end
-    end)
 end)
 
 RegisterServerEvent('mh-parking:server:unpark', function(plate)
