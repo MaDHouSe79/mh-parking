@@ -633,6 +633,16 @@ RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
     RefreshVehicles(src)
 end)
 
+RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
+        for k, v in pairs(vehicles) do
+            if v.citizenid == citizenid then
+                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
+            end
+        end
+    end)
+end)
+
 -- Create new parking space.
 RegisterServerEvent('mh-parking:server:AddNewParkingSpot', function(source, data, markerOffset)
 	if data.cid == "" or data.parkname == "" then
