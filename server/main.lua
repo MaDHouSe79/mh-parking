@@ -71,7 +71,9 @@ local function RefreshVehicles(source)
                         engine      = v.engine,
                         coords      = json.decode(v.coords), 
                     }
-                    TriggerClientEvent('mh-parking:client:addkey', source, v.plate, v.citizenid) 
+		    if v.citizenid == QBCore.Functions.GetPlayer(source).PlayerData.citizenid then
+			TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
+		    end		
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
@@ -629,16 +631,6 @@ end)
 RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
 	local src = source
     RefreshVehicles(src)
-end)
-
-RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
-        for k, v in pairs(vehicles) do
-            if v.citizenid == citizenid then
-                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
-            end
-        end
-    end)
 end)
 
 -- Create new parking space.
