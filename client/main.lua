@@ -117,7 +117,7 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     if type == 'server' then
         TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', vehicleData.plate)
-	end
+    end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
