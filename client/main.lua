@@ -115,9 +115,6 @@ local function LoadEntity(vehicleData, type)
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
-    if type == 'server' then
-        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', vehicleData.plate)
-    end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -130,50 +127,66 @@ local function trailerOffset(vehicle)
     return offset
 end
 
+local function CreateTargetEntityMenu(entity)
+    exports['qb-target']:AddTargetEntity(entity, {
+        options = {
+            {
+                type = "client",
+                event = "mh-parking:client:unparking",
+                icon = "fas fa-car",
+                label = "Unpark Vehicle",
+            },
+            {
+                type = "client",
+                event = "mh-parking:client:parking",
+                icon = "fas fa-car",
+                label = "Park Vehicle",
+            }
+        },
+        distance = Config.InteractDistance
+    })
+end
+local function IsVehicleAlreadyListed(plate)
+    local isListed = false
+    for i = 1, #LocalVehicles do
+        if LocalVehicles[i].plate == plate then
+            isListed = true
+            break
+        end
+    end
+    return isListed
+end
+
 -- Spawn 
 local function TableInsert(entity, data, warp)
-    local tmpBlip = nil
-    if data.citizenid == QBCore.Functions.GetPlayerData().citizenid then	
-        if Config.UseParkingBlips then
-        	tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
-	    end
-        exports['qb-target']:AddTargetEntity(entity, {
-            options = {
-                {
-                    type = "client",
-                    event = "mh-parking:client:unparking",
-                    icon = "fas fa-car",
-                    label = "Unpark Vehicle",
-                },
-                {
-                    type = "client",
-                    event = "mh-parking:client:parking",
-                    icon = "fas fa-car",
-                    label = "Park Vehicle",
-                }
-            },
-            distance = Config.InteractDistance
-        })
+    if not IsVehicleAlreadyListed(data.plate) then
+        local tmpBlip = nil
+        if data.citizenid == QBCore.Functions.GetPlayerData().citizenid then	
+            if Config.UseParkingBlips then
+                tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
+            end
+            TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
+            CreateTargetEntityMenu(entity)
+        end
+        LocalVehicles[#LocalVehicles+1] = {
+            entity      = entity,
+            vehicle     = data.mods,
+            plate       = data.plate,
+            fuel        = data.fuel,
+            body        = data.body,
+            engine      = data.engine,
+            oil         = data.oil, 
+            citizenid   = data.citizenid,
+            citizenname = data.citizenname,
+            livery      = data.vehicle.livery,
+            health      = data.vehicle.health,
+            model       = data.model,
+            modelname   = data.modelname,
+            location    = data.vehicle.location,
+            blip        = tmpBlip,
+            isGrounded  = false
+        }
     end
-
-    LocalVehicles[#LocalVehicles+1] = {
-		entity      = entity,
-		vehicle     = data.mods,
-		plate       = data.plate,
-        fuel        = data.fuel,
-        body        = data.body,
-        engine      = data.engine,
-        oil         = data.oil, 
-		citizenid   = data.citizenid,
-		citizenname = data.citizenname,
-		livery      = data.vehicle.livery,
-		health      = data.vehicle.health,
-		model       = data.model,
-        modelname   = data.modelname,
-		location    = data.vehicle.location,
-        blip        = tmpBlip,
-        isGrounded  = false
-    }
 end
 
 -- Draw 3d text on screen
@@ -390,6 +403,7 @@ local function Drive(player, vehicle, warp)
 	        if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
+            CreateTargetEntityMenu(callback.entity)
             QBCore.Functions.Notify(callback.message, "success", 5000)
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
@@ -662,6 +676,7 @@ end
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     local id = GetPlayerServerId(PlayerId())
     PlayerData = QBCore.Functions.GetPlayerData()
+    TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
 end)
 
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
