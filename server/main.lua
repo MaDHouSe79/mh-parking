@@ -571,40 +571,6 @@ AddEventHandler('onResourceStart', function(resource)
 				end
 			end
 		end)
-		Wait(2000)
-		print("[mh-parking] - lost parked vehicles garage check reset.")
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(vehicles)
-			if type(vehicles) == 'table' and #vehicles > 0 then
-				for _, vehicle in pairs(vehicles) do
-					if vehicle.garage == nil then
-						MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {1, 'pillboxgarage'})
-					end
-				end
-			end
-		end)
-		Wait(100)
-		currenversion = LoadResourceFile(GetCurrentResourceName(), "version")
-		local totalTimeToSpawn = count * 1000
-        local spawnColour = '^2'
-        if totalTimeToSpawn > 10000 then spawnColour = '^1' end
-
-		if Config.DebugMode then
-			print(Lang:t('discoord.version', {version = currenversion}))
-        	print(Lang:t('discoord.found', {count = count, total =total}))
-        	print(Lang:t('discoord.spawntime', {colour = spawnColour,spawntime = totalTimeToSpawn}))
-			print(Lang:t('discoord.timeloop'))
-		end
-
-		if UseDiscoordLog then
-			local log  = Lang:t('discoord.version', {version = currenversion})
-			local log1 = Lang:t('discoord.found', {count = count, total =total})
-			local log2 = Lang:t('discoord.spawntime', {colour = spawnColour,spawntime = totalTimeToSpawn})
-			local log3 = Lang:t('discoord.timeloop')
-			message = "```"..log.."\n"..log1.."\n"..log2.."\n"..log3.."```"
-			sendLogs('Server Log', message)
-		end
-		ParkingTimeCheckLoop()
-		Wait(1000)
     end
 end)
 
