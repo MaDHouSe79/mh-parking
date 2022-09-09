@@ -71,12 +71,11 @@ local function RefreshVehicles(source)
                         engine      = v.engine,
                         coords      = json.decode(v.coords), 
                     }
-		    if QBCore.Functions.GetPlayer(source) then
-		        if v.citizenid == QBCore.Functions.GetPlayer(source).PlayerData.citizenid then
-			    TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
-		        end
-		    end
-						
+                    if QBCore.Functions.GetPlayer(source) then
+						if v.citizenid == QBCore.Functions.GetPlayer(source).citizenid then
+							TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid) 
+						end
+					end
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
@@ -550,6 +549,7 @@ QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, fun
 	end
 end)
 
+--[[
 -- Reset state and counting to stay in sync.
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
@@ -571,8 +571,20 @@ AddEventHandler('onResourceStart', function(resource)
 				end
 			end
 		end)
+		Wait(2000)
+		print("[mh-parking] - lost parked vehicles garage check reset.")
+		MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(vehicles)
+			if type(vehicles) == 'table' and #vehicles > 0 then
+				for _, vehicle in pairs(vehicles) do
+					if vehicle.garage == nil then
+						MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {1, 'pillboxgarage'})
+					end
+				end
+			end
+		end)
     end
 end)
+]]--
 
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
@@ -600,6 +612,16 @@ end)
 RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
 	local src = source
     RefreshVehicles(src)
+end)
+
+RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
+        for k, v in pairs(vehicles) do
+            if v.citizenid == citizenid then
+                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
+            end
+        end
+    end)
 end)
 
 -- Create new parking space.
