@@ -8,7 +8,7 @@ Config.BuildMode                 = false        -- DONT EDIT CHANGE OR REMOVE TH
 Config.CheckForUpdates           = true         -- Default true
 Config.ResetState                = 1            -- Default 1, 1 is stored in garage, 2 is police impound. 
 
-Config.InteractDistance          = 5
+Config.InteractDistance          = 5            -- interact distance for target eye
 
 Config.ImpoundPrice              = 1000
 
