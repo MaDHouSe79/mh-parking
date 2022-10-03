@@ -21,7 +21,7 @@ subscribe to my channel It helps the channel grow
 
 ## 🎥 Video 👊😁👍
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
-[![Watch the video1](https://www.madirc.nl/fivem/foto11.png)](https://youtu.be/QRJZ2r7FD4w )
+[![Watch the video1](https://www.madirc.nl/fivem/foto11.png)](https://youtu.be/QRJZ2r7FD4w)
 
 ## 💪 Dependencies
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
