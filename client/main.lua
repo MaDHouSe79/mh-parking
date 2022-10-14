@@ -115,6 +115,7 @@ local function LoadEntity(vehicleData, type)
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
+    SetVehicleDoorsLocked(VehicleEntity, 2)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -451,47 +452,39 @@ end
 
 -- Save
 local function Save(player, vehicle, warp)
-    QBCore.Functions.TriggerCallback('mh-parking:server:allowtopark', function(cb)
-        if cb.status then
-            Park(player, vehicle, warp)
-            local props = QBCore.Functions.GetVehicleProperties(vehicle)
-            if props then
-                local displaytext = GetDisplayNameFromVehicleModel(props.model)
-                local carModelName = GetLabelText(displaytext)
-                local offset = trailerOffset(vehicle)
-                local currenModel = GetRealModel(vehicle)
-                QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
-                    if callback.status then
-                        QBCore.Functions.DeleteVehicle(vehicle)
-                        QBCore.Functions.Notify(callback.message, "success", 1000)
-                    else
-                        QBCore.Functions.Notify(callback.message, "error", 5000)
-                    end
-                end, {
-                    props     = props,
-                    livery    = GetVehicleLivery(vehicle),
-                    citizenid = QBCore.Functions.GetPlayerData().citizenid,
-                    plate     = props.plate,
-                    fuel      = GetVehicleFuelLevel(vehicle),
-                    body      = GetVehicleBodyHealth(vehicle),
-                    engine    = GetVehicleEngineHealth(vehicle),
-                    oil       = GetVehicleOilLevel(vehicle),
-                    model     = props.model,
-                    modelname = carModelName,
-                    cost      = Cost,
-                    parktime  = ParkTime,
-                    parking   = GetStreetName(vehicle),
-                    health    = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
-                    location  = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-                    coords    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-                }) 
-            end           
-        else
-            if cb.message then
-                QBCore.Functions.Notify(cb.message, "error", 5000)
+    Park(player, vehicle, warp)
+    local props = QBCore.Functions.GetVehicleProperties(vehicle)
+    if props then
+        local displaytext = GetDisplayNameFromVehicleModel(props.model)
+        local carModelName = GetLabelText(displaytext)
+        local offset = trailerOffset(vehicle)
+        local currenModel = GetRealModel(vehicle)
+        QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
+            if callback.status then
+                QBCore.Functions.DeleteVehicle(vehicle)
+                QBCore.Functions.Notify(callback.message, "success", 1000)
+            else
+                QBCore.Functions.Notify(callback.message, "error", 5000)
             end
-        end
-    end)
+        end, {
+            props     = props,
+            livery    = GetVehicleLivery(vehicle),
+            citizenid = QBCore.Functions.GetPlayerData().citizenid,
+            plate     = props.plate,
+            fuel      = GetVehicleFuelLevel(vehicle),
+            body      = GetVehicleBodyHealth(vehicle),
+            engine    = GetVehicleEngineHealth(vehicle),
+            oil       = GetVehicleOilLevel(vehicle),
+            model     = props.model,
+            modelname = carModelName,
+            cost      = Cost,
+            parktime  = ParkTime,
+            parking   = GetStreetName(vehicle),
+            health    = {engine = GetVehicleEngineHealth(vehicle), body = GetVehicleBodyHealth(vehicle), tank = GetVehiclePetrolTankHealth(vehicle) },
+            location  = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+            coords    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+        }) 
+    end
 end
 
 local function IsNotReservedPosition(coords)
