@@ -250,9 +250,11 @@ local function SaveData(Player, data)
 		["@plate"]       = data.plate,
 		["@citizenid"]   = GetCitizenid(Player)
 	})
-	MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked + 1 WHERE citizenid = @citizenid', {
-		["@citizenid"] = GetCitizenid(Player)
-	})
+	if Config.UseOnlyForVipPlayers then -- only allow for vip players
+	        MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked + 1 WHERE citizenid = @citizenid', {
+		        ["@citizenid"] = GetCitizenid(Player)
+	        })
+	end
 	TriggerClientEvent("mh-parking:client:addVehicle", -1, {
 		vehicle     = data,
 		plate       = data.plate, 
