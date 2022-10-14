@@ -250,6 +250,9 @@ local function SaveData(Player, data)
 		["@plate"]       = data.plate,
 		["@citizenid"]   = GetCitizenid(Player)
 	})
+	MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked + 1 WHERE citizenid = @citizenid', {
+		["@citizenid"] = GetCitizenid(Player)
+	})
 	TriggerClientEvent("mh-parking:client:addVehicle", -1, {
 		vehicle     = data,
 		plate       = data.plate, 
@@ -277,28 +280,32 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 				['@citizenid'] = Player.PlayerData.citizenid,
 			}, function(rs)
 				if type(rs) == 'table' and #rs > 0 then
-					FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
-						for k, v in pairs(vehicles) do
-							if type(v.plate) and data.plate == v.plate then
-								model = v.model
-								isFound = true
-							end		
-						end
-						if isFound then
-							MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid AND plate = @plate AND state = 3", {
-								['@citizenid'] = Player.PlayerData.citizenid,
-								['@plate'] = data.plate
-							}, function(rs)
-								if type(rs) == 'table' and #rs > 0 then
-									cb({status = false, message = Lang:t("info.car_already_parked")})
-								else
-									data.model = model
-									SaveData(Player, data)
-									cb({status = true, message = Lang:t("success.parked")})
-								end
-							end)
-						end
-					end)
+					local hasparked = rs[1].hasparked
+					if hasparked < 0 then hasparked = 0 end
+					if hasparked < rs[1].maxparking then
+						FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
+							for k, v in pairs(vehicles) do
+								if type(v.plate) and data.plate == v.plate then
+									model = v.model
+									isFound = true
+								end		
+							end
+							if isFound then
+								MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid AND plate = @plate AND state = 3", {
+									['@citizenid'] = Player.PlayerData.citizenid,
+									['@plate'] = data.plate
+								}, function(rs)
+									if type(rs) == 'table' and #rs > 0 then
+										cb({status = false, message = Lang:t("info.car_already_parked")})
+									else
+										data.model = model
+										SaveData(Player, data)
+										cb({status = true, message = Lang:t("success.parked")})
+									end
+								end)
+							end
+						end)
+					end
 				end
 			end)
 		else
@@ -357,6 +364,20 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 							["@plate"]     = data.plate,
 							["@citizenid"] = Player.PlayerData.citizenid
 						})
+						if Config.UseOnlyForVipPlayers then -- only allow for vip players
+							MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+								['@citizenid'] = GetCitizenid(Player),
+							}, function(rs)
+								if type(rs) == 'table' and #rs > 0 then
+									local hasparked = rs[1].hasparked - 1
+									if hasparked < 0 then hasparked = 0 end
+									MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = @hasparked WHERE citizenid = @citizenid', {
+										["@citizenid"] = GetCitizenid(Player),
+										["@hasparked"] = hasparked
+									})
+								end
+							end)
+						end
 						cb({
 							status      = true,
 							message     = Lang:t("info.has_take_the_car"),
@@ -396,58 +417,23 @@ QBCore.Functions.CreateCallback('mh-parking:server:payparkspace', function(sourc
     end
 end)
 
-QBCore.Functions.CreateCallback('mh-parking:server:allowtopark', function(source, cb)
-	local server_allowed, player_allowed, allowed, text = false, false, false, nil
-	local Player = QBCore.Functions.GetPlayer(source)
-	local citizenid = Player.PlayerData.citizenid
-	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = 3')
-	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid=? AND state = ?', {citizenid, 3})
-	if Config.UseMaxParkingOnServer then
-		if server_total < Config.MaxServerParkedVehicles then
-			server_allowed = true
-		else
-			text = Lang:t('info.maximum_cars', {amount = Config.MaxServerParkedVehicles})
-		end
-		if server_allowed and Config.UseMaxParkingPerPlayer then
-			if player_total < Config.MaxStreetParkingPerPlayer then
-				player_allowed = true
-			else
-				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
-			end
-		end
-		if server_allowed then
-			if player_allowed then
-				allowed = true
-				text = nil
-			end
-		end
-	else
-		if Config.UseMaxParkingPerPlayer then
-			if player_total < Config.MaxStreetParkingPerPlayer then
-				player_allowed = true
-			else
-				text = Lang:t('info.limit_for_player')
-			end
-		end
-		if player_allowed then
-			allowed = true
-			text = nil
-		end
-	end
-	cb({status = allowed, message = text})
-end)
-
-QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)
+QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='De id van de speler die je wilt toevoegen.'}, {name='Amount', help='Het maximale aantal voertuigen dat een speler kan parkeren'}}, true, function(source, args)
 	if args[1] and tonumber(args[1]) > 0 then
+		local amount = Config.MaxStreetParkingPerPlayer 
+		if args[2] and tonumber(args[2]) > 0 then
+			amount = tonumber(args[2])
+		end
 		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
 			['@citizenid'] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
 		}, function(rs)
 			if type(rs) == 'table' and #rs > 0 then
 				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.already_vip'), "error")
 			else
-				MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname) VALUES (@citizenid, @citizenname)", {
+				MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname, maxparking, hasparked) VALUES (@citizenid, @citizenname, @maxparking, @hasparked)", {
 					["@citizenid"]   = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
-					["@citizenname"] = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))
+					["@citizenname"] = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+					['@maxparking'] = amount,
+					['@hasparked'] = 0
 				})
 				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_add', {username = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))}), "success")
 			end
@@ -548,43 +534,6 @@ QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, fun
 		TriggerClientEvent('QBCore:Notify', source, Lang:t('system.not_the_right_job'), "error")
 	end
 end)
-
---[[
--- Reset state and counting to stay in sync.
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        Wait(2000)
-		print("[mh-parking] - parked vehicles state check reset.")
-		local total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles')
-		local count = 0
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {}, function(vehicles)
-			if type(vehicles) == 'table' and #vehicles > 0 then
-				for _, vehicle in pairs(vehicles) do
-					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {vehicle.plate}, function(rs)
-						if type(rs) == 'table' and #rs > 0 then
-							for _, v in pairs(rs) do
-								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {vehicle.plate})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {Config.ResetState, vehicle.plate})					
-							end
-						end
-					end)
-				end
-			end
-		end)
-		Wait(2000)
-		print("[mh-parking] - lost parked vehicles garage check reset.")
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(vehicles)
-			if type(vehicles) == 'table' and #vehicles > 0 then
-				for _, vehicle in pairs(vehicles) do
-					if vehicle.garage == nil then
-						MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {1, 'pillboxgarage'})
-					end
-				end
-			end
-		end)
-    end
-end)
-]]--
 
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
