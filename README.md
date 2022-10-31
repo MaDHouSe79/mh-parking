@@ -68,5 +68,5 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 ## 🐞 Any bugs issues or suggestions, let my know. 👊😎
 
 ## 🙈 Youtube & Discord
-- [Youtube](https://www.youtube.com/c/MaDHouSe79) for videos
+- [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
 - [Discord](https://discord.gg/cEMSeE9dgS)
