@@ -94,6 +94,7 @@ end
 local function PrepareVehicle(entity, vehicleData)
     -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
+    SetVehicleNumberPlateText(entity, vehicleData.vehicle.plate)
     SetVehicleOnGroundProperly(entity)
     SetEntityAsMissionEntity(entity, true, true)
     SetEntityInvincible(entity, true)
@@ -115,7 +116,6 @@ local function LoadEntity(vehicleData, type)
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
-    SetVehicleDoorsLocked(VehicleEntity, 2)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -147,6 +147,7 @@ local function CreateTargetEntityMenu(entity)
         distance = Config.InteractDistance
     })
 end
+
 local function IsVehicleAlreadyListed(plate)
     local isListed = false
     for i = 1, #LocalVehicles do
@@ -166,7 +167,6 @@ local function TableInsert(entity, data, warp)
             if Config.UseParkingBlips then
                 tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
             end
-            TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
             CreateTargetEntityMenu(entity)
         end
         LocalVehicles[#LocalVehicles+1] = {
@@ -484,7 +484,7 @@ local function Save(player, vehicle, warp)
             location  = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
             coords    = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
         }) 
-    end
+    end       
 end
 
 local function IsNotReservedPosition(coords)
@@ -755,7 +755,9 @@ end)
 
 RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
     if QBCore.Functions.GetPlayerData().citizenid == citizenid then
-        TriggerServerEvent(Config.KeyScriptTrigger, plate) 
+        TriggerEvent("vehiclekeys:client:SetOwner", tostring(plate))
+
+        --TriggerServerEvent(Config.KeyScriptTrigger, plate) 
     end
 end)
 
