@@ -72,17 +72,16 @@ local function RefreshVehicles(source)
                         coords      = json.decode(v.coords), 
                     }
                     if QBCore.Functions.GetPlayer(source) then
-						if v.citizenid == QBCore.Functions.GetPlayer(source).citizenid then
-							TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid) 
-						end
-					end
+			if v.citizenid == QBCore.Functions.GetPlayer(source).citizenid then
+			    TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid) 
+			end
+		    end
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
         end)
     end
 end
-
 local function sendLogs(title, message)
      if UseDiscoordLog then
 		if Webhook == "" then
