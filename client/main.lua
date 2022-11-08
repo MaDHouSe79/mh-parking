@@ -116,6 +116,8 @@ local function LoadEntity(vehicleData, type)
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
+    SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
+    SetVehicleDoorsLocked(VehicleEntity, 3)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
