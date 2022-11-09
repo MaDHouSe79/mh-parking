@@ -119,7 +119,7 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
-    SetVehicleDoorsLocked(VehicleEntity, 3)
+    TriggerServerEvent('qb-vehiclekeys:server:setVehLockState', netid, 2)
     SetVehicleNeedsToBeHotwired(vehicle, false)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
