@@ -91,7 +91,7 @@ local function RefreshVehicles(source)
                     }
                     if QBCore.Functions.GetPlayer(source) then
 						if v.citizenid == QBCore.Functions.GetPlayer(source).citizenid then
-							TriggerClientEvent("vehiclekeys:client:SetOwner", source, v.plate)
+							TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid) 
 						end
 					end
                 end
