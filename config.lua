@@ -8,8 +8,6 @@ Config.BuildMode                 = false        -- DONT EDIT CHANGE OR REMOVE TH
 Config.CheckForUpdates           = true         -- Default true
 Config.ResetState                = 1            -- Default 1, 1 is stored in garage, 2 is police impound. 
 
-Config.InteractDistance          = 5            -- interact distance for target eye
-
 Config.ImpoundPrice              = 1000
 
 Config.KeyParkBindButton         = "F5"         -- Default F5
@@ -25,12 +23,12 @@ Config.DisplayMarkerDistance     = 15           -- Default 10
 Config.PayTimeInSecs             = 3600         -- 1 hour
 
 Config.UseParkingSystem          = true         -- Default true,  this turn the parking system On or Off.
-Config.UseOnlyPreCreatedSpots    = false         -- Default false,  if you only want to use pre-created locations.
+Config.UseOnlyPreCreatedSpots    = false        -- Default false,  if you only want to use pre-created locations.
 Config.UseParkingBlips           = true         -- Default true,  if you want to see parking blips 
-Config.UseParkedVehicleNames     = true         -- Default true  if you want parking vehicles names.
+Config.UseParkedVehicleNames     = false        -- Default true  if you want parking vehicles names.
 Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset this higher
 Config.UseOnlyForVipPlayers      = true         -- Default false  if you only want that vip players can park.
-Config.UseParkedLocationNames    = true         -- Default true   if you want parking owner names above vehicles.
+Config.UseParkedLocationNames    = false        -- Default true   if you want parking owner names above vehicles.
 
 
 Config.UseOwnerNames             = true         -- Default true   if you want to use owner names
@@ -49,6 +47,7 @@ Config.MaxServerParkedVehicles   = 50           -- Default 50, total allowed par
 Config.UseSpawnDelay          = true            -- Default true, if your vehicles spawn on top of each other, set this to true
 Config.DeleteDelay            = 1500            -- Default 1500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 500             -- Default 50, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
+
 
 
 Config.JobToCreateParkSpaces = {                -- The job that you need to able to create parking places.
