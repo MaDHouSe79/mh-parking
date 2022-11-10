@@ -94,7 +94,6 @@ end
 local function PrepareVehicle(entity, vehicleData)
     -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
-    SetVehicleNumberPlateText(entity, vehicleData.vehicle.plate)
     SetVehicleOnGroundProperly(entity)
     SetEntityAsMissionEntity(entity, true, true)
     SetEntityInvincible(entity, true)
@@ -114,13 +113,9 @@ end
 local function LoadEntity(vehicleData, type)
 	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
-    local netid = NetworkGetNetworkIdFromEntity(vehicle)
-    SetNetworkIdCanMigrate(netid, true)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
-    SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
-    TriggerServerEvent('qb-vehiclekeys:server:setVehLockState', netid, 2)
-    SetVehicleNeedsToBeHotwired(vehicle, false)
+    SetVehicleDoorsLocked(VehicleEntity, 2)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -152,7 +147,6 @@ local function CreateTargetEntityMenu(entity)
         distance = Config.InteractDistance
     })
 end
-
 local function IsVehicleAlreadyListed(plate)
     local isListed = false
     for i = 1, #LocalVehicles do
@@ -172,6 +166,7 @@ local function TableInsert(entity, data, warp)
             if Config.UseParkingBlips then
                 tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
             end
+            TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
             CreateTargetEntityMenu(entity)
         end
         LocalVehicles[#LocalVehicles+1] = {
@@ -760,9 +755,7 @@ end)
 
 RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
     if QBCore.Functions.GetPlayerData().citizenid == citizenid then
-        TriggerEvent("vehiclekeys:client:SetOwner", tostring(plate))
-
-        --TriggerServerEvent(Config.KeyScriptTrigger, plate) 
+        TriggerServerEvent(Config.KeyScriptTrigger, plate) 
     end
 end)
 
