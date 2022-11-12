@@ -104,5 +104,5 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 - [Discord](https://discord.gg/cEMSeE9dgS)
 
 # LICENSE
-[GPL LICENSE](./LICENSE)
-
+[GPL LICENSE](./LICENSE)<br />
+&copy; [MaDHouSe79](https://www.youtube.com/@MaDHouSe79)
