@@ -3,20 +3,23 @@
     <h1 align="center">Hi 👋, I'm MaDHouSe</h1>
     <h3 align="center">A passionate allround developer </h3>    
 </p>
+
 <p align="center">
   <a href="https://github.com/MaDHouSe79/mh-parking/issues">
     <img src="https://img.shields.io/github/issues/MaDHouSe79/mh-parking"/> 
   </a>
+  <a href="https://github.com/MaDHouSe79/mh-parking/watchers">
+    <img src="https://img.shields.io/github/watchers/MaDHouSe79/mh-parking"/> 
+  </a> 
   <a href="https://github.com/MaDHouSe79/mh-parking/network/members">
     <img src="https://img.shields.io/github/forks/MaDHouSe79/mh-parking"/> 
   </a>  
   <a href="https://github.com/MaDHouSe79/mh-parking/stargazers">
     <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking?color=white"/> 
   </a>
-  
   <a href="https://github.com/MaDHouSe79/mh-parking/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking?color=black"/> 
-    </a>      
+    <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking?color=black"/> 
+  </a>      
 </p>
 
 <p align="center">
