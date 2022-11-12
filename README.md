@@ -13,6 +13,10 @@
   <a href="https://github.com/MaDHouSe79/mh-parking/stargazers">
     <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking"/> 
   </a>
+  
+  <a href="https://github.com/MaDHouSe79/mh-parking/LICENSE">
+        <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking"/> 
+    </a>
 </p>
 
 <p align="center">
