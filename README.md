@@ -91,11 +91,10 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 ````
 
 ## Contributers
-<p align="center">
-    <a href="https://github.com/MaDHouSe79/mh-parking/graphs/contributors">
-      <img src="https://contributors-img.web.app/image?repo=MaDHouSe79/mh-parking" />
-    </a>
-</p>
+<a href="https://github.com/MaDHouSe79/mh-parking/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=MaDHouSe79/mh-parking" />
+</a>
+
 
 
 ## 🐞 Any bugs issues or suggestions, let my know. 👊😎
@@ -103,3 +102,7 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 ## 🙈 Youtube & Discord
 - [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
 - [Discord](https://discord.gg/cEMSeE9dgS)
+
+# LICENSE
+[GPL LICENSE](./LICENSE)
+
