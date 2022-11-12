@@ -11,12 +11,12 @@
     <img src="https://img.shields.io/github/forks/MaDHouSe79/mh-parking"/> 
   </a>  
   <a href="https://github.com/MaDHouSe79/mh-parking/stargazers">
-    <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking"/> 
+    <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking?color=white"/> 
   </a>
   
   <a href="https://github.com/MaDHouSe79/mh-parking/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking"/> 
-    </a>
+        <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking?color=black"/> 
+    </a>      
 </p>
 
 <p align="center">
@@ -24,8 +24,8 @@
 </p>
 
 
-## mh-parking 
-- An Advanced Parking System build by MaDHouSe79.
+# mh-parking
+* An Advanced Parking System build by MaDHouSe79.
 
 
 subscribe to my channel It helps the channel grow
