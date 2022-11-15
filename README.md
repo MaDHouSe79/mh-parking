@@ -80,7 +80,7 @@ subscribe to my channel It helps the channel grow
 
 ## Unpark trigger event (use this client side)
 - this only unpark the vehicle, it does not delete the entity from the gameworld.
-- use this trigger in policejob/client/job.lua, put it in the impouns trigger.
+- use this trigger in policejob/client/job.lua, put it in the impouns trigger. (around line 330)
 ```lua
 TriggerServerEvent('mh-parking:server:unpark', plate)
 ```
