@@ -96,7 +96,7 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 ````
 
 ## Issues with qb-vehiclekey script (fix)
-Add this in the client file
+Add this in the file `[qb]/qb-vehiclekeys/client.lua`
 ```lua
 CreateThread(function() --Reload Vehicle Key
     while true do        
