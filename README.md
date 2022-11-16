@@ -101,10 +101,10 @@ Add this in the client file
 CreateThread(function() --Reload Vehicle Key
     while true do        
         QBCore.Functions.TriggerCallback('qb-vehiclekeys:server:GetVehicleKeys', function(keys)
-			KeysList = keys
-		end)
-		Wait(1000)
-	end
+	    KeysList = keys
+	end)
+	Wait(1000)
+    end
 end)
 ```
 
