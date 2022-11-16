@@ -95,6 +95,20 @@ TriggerServerEvent('mh-parking:server:unpark', plate)
 { table = 'player_parking_vips' },
 ````
 
+## Issues with qb-vehiclekey script (fix)
+Add this in the client file
+```lua
+CreateThread(function() --Reload Vehicle Key
+    while true do        
+        QBCore.Functions.TriggerCallback('qb-vehiclekeys:server:GetVehicleKeys', function(keys)
+			KeysList = keys
+		end)
+		Wait(1000)
+	end
+end)
+```
+
+
 ## Contributers
 <a href="https://github.com/MaDHouSe79/mh-parking/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=MaDHouSe79/mh-parking" />
