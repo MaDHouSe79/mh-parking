@@ -27,7 +27,7 @@ Config.UseOnlyPreCreatedSpots    = false        -- Default false,  if you only w
 Config.UseParkingBlips           = true         -- Default true,  if you want to see parking blips 
 Config.UseParkedVehicleNames     = false        -- Default true  if you want parking vehicles names.
 Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset this higher
-Config.UseOnlyForVipPlayers      = true         -- Default false  if you only want that vip players can park.
+Config.UseOnlyForVipPlayers      = true         -- Default true if you only want that vip players can park.
 Config.UseParkedLocationNames    = false        -- Default true   if you want parking owner names above vehicles.
 
 
