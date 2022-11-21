@@ -78,6 +78,18 @@ subscribe to my channel It helps the channel grow
 - 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
+## 💯 What i recommend for using this mod
+- 👉 I recommend to use this mod only for vip players or for players who are most online on you server.
+- 👉 Try not to spawn too many vehicles in world space, this can cause issues and hiccups. 
+- 👉 It is also recommended to have a good computer/server to use this mod, cause you will need it.
+- 👉 To keep the server nice and clean for everyody, use this system only for vip players. 
+
+
+## 💯 I tested this mod on a computer/server with the following settings
+- ✅ Prossessor: I7 12xCore
+- ✅ Memory: 16 gig memory
+- ✅ Graphics: GTX 1050 TI 4GB
+
 ## Unpark trigger event (use this client side)
 - this only unpark the vehicle, it does not delete the entity from the gameworld.
 - use this trigger in policejob/client/job.lua, put it in the impound trigger. (around line 330)
