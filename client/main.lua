@@ -754,8 +754,9 @@ RegisterNetEvent('mh-parking:client:setParkedVecihleLocation', function(location
 end)
 
 RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
-    if QBCore.Functions.GetPlayerData().citizenid == citizenid then
-        TriggerServerEvent(Config.KeyScriptTrigger, plate) 
+    PlayerData = QBCore.Functions.GetPlayerData()
+    if PlayerData.citizenid == citizenid then
+        TriggerEvent('qb-vehiclekeys:client:AddKeys', plate)
     end
 end)
 
