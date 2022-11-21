@@ -89,11 +89,7 @@ local function RefreshVehicles(source)
                         engine      = v.engine,
                         coords      = json.decode(v.coords), 
                     }
-                    if QBCore.Functions.GetPlayer(source) then
-						if v.citizenid == QBCore.Functions.GetPlayer(source).citizenid then
-							TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid) 
-						end
-					end
+                    TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid)
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
