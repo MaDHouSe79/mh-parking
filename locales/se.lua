@@ -35,6 +35,7 @@ local Translations = {
         ["parked"]              = "Ditt fordon är parkerad",
         ["route_has_been_set"]  = "Er is een waypoint op de map geplaatst waar jou voertuig is gepakeerd.",
         ["paid_park_space"]     = "Je hebt %{paid} betaald.",
+        ["get_vehicle_keys"]    = "You got the contact key from vehicle with the %{plate}",
     },
     info = {
         ["companyName"]         = "Beunhaas BV",
