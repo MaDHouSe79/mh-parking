@@ -89,7 +89,7 @@ local function RefreshVehicles(source)
                         engine      = v.engine,
                         coords      = json.decode(v.coords), 
                     }
-                    TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid)
+                    --TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid)
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
