@@ -754,6 +754,7 @@ RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
     PlayerData = QBCore.Functions.GetPlayerData()
     if PlayerData.citizenid == citizenid then
         TriggerEvent('qb-vehiclekeys:client:AddKeys', plate)
+	QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {plate = plate}), "success")
     end
 end)
 
