@@ -269,17 +269,14 @@ local function DeleteLocalVehicle(vehicle)
 end
 
 local function UnparkVehicle(plate)
-    IsDeleting = true
-    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 then
 		for i = 1, #LocalVehicles do
-            if type(LocalVehicles[i].plate) ~= 'nil' then
-				if plate == LocalVehicles[i].plate then
-                    table.remove(LocalVehicles, i)
-				end
+			if LocalVehicles[i].plate == plate then
+                table.remove(LocalVehicles, i)
+                LocalVehicles[i] = nil
 			end
 		end
     end
-    IsDeleting = false
 end
 
 -- Spawn local vehicles(server data)
