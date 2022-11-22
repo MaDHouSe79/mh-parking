@@ -90,12 +90,27 @@ subscribe to my channel It helps the channel grow
 - ✅ Memory: 16 gig memory
 - ✅ Graphics: GTX 1050 TI 4GB
 
-## Unpark trigger event (use this client side)
+## Unpark trigger event (use this server side)
 - this only unpark the vehicle, it does not delete the entity from the gameworld.
-- use this trigger in policejob/client/job.lua, put it in the impound trigger. (around line 330)
-- you can also use this in lockpick or hotwire.
+- use this trigger in qb-policejob/server/main.lua, replace it with this (around line 888)
+- 
 ```lua
-TriggerServerEvent('mh-parking:server:unpark', plate)
+RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
+    local src = source
+    price = price and price or 0
+    if IsVehicleOwned(plate) then
+        TriggerEvent('mh-parking:server:unpark', plate) -- <----- OR ADD THIS TRIGGER HERE (mh-parking)
+        if not fullImpound then
+            MySQL.query('UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?', {0, price, body, engine, fuel, plate})
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_taken_depot", {price = price}))
+        else
+            MySQL.query(
+                'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
+                {2, body, engine, fuel, plate})
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_seized"))
+        end
+    end
+end)
 ```
 
 ## 👇 To keep things nice and clean for the qb-core system and database.
