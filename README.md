@@ -79,6 +79,10 @@ subscribe to my channel It helps the channel grow
 - 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
+
+## 👉 NOTE DONT FORGET  TO ADD YOUR SELF AS VIP
+
+
 ## 💯 What i recommend for using this mod
 - 👉 I recommend to use this mod only for vip players or for players who are most online on you server.
 - 👉 Try not to spawn too many vehicles in world space, this can cause issues and hiccups. 
@@ -90,6 +94,7 @@ subscribe to my channel It helps the channel grow
 - ✅ Prossessor: I7 12xCore
 - ✅ Memory: 16 gig memory
 - ✅ Graphics: GTX 1050 TI 4GB
+
 
 ## Unpark trigger event (use this server side)
 - this only unpark the vehicle, it does not delete the entity from the gameworld.
@@ -127,7 +132,6 @@ end)
 <a href="https://github.com/MaDHouSe79/mh-parking/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=MaDHouSe79/mh-parking" />
 </a>
-
 
 
 ## 🐞 Any bugs issues or suggestions, let my know. 👊😎
