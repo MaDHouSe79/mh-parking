@@ -21,14 +21,6 @@ local function GetCitizenid(player)
     return player.PlayerData.citizenid
 end
 
-local function GetVIPData(citizenid)
-	MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = ?", {citizenid}, function(rs)
-		if type(rs) == 'table' and #rs > 0 then
-
-		end
-	end)
-end 
-
 local function countPlayers()
     local count = 0
     for k, v in pairs(QBCore.Functions.GetPlayers()) do count = count + 1  end
