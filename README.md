@@ -120,7 +120,7 @@ end)
 ```
 
 
-## Optional qb-phone and qb-garages integration.
+## Optional qb-garages integration, this part is also for the phone app
 - you need to find this in your qb-garages server and client file
 ```lua
 if v.state == 0 then
@@ -132,7 +132,7 @@ elseif v.state == 2 then
 end
 ```
 
-## Example qb-phone and qb-garages integration
+## Example qb-garages integration, this part is also for the phone app
 - you need to add a state 3
 ```lua
 if v.state == 0 then
