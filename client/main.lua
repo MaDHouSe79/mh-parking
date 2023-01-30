@@ -162,7 +162,7 @@ end
 local function TableInsert(entity, data, warp)
     if not IsVehicleAlreadyListed(data.plate) then
         local tmpBlip = nil
-        if data.citizenid == QBCore.Functions.GetPlayerData().citizenid then	
+        if data.citizenid == PlayerData.citizenid then		
             if Config.UseParkingBlips then
                 tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
             end
