@@ -119,6 +119,34 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
 end)
 ```
 
+
+## Optional qb-phone integration.
+- you need to find this in your qb-garages/client/main.lua
+```lua
+if v.state == 0 then
+    v.state = Lang:t("status.out")
+elseif v.state == 1 then
+    v.state = Lang:t("status.garaged")
+elseif v.state == 2 then
+    v.state = Lang:t("status.impound")
+end
+```
+
+## Example qb-phone integration 
+```lua
+if v.state == 0 then
+    v.state = Lang:t("status.out")
+elseif v.state == 1 then
+    v.state = Lang:t("status.garaged")
+elseif v.state == 2 then
+    v.state = Lang:t("status.impound")
+elseif v.state == 3 then                 -- <--- ADD HERE
+    v.state = "Parked outside"
+end
+```
+
+
+
 ## 👇 To keep things nice and clean for the qb-core system and database.
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
 - ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
