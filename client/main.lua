@@ -109,10 +109,14 @@ local function PrepareVehicle(entity, vehicleData)
     SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
 end
 
--- Load Entity
 local function LoadEntity(vehicleData, type)
 	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+    --VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+    local isnetworked = true
+    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, isnetworked, false)
+    local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
+    SetNetworkIdCanMigrate(netid, true)
+
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -367,7 +371,11 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
+    local isnetworked = true
+    local entity = CreateVehicle(vehicleData.vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.1, vehicle.location.w, isnetworked, false)
+    local netid = NetworkGetNetworkIdFromEntity(entity)
+    SetNetworkIdCanMigrate(netid, true)
+    return entity
 end
 
 -- Drive 
