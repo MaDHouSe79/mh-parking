@@ -120,7 +120,7 @@ end)
 ```
 
 
-## Optional qb-phone integration.
+## Optional qb-garages integration.
 - you need to find this in your qb-garages/client/main.lua
 ```lua
 if v.state == 0 then
@@ -132,7 +132,7 @@ elseif v.state == 2 then
 end
 ```
 
-## Example qb-phone integration 
+## Example qb-garages integration 
 ```lua
 if v.state == 0 then
     v.state = Lang:t("status.out")
