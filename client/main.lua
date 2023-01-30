@@ -370,7 +370,7 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    local entity = CreateVehicle(vehicleData.vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.1, vehicle.location.w, true, false)
+    local entity = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.1, vehicle.location.w, true, false)
     local netid = NetworkGetNetworkIdFromEntity(entity)
     SetNetworkIdCanMigrate(netid, true)
     return entity
