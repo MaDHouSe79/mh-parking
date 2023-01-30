@@ -146,6 +146,13 @@ elseif v.state == 3 then                 -- <--- ADD HERE
 end
 ```
 
+- if you get this error
+- `script:qb-core] SCRIPT ERROR: citizen:/scripting/lua/scheduler.lua:741: SCRIPT ERROR: @qb-phone/server/main.lua:233: attempt to index a nil value (field 'Garages')`
+## Check the config file from qb-phone
+- check if you have this
+```lua
+Config.Garages = Garages
+```
 
 
 ## 👇 To keep things nice and clean for the qb-core system and database.
