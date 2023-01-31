@@ -466,6 +466,7 @@ local function Park(player, vehicle, warp)
     Wait(150)
     SetVehicleLights(vehicle, 0)
     TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
+    CreateTargetEntityMenu(vehicle)
     RemoveParkedBlips()
 end
 
