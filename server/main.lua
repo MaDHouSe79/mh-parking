@@ -416,6 +416,20 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 	end)
 end)
 
+QBCore.Functions.CreateCallback('mh-parking:server:isOwner', function(source, cb, plate)
+    local src = source
+    local citizenid = QBCore.Functions.GetPlayer(src).PlayerData.citizenid
+    local isOwner = false
+    MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ?", {citizenid}, function(rs)
+        for k, v in pairs(rs) do
+	    if v.plate == plate then
+	        isOwner = true
+	    end
+        end
+	cb(isOwner)
+    end)
+end)
+
 QBCore.Functions.CreateCallback('mh-parking:server:payparkspace', function(source, cb, cost)
     local Player = QBCore.Functions.GetPlayer(source)
     if Pay(source, cost) then
