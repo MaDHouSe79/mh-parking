@@ -161,6 +161,38 @@ local function IsVehicleAlreadyListed(plate)
     return isListed
 end
 
+local function CreateParkingBlips()
+    if Config.UseParkingBlips then
+        for i = 1, #LocalVehicles do
+            if LocalVehicles[i] then
+                if LocalVehicles[i].citizenid == QBCore.Functions.GetPlayerData().citizenid then
+                    if LocalVehicles[i].blip == nil then
+                        if not DoesBlipExist(LocalVehicles[i].blip) then
+                            LocalVehicles[i].blip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = LocalVehicles[i].modelname}), LocalVehicles[i].location)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function RemoveParkedBlips()
+    for i = 1, #LocalVehicles do
+        if LocalVehicles[i] then
+            if LocalVehicles[i].citizenid == QBCore.Functions.GetPlayerData().citizenid then
+                if LocalVehicles[i].blip ~= nil then
+                    if DoesBlipExist(LocalVehicles[i].blip) then
+                        RemoveBlip(LocalVehicles[i].blip)
+                    end
+                end
+            end
+        end
+    end
+    Wait(500)
+    CreateParkingBlips()
+end
+
 -- Spawn 
 local function TableInsert(entity, data, warp)
     if not IsVehicleAlreadyListed(data.plate) then
@@ -407,6 +439,7 @@ local function Drive(player, vehicle, warp)
 	        if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
+            RemoveParkedBlips()
             CreateTargetEntityMenu(callback.entity)
             QBCore.Functions.Notify(callback.message, "success", 5000)
         else
@@ -433,6 +466,7 @@ local function Park(player, vehicle, warp)
     Wait(150)
     SetVehicleLights(vehicle, 0)
     TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
+    RemoveParkedBlips()
 end
 
 -- Get the street name where you are at the moment.
