@@ -112,7 +112,7 @@ end
 local function LoadEntity(vehicleData, type)
 	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     --VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, false)
+    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false, false)
     local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetNetworkIdCanMigrate(netid, true)
 
@@ -370,7 +370,7 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    local entity = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.1, vehicle.location.w, true, false)
+    local entity = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.1, vehicle.location.w, false, false)
     local netid = NetworkGetNetworkIdFromEntity(entity)
     SetNetworkIdCanMigrate(netid, true)
     return entity
