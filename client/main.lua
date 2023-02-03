@@ -838,7 +838,9 @@ end)
 
 CreateThread(function()
     while true do
-        CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
-        Wait(Config.ForceGroundenInMilSec)
+        if LocalPlayer.state.isLoggedIn then
+            CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
+            Wait(Config.ForceGroundenInMilSec)
+        end
     end
 end)
