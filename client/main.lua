@@ -779,68 +779,91 @@ RegisterNetEvent("mh-parking:client:buildmode", function(state)
     Config.BuildMode = not Config.BuildMode
 end)
 
+-- Threads
+CreateThread(function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+end)
+
 CreateThread(function()
     while true do
-        if Config.UseParkingSystem then
-            if LocalPlayer.state.isLoggedIn then
-                local position = nil
-                local player = PlayerPedId()
-                CreateState()
-                if IsPedInAnyVehicle(player) then
-                    position = GetEntityCoords(GetVehiclePedIsIn(player))
-                else
-                    position = GetEntityCoords(player)
-                end
-                DrawParkedLocation(position)
-                if IsPedInAnyVehicle(player) then
-                    local storedVehicle = GetPlayerInStoredCar(player)
-                    local vehicle = GetVehiclePedIsIn(player)
-                    local plate = QBCore.Functions.GetPlate(vehicle)
-                    if storedVehicle ~= false then
-                        DisplayHelpText(Lang:t("info.press_drive_car"))
-                        if IsControlJustReleased(0, Config.ParkingButton) then
-                            isUsingParkCommand = true
-                        end
-                    end
-                    if isUsingParkCommand then
-                        isUsingParkCommand = false
-                        if storedVehicle ~= false then
-                            Drive(player, storedVehicle, true)
-                        else
-                            if vehicle then
-                                local speed = GetEntitySpeed(vehicle)
-                                local vehicleCoords = GetEntityCoords(vehicle)
-                                if speed > 0.9 then
-                                    QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
-                                elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
-                                    if IsNotReservedPosition(vehicleCoords) then
-                                        Save(PlayerPedId(), vehicle, true)
-                                    end
+        InParking = true
+        if InParking then
+            if not SpawnedVehicles then
+                RemoveVehicles(GlobalVehicles)
+                TriggerServerEvent("mh-parking:server:refreshVehicles", 'allparking')
+                SpawnedVehicles = true
+                Wait(2000)
+            end
+        else
+            if SpawnedVehicles then
+                RemoveVehicles(GlobalVehicles)
+                SpawnedVehicles = false
+            end
+        end
+        Wait(0)
+    end
+end)
+
+CreateThread(function()
+    if Config.UseParkingSystem then
+	while true do
+            local position = nil
+	    local player = PlayerPedId()
+            CreateState()
+            if IsPedInAnyVehicle(player) then
+                position = GetEntityCoords(GetVehiclePedIsIn(player))
+            else
+                position = GetEntityCoords(player)
+            end
+            DrawParkedLocation(position)
+	    if IsPedInAnyVehicle(player) then
+	        local storedVehicle = GetPlayerInStoredCar(player)
+		local vehicle = GetVehiclePedIsIn(player)
+                local plate = QBCore.Functions.GetPlate(vehicle)
+		if storedVehicle ~= false then
+		    DisplayHelpText(Lang:t("info.press_drive_car"))
+		    if IsControlJustReleased(0, Config.ParkingButton) then
+		        isUsingParkCommand = true
+		    end
+		end
+		if isUsingParkCommand then
+		    isUsingParkCommand = false
+		    if storedVehicle ~= false then
+		        Drive(player, storedVehicle, true)
+		    else
+			if vehicle then
+                            local speed = GetEntitySpeed(vehicle)
+                            local vehicleCoords = GetEntityCoords(vehicle)
+                            if speed > 0.9 then
+                                QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
+                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
+                                if IsNotReservedPosition(vehicleCoords) then
+                                    Save(PlayerPedId(), vehicle, true)
                                 end
                             end
-                        end
-                    end
-                else
-                    isUsingParkCommand = false
-                end
-                if not SpawnedVehicles then 
-                    SpawnedVehicles = true
-                    RemoveVehicles(GlobalVehicles)
-                    TriggerServerEvent("mh-parking:server:refreshVehicles")
-                    Wait(2000)
-                end
-                if Config.UseParkedVehicleNames then DisplayParkedOwnerText() end
-            end
+		        end
+		    end
+		end
+	    else
+		isUsingParkCommand = false
+	    end
+	    Wait(0)
 	end
-	Wait(0)
+    end
+end)
+
+CreateThread(function()
+    if Config.UseParkingSystem and Config.UseParkedVehicleNames then
+        while true do
+            DisplayParkedOwnerText()
+            Wait(0)
+        end
     end
 end)
 
 CreateThread(function()
     while true do
-        if LocalPlayer.state.isLoggedIn then
-            CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
-            Wait(Config.ForceGroundenInMilSec)
-        end
+        CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
+        Wait(Config.ForceGroundenInMilSec)
     end
 end)
