@@ -163,7 +163,7 @@ local function TableInsert(entity, data)
         local tmpBlip = nil
         if data.citizenid == QBCore.Functions.GetPlayerData().citizenid then
             TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
-            TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity)
+	    if Config.UseMHVehicleKeyItem then TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity) end
             tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
             CreateTargetEntityMenu(entity)
         end
@@ -397,7 +397,7 @@ local function Drive(player, vehicle, warp)
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
 	    if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
-            TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', callback.vehicle)
+	    if Config.UseMHVehicleKeyItem then TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', callback.vehicle) end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
             QBCore.Functions.Notify(callback.message, "success", 5000)
@@ -456,7 +456,7 @@ local function Save(player, vehicle, warp)
         local currenModel = GetRealModel(vehicle)
         QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
             if callback.status then
-                TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', props.plate)
+                if Config.UseMHVehicleKeyItem then TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', props.plate) end
                 QBCore.Functions.DeleteVehicle(vehicle)
                 QBCore.Functions.Notify(callback.message, "success", 1000)
             else
