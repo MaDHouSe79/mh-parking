@@ -10,6 +10,8 @@ Config.ResetState                = 1            -- Default 1, 1 is stored in gar
 
 Config.ImpoundPrice              = 1000
 
+Config.UseMHVehicleKeyItem       = false        -- you need mh-vehiclekeyitem to use this option
+
 Config.KeyParkBindButton         = "F5"         -- Default F5
 Config.KeyParkMenuBindButton     = "F6"         -- Default F6
 Config.ParkingButton             = 166          -- Default 166, [F5] 
