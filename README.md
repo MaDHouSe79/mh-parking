@@ -61,7 +61,7 @@ subscribe to my channel It helps the channel grow
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server. 😁
-- 👉 Step 2: Copy the directory mh-parking to resources/[qb]/
+- 👉 Step 2: Copy the directory mh-parking to resources/[mh]/
 - 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
 - 👉 Step 4: Start your server.  
 - 👉 Step 5: Add your self or other as vip, you can use the command: /park-addvip [id]
