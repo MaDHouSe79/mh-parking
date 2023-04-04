@@ -663,6 +663,44 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     TriggerServerEvent("mh-parking:server:onjoin", id, QBCore.Functions.GetPlayerData().citizenid)
 end)
 
+local parkMenu = nil
+RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
+    if parkMenu ~= nil then
+        exports['qb-radialmenu']:RemoveOption(parkMenu)
+        parkMenu = nil
+    end
+    if (GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId()) then
+        parkMenu = exports['qb-radialmenu']:AddOption({
+            id = 'park_vehicle',
+            title = 'Park (F5)',
+            icon = "parking",
+            type = 'client',
+            event = "mh-parking:client:parking",
+            shouldClose = true
+        }, parkMenu)  
+    else
+        local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+        if vehicle ~= 0 and distance <= 3.0 then
+            if not IsPedInAnyVehicle(PlayerPedId()) then
+                parkMenu = exports['qb-radialmenu']:AddOption({
+                    id = 'park_vehicle',
+                    title = 'Unpark (F5)',
+                    icon = "parking",
+                    type = 'client',
+                    event = "mh-parking:client:unparking",
+                    shouldClose = true
+                }, parkMenu)  
+            end
+        end
+    end
+end)
+
+AddEventHandler('onResourceStop', function(resource)
+    if parkMenu ~= nil then
+        exports['qb-radialmenu']:RemoveOption(parkMenu)
+        parkMenu = nil
+    end
+end)
 
 -- Command
 RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton) 
