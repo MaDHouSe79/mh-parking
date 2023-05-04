@@ -50,7 +50,7 @@ Config.UseSpawnDelay          = true            -- Default true, if your vehicle
 Config.DeleteDelay            = 1500            -- Default 1500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 500             -- Default 50, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
-
+Config.InteractDistance       = 5               -- interact distence for target
 
 Config.JobToCreateParkSpaces = {                -- The job that you need to able to create parking places.
     ['realestate'] = true,
