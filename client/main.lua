@@ -673,7 +673,7 @@ RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
         parkMenu = exports['qb-radialmenu']:AddOption({
             id = 'park_vehicle',
             title = 'Park (F5)',
-            icon = "parking",
+            icon = "square-parking",
             type = 'client',
             event = "mh-parking:client:parking",
             shouldClose = true
@@ -685,7 +685,7 @@ RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
                 parkMenu = exports['qb-radialmenu']:AddOption({
                     id = 'park_vehicle',
                     title = 'Unpark (F5)',
-                    icon = "parking",
+                    icon = "square-parking",
                     type = 'client',
                     event = "mh-parking:client:unparking",
                     shouldClose = true
