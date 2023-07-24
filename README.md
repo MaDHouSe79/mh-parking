@@ -54,9 +54,9 @@ subscribe to my channel It helps the channel grow
 ## 💪 Dependencies
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
-- ✅ [mh-vehiclekeys](https://github.com/MaDHouSe79/mh-vehiclekeys) (You need this script to make mh-parking work)
 
 ## 💪 Optional
+- ✅ [mh-vehiclekeys](https://github.com/MaDHouSe79/mh-vehiclekeys)
 - ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
