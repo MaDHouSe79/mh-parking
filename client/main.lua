@@ -161,12 +161,10 @@ end
 local function TableInsert(entity, data)
     if not IsVehicleAlreadyListed(data.plate) then
         local tmpBlip = nil
-        if data.citizenid == QBCore.Functions.GetPlayerData().citizenid then
-            TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
-	    if Config.UseMHVehicleKeyItem then TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity) end
-            tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
-            CreateTargetEntityMenu(entity)
-        end
+        TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
+	if Config.UseMHVehicleKeyItem then TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity) end
+        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.modelname}), data.vehicle.location)
+        CreateTargetEntityMenu(entity)
         LocalVehicles[#LocalVehicles+1] = {
             entity      = entity,
             vehicle     = data.mods,
