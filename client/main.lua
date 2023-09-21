@@ -225,6 +225,22 @@ local function DisplayParkedOwnerText()
     end
 end
 
+--Make Vehicles Visable
+local function MakeVehiclesVisable()
+    local pl = GetEntityCoords(PlayerPedId())
+    for k, vehicle in pairs(LocalVehicles) do
+        if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.ParkedViewDistance then
+            if not IsEntityVisible(vehicle.entity) then
+                SetEntityVisible(vehicle.entity, true, 0)
+            end
+        else
+            if IsEntityVisible(vehicle.entity) then
+                SetEntityVisible(vehicle.entity, false, 0)
+            end
+        end
+    end
+end
+
 -- Get the stored vehicle player is in
 local function GetPlayerInStoredCar(player)
     local entity = GetVehiclePedIsIn(player)
@@ -886,6 +902,15 @@ CreateThread(function()
 	    end
 	    Wait(0)
 	end
+    end
+end)
+
+CreateThread(function()
+    if Config.UseParkingSystem then
+        while true do
+            MakeVehiclesVisable()
+            Wait(1000)
+        end
     end
 end)
 
