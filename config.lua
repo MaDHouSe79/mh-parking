@@ -32,6 +32,7 @@ Config.ParkedNamesViewDistance   = 5            -- Default 5,     you canset thi
 Config.UseOnlyForVipPlayers      = true         -- Default true if you only want that vip players can park.
 Config.UseParkedLocationNames    = false        -- Default true   if you want parking owner names above vehicles.
 
+Config.ParkedViewDistance        = 100          -- Default 100 if you more away than 100 meters the vehicles in that area wil not display
 
 Config.UseOwnerNames             = true         -- Default true   if you want to use owner names
 Config.UseRoleplayName           = true         -- Default true   if you want to use roleplay names
