@@ -293,10 +293,10 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 					if hasparked < rs[1].maxparking then
 						FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
 							for k, v in pairs(vehicles) do
-								if type(v.plate) and data.plate == v.plate then
+								if v and v.plate and data.plate == v.plate then
 									model = v.model
 									isFound = true
-								end		
+								end
 							end
 							if isFound then
 								MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = @citizenid AND plate = @plate AND state = 3", {
@@ -311,6 +311,8 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 										cb({status = true, message = Lang:t("success.parked")})
 									end
 								end)
+							else
+								cb({status = false, message = "Vehicle not found, or you are not the owner of this vehicle"})
 							end
 						end)
 					end
@@ -319,7 +321,7 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 		else
 			FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles) -- free for all
 				for k, v in pairs(vehicles) do
-					if type(v.plate) and data.plate == v.plate then
+					if v and v.plate and data.plate == v.plate then
 						model = v.model
 						isFound = true
 					end		
@@ -336,7 +338,9 @@ QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, d
 							SaveData(Player, data)
 							cb({status  = true, message = Lang:t("success.parked")})
 						end
-					end)		
+					end)
+				else
+		    		cb({status = false, message = "Vehicle not found, or you are not the owner of this vehicle"})
 				end
 			end)
 		end
@@ -350,24 +354,24 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 	local Player = QBCore.Functions.GetPlayer(src)
 	local isFound = false
 	FindPlayerVehicles(Player.PlayerData.citizenid, function(vehicles)
-		for k, v in pairs(vehicles) do
-			if type(v.plate) and data.plate == v.plate then
-				isFound = true
+	    for k, v in pairs(vehicles) do
+			if v and v.plate and data.plate == v.plate then
+			    isFound = true
 			end
-		end
-		if isFound then
+	    end
+	    if isFound then
 			MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-				['@citizenid'] = Player.PlayerData.citizenid,
-				['@plate'] = data.plate
+			    ['@citizenid'] = Player.PlayerData.citizenid,
+			    ['@plate'] = data.plate
 			}, function(rs)
-				if type(rs) == 'table' and #rs > 0 and rs[1] then
+			    if type(rs) == 'table' and #rs > 0 and rs[1] then
 					local cost = (math.floor(((os.time() - rs[1].time) / Config.PayTimeInSecs) * rs[1].cost))
 					if cost < 0 then cost = 0 end
 					if Pay(src, cost) then
-						MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
+					    MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
 							["@plate"]     = data.plate,
 							["@citizenid"] = Player.PlayerData.citizenid
-						})
+					    })
 						MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
 							["@plate"]     = data.plate,
 							["@citizenid"] = Player.PlayerData.citizenid
@@ -412,6 +416,8 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 					end
 				end
 			end)
+		else
+		    cb({status = false, message = "Vehicle not found, or you are not the owner of this vehicle"})
 		end
 	end)
 end)
