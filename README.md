@@ -169,12 +169,8 @@ Config.Garages = Garages
   <img src="https://contributors-img.web.app/image?repo=MaDHouSe79/mh-parking" />
 </a>
 
-
-## 🐞 Any bugs issues or suggestions, let my know. 👊😎
-
-## 🙈 Youtube & Discord
+## 🙈 Youtube
 - [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
-- [Discord](https://discord.gg/cEMSeE9dgS)
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
