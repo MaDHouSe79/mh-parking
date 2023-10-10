@@ -187,6 +187,8 @@ local function TableInsert(entity, data)
             modelname = data.modelname
         }), data.vehicle.location)
         CreateTargetEntityMenu(entity)
+        local angle = data.steerangle
+        if angle == 0 then angle = math.random(-50, 50) end
         LocalVehicles[#LocalVehicles + 1] = {
             entity = entity,
             vehicle = data.mods,
@@ -506,7 +508,7 @@ local function GetRealModel(vehicle)
 end
 
 -- Save
-local function Save(player, vehicle, warp)
+local function Save(player, vehicle, wheelangle, warp)
     Park(player, vehicle, warp)
     local props = QBCore.Functions.GetVehicleProperties(vehicle)
     if props then
@@ -514,13 +516,6 @@ local function Save(player, vehicle, warp)
         local carModelName = GetLabelText(displaytext)
         local offset = trailerOffset(vehicle)
         local currenModel = GetRealModel(vehicle)
-
-        local angle = 0.0
-        local tangle = GetVehicleSteeringAngle(vehicle)
-        if tangle > 10.0 or tangle < -10.0 then
-            angle = tangle
-        end
-
         QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
             if callback.status then
                 if Config.UseMHVehicleKeyItem then
@@ -536,7 +531,7 @@ local function Save(player, vehicle, warp)
             livery = GetVehicleLivery(vehicle),
             citizenid = QBCore.Functions.GetPlayerData().citizenid,
             plate = props.plate,
-            steerangle = angle,
+            steerangle = wheelangle,
             fuel = GetVehicleFuelLevel(vehicle),
             body = GetVehicleBodyHealth(vehicle),
             engine = GetVehicleEngineHealth(vehicle),
@@ -1000,7 +995,8 @@ CreateThread(function()
                                 IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or
                                 IsThisModelAHeli(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
-                                    Save(PlayerPedId(), vehicle, true)
+                                    local wheelangle = GetVehicleSteeringAngle(vehicle)
+                                    Save(PlayerPedId(), vehicle, wheelangle, true)
                                 end
                             end
                         end
@@ -1009,7 +1005,6 @@ CreateThread(function()
             else
                 isUsingParkCommand = false
             end
-            CheckWheelState()
             Wait(0)
         end
     end
@@ -1037,5 +1032,14 @@ CreateThread(function()
     while true do
         CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
         Wait(Config.ForceGroundenInMilSec)
+    end
+end)
+
+CreateThread(function()
+    if Config.UseParkingSystem then
+        while true do
+            CheckWheelState()
+            Wait(0)
+        end
     end
 end)
