@@ -1,6 +1,6 @@
 ## ----------------------------------------------Update------------------------------------------------
 ## Update 49 10-10-2023
-# you need to add a table to your paking database
+# you need to add a table to your parking database
 - Park with lock steer angle
 - distance rendering
 
