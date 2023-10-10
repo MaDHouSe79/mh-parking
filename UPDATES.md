@@ -9,17 +9,5 @@
 ALTER TABLE `player_parking` ADD COLUMN `steerangle` INT(15) NULL DEFAULT '0' AFTER `plate`;
 ```
 
-
-## 😎 Special thanks for helping me with testing 👊😉👍
-- 💪 GUS
-- 💪 Jazerra
-- 💪 ameN
-- 💪 MulGirtab
-- 💪 DannyJ
-- 💪 MasonJason310
-- 💪 Enxsistanz
-- 💪 !ExiledVibe!
-- 💪 FARRUKO
-
 ## 🙈 My Youtube 👊😉👍
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
