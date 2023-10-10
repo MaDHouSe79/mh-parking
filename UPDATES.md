@@ -1,3 +1,14 @@
+## ----------------------------------------------Update------------------------------------------------
+## Update 49 10-10-2023
+# you need to add a table to your paking database
+- Park with lock steer angle
+- distance rendering
+
+# New Table Row
+```sql
+ALTER TABLE `player_parking` ADD COLUMN `steerangle` INT(15) NULL DEFAULT '0' AFTER `plate`;
+```
+
 ## --------------------------------------------Update Fix----------------------------------------------
 ## Update 45 20-3-2022
 #extra code again cause the vehicle keys wil not work again, and i dont know why but this code below wil fix it.
