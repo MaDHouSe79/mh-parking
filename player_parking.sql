@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `player_parking` (
   `model` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `modelname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `plate` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `steerangle` int(15) NOT NULL DEFAULT 0,
   `fuel` int(15) NOT NULL DEFAULT 0,
   `engine` int(15) NOT NULL DEFAULT 0,
   `body` int(15) NOT NULL DEFAULT 0,
