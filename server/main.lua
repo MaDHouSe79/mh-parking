@@ -2,7 +2,6 @@
 --[[         MH Realistic Parking Script by MaDHouSe       ]] --
 --[[ ===================================================== ]] --
 local QBCore = exports['qb-core']:GetCoreObject()
-local MHCore = exports['mh-core']:GetMHCore()
 local PlayerData, updateavail = {}, false
 
 -- Discoord webhook
