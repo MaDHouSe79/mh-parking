@@ -2,7 +2,6 @@
 --[[         MH Realistic Parking Script by MaDHouSe       ]] --
 --[[ ===================================================== ]] --
 local QBCore = exports['qb-core']:GetCoreObject()
-local MHCore = exports['mh-core']:GetMHCore()
 local LocalVehicles = {}
 local GlobalVehicles = {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
