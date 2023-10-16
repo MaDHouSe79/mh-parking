@@ -32,7 +32,7 @@
 
 # mh-parking
 * An Advanced Parking System build by MaDHouSe79.
-* when you park, befor you hit F5 turn your steel and lock it at that posotion when parked.
+* when you park, befor you hit F5 turn your steel and lock it at that position when parked.
 
 subscribe to my channel It helps the channel grow
 [Youtube](https://www.youtube.com/c/MaDHouSe79)
