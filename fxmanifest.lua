@@ -19,6 +19,6 @@ client_scripts {'client/main.lua'}
 
 server_scripts {'@oxmysql/lib/MySQL.lua', 'server/main.lua', 'server/update.lua'}
 
-dependencies {'oxmysql', 'qb-core', 'mh-core'}
+dependencies {'oxmysql', 'qb-core'}
 
 lua54 'yes'
