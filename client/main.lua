@@ -98,10 +98,12 @@ end
 
 -- Set fuel
 local function SetFuel(vehicle, fuel)
-    if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
-        SetVehicleFuelLevel(vehicle, fuel + 0.0)
-        DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
-    end
+    exports[Config.FuelScript]:SetFuel(vehicle, fuel)
+end
+
+-- Get fuel
+local function GetFuel(vehicle)
+    return exports[Config.FuelScript]:GetFuel(vehicle)
 end
 
 local function PrepareVehicle(entity, vehicleData)
