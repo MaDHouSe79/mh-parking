@@ -697,7 +697,7 @@ end)
 
 Citizen.CreateThread(function()
     Wait(5000)
-    MySQL.Sync.execute([[
+    MySQL.Async.execute([[
         CREATE TABLE IF NOT EXISTS `player_parking` (
             `id` int(10) NOT NULL AUTO_INCREMENT,
             `citizenid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
