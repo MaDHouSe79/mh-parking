@@ -38,19 +38,6 @@ subscribe to my channel It helps the channel grow
 [Youtube](https://www.youtube.com/c/MaDHouSe79)
 
 
-## 📸 Screenshot 👊😁👍
-![foto1](https://www.madirc.nl/fivem/new7.png)
-![foto1](https://www.madirc.nl/fivem/new1.png)
-![foto1](https://www.madirc.nl/fivem/new2.png)
-![foto1](https://www.madirc.nl/fivem/new3.png)
-![foto1](https://www.madirc.nl/fivem/new4.png)
-![foto1](https://www.madirc.nl/fivem/new5.png)
-![foto1](https://www.madirc.nl/fivem/new9.png)
-![foto1](https://www.madirc.nl/fivem/new10.png)
-![foto1](https://www.madirc.nl/fivem/foto1.png)
-![foto1](https://www.madirc.nl/fivem/foto9.png)
-![foto1](https://www.madirc.nl/fivem/foto11.png)
-
 ## 🎥 Video 👊😁👍
 [![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
 [![Watch the video1](https://www.madirc.nl/fivem/foto11.png)](https://youtu.be/QRJZ2r7FD4w)
@@ -66,7 +53,7 @@ subscribe to my channel It helps the channel grow
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
 - 👉 Step 1: First stop your server. 😁
 - 👉 Step 2: Copy the directory mh-parking to resources/[mh]/
-- 👉 Step 3: Rwad this file!
+- 👉 Step 3: Read this file!
 - 👉 Step 4: Start your server.  
 - 👉 Step 5: Add your self or other as vip, you can use the command: /park-addvip [id]
 - 👉 Step 6: Most important step -> Enjoy 👊😎👍
