@@ -256,7 +256,7 @@ end
 local function MakeVehiclesVisable()
     local pl = GetEntityCoords(PlayerPedId())
     for k, vehicle in pairs(LocalVehicles) do
-        if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < 50 then
+        if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.ParkedViewDistance then
             if not IsEntityVisible(vehicle.entity) then
                 SetEntityVisible(vehicle.entity, true, 0)
             end
