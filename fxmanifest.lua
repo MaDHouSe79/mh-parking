@@ -15,7 +15,8 @@ files {'html/*.html', 'html/*.js', 'html/*.css'}
 shared_scripts {
   '@qb-core/shared/locale.lua',
   '@qb-core/shared/vehicles.lua',
-  'locales/en.lua', -- change en to your language
+  'locales/en.lua',
+  'locales/*.lua',
   'config.lua', 
   'configs/*.lua'
 }
