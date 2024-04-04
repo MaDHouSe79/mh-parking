@@ -26,9 +26,9 @@
   <img alig src="https://github-profile-trophy.vercel.app/?username=MaDHouSe79&margin-w=15&column=6" />
 </p>
 
-## 🙈 Youtube
-- [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
-
+# My Youtube Channel and Discord
+- [Subscribe](https://www.youtube.com/c/@MaDHouSe79) 
+- [Discord](https://discord.gg/vJ9EukCmJQ)
 
 # mh-parking
 * An Advanced Parking System build by MaDHouSe79.
