@@ -124,6 +124,7 @@ end
 ```
 
 ## qb-garages (new) integration
+- find and replace in `qb-garage/html/script.js` around line 43
 - From
 ```lua
 function populateVehicleList(garageLabel, vehicles) {
