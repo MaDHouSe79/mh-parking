@@ -310,10 +310,13 @@ local function DeleteLocalVehicle(vehicle)
     IsDeleting = false
 end
 
-local function UnparkVehicle(plate)
+local function UnparkVehicle(plate, delete)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 then
         for i = 1, #LocalVehicles do
             if LocalVehicles[i].plate == plate then
+                if delete then
+                    DeleteEntity(LocalVehicles[i].entity)
+                end
                 table.remove(LocalVehicles, i)
                 LocalVehicles[i] = nil
             end
@@ -861,8 +864,8 @@ RegisterNetEvent("mh-parking:client:deleteVehicle", function(vehicle)
     DeleteLocalVehicle(vehicle)
 end)
 
-RegisterNetEvent("mh-parking:client:unparkVehicle", function(plate)
-    UnparkVehicle(plate)
+RegisterNetEvent("mh-parking:client:unparkVehicle", function(plate, delete)
+    UnparkVehicle(plate, delete)
 end)
 
 RegisterNetEvent("mh-parking:client:refreshVehicles", function(vehicles)
