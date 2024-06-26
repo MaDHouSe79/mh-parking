@@ -120,6 +120,8 @@ elseif v.state == 1 then
     v.state = Lang:t("status.garaged")
 elseif v.state == 2 then
     v.state = Lang:t("status.impound")
+elseif v.state == 3 then
+    v.state = "Parked outside"
 end
 ```
 
