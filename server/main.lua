@@ -295,6 +295,16 @@ local function SaveData(Player, data)
     })
 end
 
+local function DeleteParkedCount(plate)
+    MySQL.Async.fetchAll("SELECT * FROM player_vehicles", function(rs)
+        for k, v in pairs(rs) do
+            if v.plate == plate then
+                 MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = ?, {v.citizenid})
+            end
+        end
+    end)
+end
+    
 QBCore.Functions.CreateCallback("mh-parking:server:save", function(source, cb, data)
     if Config.UseParkingSystem then
         local src = source
@@ -663,16 +673,18 @@ QBCore.Commands.Add(Config.Command.createmenu, "Park Create Menu", {}, true, fun
         TriggerClientEvent('QBCore:Notify', source, Lang:t('system.not_the_right_job'), "error")
     end
 end)
-
+    
 RegisterServerEvent('mh-parking:server:unpark', function(plate)
     MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
     MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
+    DeleteParkedCount(plate)    
     TriggerClientEvent("mh-parking:client:unparkVehicle", -1, plate, false)
 end)
 
 RegisterServerEvent('mh-parking:server:impound', function(plate)
     MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
     MySQL.Async.execute('UPDATE player_vehicles SET state = 1 WHERE plate = ?', {plate})
+    DeleteParkedCount(plate)
     TriggerClientEvent("mh-parking:client:unparkVehicle", -1, plate, true)
 end)
 
