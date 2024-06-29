@@ -296,10 +296,10 @@ local function SaveData(Player, data)
 end
 
 local function DeleteParkedCount(plate)
-    MySQL.Async.fetchAll("SELECT * FROM player_vehicles", function(rs)
+    MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(rs)
         for k, v in pairs(rs) do
             if v.plate == plate then
-                 MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = ?, {v.citizenid})
+                 MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = ?', {v.citizenid})
             end
         end
     end)
