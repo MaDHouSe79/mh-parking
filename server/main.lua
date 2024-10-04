@@ -683,7 +683,7 @@ end)
 
 RegisterServerEvent('mh-parking:server:impound', function(plate)
     MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
-    MySQL.Async.execute('UPDATE player_vehicles SET state = 1 WHERE plate = ?', {plate})
+    MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
     DeleteParkedCount(plate)
     TriggerClientEvent("mh-parking:client:unparkVehicle", -1, plate, true)
 end)
@@ -711,4 +711,16 @@ RegisterServerEvent('mh-parking:server:AddNewParkingSpot', function(source, data
         CreateParkingLocation(source, data.cid, data.parkname, data.display, data.radius, data.cost, data.parktime,
             data.job, data.marker, markerOffset, data.parktype)
     end
+end)
+
+RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
+    local src = source
+	MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
+		if type(rs) == 'table' and #rs > 0 and rs[1] ~= nil and rs[1].plate == plate then
+			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
+			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
+            DeleteParkedCount(plate)
+            TriggerClientEvent("mh-parking:client:unparkVehicle", -1, plate, true)
+		end
+	end)
 end)
