@@ -6,7 +6,7 @@ Config.Parkzones = {} -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 Config.BuildMode = false -- DONT EDIT CHANGE OR REMOVE THIS!!!.
 
 Config.CheckForUpdates = true -- Default true
-Config.ResetState = 1 -- Default 1, 1 is stored in garage, 2 is police impound. 
+Config.ResetState = 1 -- Default 1, 1 is stored in garage, 0 is police impound. 
 
 Config.ImpoundPrice = 1000
 
