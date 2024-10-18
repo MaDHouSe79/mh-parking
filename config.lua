@@ -94,54 +94,14 @@ Config.IgnoreJobs = { -- If true this job wil be iqnore by the system when parki
 }
 
 Config.ParkColours = { -- Marker colours
-    ['white'] = {
-        r = 255,
-        g = 255,
-        b = 255
-    }, -- White
-    ['green'] = {
-        r = 9,
-        g = 255,
-        b = 0
-    }, -- Green
-    ['blue'] = {
-        r = 9,
-        g = 9,
-        b = 255
-    }, -- Blue
-    ['yellow'] = {
-        r = 255,
-        g = 230,
-        b = 0
-    }, -- Yellow
-    ['orange'] = {
-        r = 255,
-        g = 128,
-        b = 0
-    }, -- Orange
-    ['grey'] = {
-        r = 148,
-        g = 148,
-        b = 148
-    }, -- Grey
-    ['black'] = {
-        r = 6,
-        g = 5,
-        b = 5
-    }, -- Black
-    ['red'] = {
-        r = 255,
-        g = 0,
-        b = 0
-    } -- Ted
-}
-
-Config.ParkingLocation = {
-    x = 232.11,
-    y = -770.14,
-    z = 0.0,
-    w = 900.10,
-    s = 99999099.0
+    ['white'] = {r = 255, g = 255, b = 255}, -- White
+    ['green'] = {r = 9, g = 255, b = 0}, -- Green
+    ['blue'] = {r = 9, g = 9, b = 255}, -- Blue
+    ['yellow'] = {r = 255, g = 230, b = 0}, -- Yellow
+    ['orange'] = { r = 255, g = 128, b = 0}, -- Orange
+    ['grey'] = { r = 148, g = 148, b = 148}, -- Grey
+    ['black'] = { r = 6, g = 5, b = 5}, -- Black
+    ['red'] = {r = 255, g = 0, b = 0} -- Ted
 }
 
 Config.DebugMode = false -- if you want to see debug in your console.
