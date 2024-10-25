@@ -724,3 +724,32 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
 		end
 	end)
 end)
+
+-- if driver left the vehicle auto save.
+RegisterNetEvent('baseevents:leftVehicle', function(currentVehicle, currentSeat, vehicleName, netId)
+    local src = source
+    local vehicle = NetworkGetEntityFromNetworkId(netId)
+    if DoesEntityExist(vehicle) then
+        local player = GetPlayerName(src)
+        local seatTxt = ""
+        if currentSeat == -1 then seatTxt = "Driver seat" end
+        if currentSeat == 0 then seatTxt = "CoDriver seat" end
+        if currentSeat >= 1 then seatTxt = "Back seat" end
+        print("[^3" .. GetCurrentResourceName() .. "^7] - Player "..player.." Left Vehicle: "..vehicleName.." Seat: "..seatTxt.." Entity: "..vehicle.." Netid:"..netId)
+        if currentSeat == -1 then
+            if Config.AutoParkOnDriverLeftVehicle then
+                if Config.AutoSetPlayersOutOfVehicle then TriggerClientEvent('mh-parking:client:leftVehicle', -1, src, netId) end
+                local Player = QBCore.Functions.GetPlayer(src)
+                local coords = GetEntityCoords(vehicle)
+                local plate = GetVehicleNumberPlateText(vehicle)
+                local result = MySQL.Sync.fetchAll('SELECT * FROM player_vehicles WHERE plate = ?', {plate})[1]
+                if result ~= nil then
+                    --print(json.encode(result[1], {indent=true}))
+                    local vehicleData = json.decode(result.mods)
+                    local parking = MySQL.Sync.fetchAll('SELECT * FROM player_parking WHERE plate = ?', {plate})[1]
+                    if parking == nil then TriggerClientEvent("mh-parking:client:autoPark", src, netId) end
+                end
+            end
+        end
+    end
+end)
