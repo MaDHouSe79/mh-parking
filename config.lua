@@ -14,7 +14,7 @@ Config.FuelScript = "LegacyFuel"
 
 Config.UseMHVehicleKeyItem = false -- you need mh-vehiclekeyitem to use this option
 
-Config.AutoParkOnDriverLeftVehicle = true
+Config.AutoParkOnDriverLeftVehicle = false
 
 Config.KeyParkBindButton = "F5" -- Default F5
 Config.KeyParkMenuBindButton = "F6" -- Default F6
