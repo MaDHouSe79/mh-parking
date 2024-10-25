@@ -738,7 +738,7 @@ RegisterNetEvent('baseevents:leftVehicle', function(currentVehicle, currentSeat,
         print("[^3" .. GetCurrentResourceName() .. "^7] - Player "..player.." Left Vehicle: "..vehicleName.." Seat: "..seatTxt.." Entity: "..vehicle.." Netid:"..netId)
         if currentSeat == -1 then
             if Config.AutoParkOnDriverLeftVehicle then
-                if Config.AutoSetPlayersOutOfVehicle then TriggerClientEvent('mh-parking:client:leftVehicle', -1, src, netId) end
+                TriggerClientEvent('mh-parking:client:leftVehicle', -1, src, netId)
                 local Player = QBCore.Functions.GetPlayer(src)
                 local coords = GetEntityCoords(vehicle)
                 local plate = GetVehicleNumberPlateText(vehicle)
