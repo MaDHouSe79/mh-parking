@@ -2,6 +2,7 @@
 --[[         MH Realistic Parking Script by MaDHouSe       ]] --
 --[[ ===================================================== ]] --
 local QBCore = exports['qb-core']:GetCoreObject()
+local PlayerData = {}
 local LocalVehicles = {}
 local GlobalVehicles = {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
@@ -107,9 +108,7 @@ local function GetFuel(vehicle)
 end
 
 local function PrepareVehicle(entity, vehicleData)
-    -- Add Vehicle On Ground Properly
-    RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y,
-        vehicleData.vehicle.location.z)
+    RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
     SetVehicleOnGroundProperly(entity)
     SetEntityAsMissionEntity(entity, true, true)
     SetEntityInvincible(entity, true)
@@ -128,8 +127,7 @@ end
 -- Load Entity
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x,
-        vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, true)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -245,8 +243,7 @@ local function DisplayParkedOwnerText()
                 Config.ParkedNamesViewDistance then
                 if QBCore.Functions.GetPlayerData().citizenid == vehicle.citizenid then
                     displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
-                    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar,
-                        0, 0.04, 0.04)
+                    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                 end
             end
         end
@@ -427,8 +424,7 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z,
-        vehicle.location.w, true)
+    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
 end
 
 -- Drive 
@@ -494,8 +490,7 @@ end
 
 -- Get the street name where you are at the moment.
 local function GetStreetName(entity)
-    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y,
-        GetEntityCoords(entity).z))
+    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
 end
 
 -- Get Real Model Name Config.lua to add more
@@ -550,10 +545,8 @@ local function Save(player, vehicle, wheelangle, warp)
                 body = GetVehicleBodyHealth(vehicle),
                 tank = GetVehiclePetrolTankHealth(vehicle)
             },
-            location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
-                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-            coords = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
-                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle))
+            location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+            coords = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle))
         })
     end
 end
@@ -625,57 +618,45 @@ local function DrawParkedLocation(coords)
                         local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
                         local r, g, b = 0, 0, 0
                         if data.parktype == 'paid' then
-                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g,
-                                Config.ParkColours['blue'].b
+                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
                             if vehicle and distance <= 1 then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                    Config.ParkColours['green'].b
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                             end
                         elseif data.parktype == 'prived' then
                             if QBCore.Functions.GetPlayerData().citizenid == data.citizenid then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                    Config.ParkColours['green'].b
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                             else
-                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g,
-                                    Config.ParkColours['red'].b
+                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
                             end
                         elseif data.parktype == 'job' then
                             if Config.IgnoreJobs[QBCore.Functions.GetPlayerData().job.name] and
                                 QBCore.Functions.GetPlayerData().job.onduty then
-                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g,
-                                    Config.ParkColours['orange'].b
+                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
                             else
-                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g,
-                                    Config.ParkColours['black'].b
+                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
                             end
                         else
                             if data.parktype == 'free' then
                                 r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g,
                                     Config.ParkColours['white'].b
                                 if vehicle and distance <= 1 then
-                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                        Config.ParkColours['green'].b
+                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                                 end
                             end
                         end
-                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0,
-                            0.0, 0.0, 0.3, 0.2, 0.15, r, g, b, 222, false, false, false, true, false, false, false)
+                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, r, g, b, 222, false, false, false, true, false, false, false)
                         if data.parktype ~= 'free' then
                             if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
-                                    "~y~Reserved~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~Reserved~s~", 0, 0.04, 0.04)
                             end
                             if QBCore.Functions.GetPlayerData().citizenid ~= data.citizenid then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
-                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             else
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
-                                    "~b~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~b~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             end
                         else
                             if data.parktype == 'free' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
-                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             end
                         end
                     end
@@ -709,8 +690,7 @@ local function CheckDistanceToForceGrounded(distance)
                     end
                     if Config.DebugMode then
                         if not tmp.isGrounded then
-                            print("Parking Force Grounded - Plate (" .. tmp.plate .. ") Model (" .. tmp.modelname ..
-                                      ") Grounded (" .. tostring(LocalVehicles[i].isGrounded) .. ") ")
+                            print("Parking Force Grounded - Plate (" .. tmp.plate .. ") Model (" .. tmp.modelname .. ") Grounded (" .. tostring(LocalVehicles[i].isGrounded) .. ") ")
                         else
                             print("Parking can\'t force a vehicle to the ground at this moment. (No vehicle neerby)")
                         end
@@ -727,12 +707,9 @@ local function CreateState()
     if Config.BuildMode then
         local currentVehicle = GetVehiclePedIsIn(PlayerPedId(), 0)
         local markerCoords = GetOffsetFromEntityInWorldCoords(currentVehicle, 0.0, 2.5, -1.0)
-        DrawMarker(2, markerCoords.x, markerCoords.y, markerCoords.z + 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,
-            0, 255, 26, 126, false, false, false, true, false, false, false)
-        DrawMarker(27, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
-            false, false, false, true, false, false, false)
-        DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
-            false, false, false, true, false, false, false)
+        DrawMarker(2, markerCoords.x, markerCoords.y, markerCoords.z + 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 0, 255, 26, 126, false, false, false, true, false, false, false)
+        DrawMarker(27, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200, false, false, false, true, false, false, false)
+        DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200, false, false, false, true, false, false, false)
     end
 end
 
@@ -773,11 +750,6 @@ local function CheckWheelState()
     end
 end
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    local id = GetPlayerServerId(PlayerId())
-    TriggerServerEvent("mh-parking:server:onjoin", id, QBCore.Functions.GetPlayerData().citizenid)
-end)
-
 local parkMenu = nil
 RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
     if parkMenu ~= nil then
@@ -817,6 +789,24 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+        PlayerData = QBCore.Functions.GetPlayerData()
+        local id = GetPlayerServerId(PlayerId())
+        TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
+    end
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+    local id = GetPlayerServerId(PlayerId())
+    TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
+end)
+
+RegisterNetEvent('Config.QBCore:Client:OnPlayerUnload', function()
+    PlayerData = {}
+end)
+
 -- Command
 RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton)
 RegisterCommand(Config.Command.park, function()
@@ -830,8 +820,7 @@ RegisterNUICallback('newParkLocation', function(data, cb)
     local offset = 2.5
     local markerOffset = GetOffsetFromEntityInWorldCoords(vehicle, 0, offset, 0)
     Wait(200)
-    TriggerServerEvent('mh-parking:server:AddNewParkingSpot', QBCore.Functions.GetPlayerData().source, data,
-        markerOffset)
+    TriggerServerEvent('mh-parking:server:AddNewParkingSpot', QBCore.Functions.GetPlayerData().source, data, markerOffset)
 end)
 
 RegisterNetEvent("mh-parking:client:openmenu", function(source)
@@ -964,10 +953,6 @@ end)
 
 -- Threads
 CreateThread(function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-end)
-
-CreateThread(function()
     while true do
         InParking = true
         if InParking then
@@ -1019,10 +1004,7 @@ CreateThread(function()
                             local vehicleCoords = GetEntityCoords(vehicle)
                             if speed > 0.9 then
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
-                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or
-                                IsThisModelABicycle(GetEntityModel(vehicle)) or
-                                IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or
-                                IsThisModelAHeli(GetEntityModel(vehicle)) then
+                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
                                     local wheelangle = GetVehicleSteeringAngle(vehicle)
                                     Save(PlayerPedId(), vehicle, wheelangle, true)
