@@ -937,6 +937,31 @@ RegisterNetEvent("mh-parking:client:buildmode", function(state)
     Config.BuildMode = not Config.BuildMode
 end)
 
+RegisterNetEvent("mh-parking:client:autoPark", function(netid)
+    local vehicle = NetworkGetEntityFromNetworkId(netid)
+    if DoesEntityExist(vehicle) then
+        if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
+            local wheelangle = GetVehicleSteeringAngle(vehicle)
+            Save(PlayerPedId(), vehicle, wheelangle, false)
+        end
+    end
+end)
+
+RegisterNetEvent("mh-parking:client:leftVehicle", function(driver, netid)
+    local player = PlayerPedId()
+    if driver ~= player then
+        local vehicle = NetworkGetEntityFromNetworkId(netid)
+        if DoesEntityExist(vehicle) then
+            if IsPedInAnyVehicle(player) then
+                local currentVehicle = GetVehiclePedIsIn(player)
+                if currentVehicle == vehicle then
+                    TaskLeaveVehicle(player, currentVehicle)
+                end
+            end
+        end
+    end
+end)
+
 -- Threads
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
