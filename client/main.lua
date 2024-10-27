@@ -128,6 +128,15 @@ end
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, true)
+    
+    while not DoesEntityExist(VehicleEntity) do
+        Citizen.Wait(1) 
+    end
+    local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
+    SetNetworkIdExistsOnAllMachines(netid, 1)
+    NetworkSetNetworkIdDynamic(netid, 0)
+    SetNetworkIdCanMigrate(netid, 0)
+    
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -424,7 +433,15 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
+    local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
+    while not DoesEntityExist(vehicle) do
+        Citizen.Wait(1) 
+    end
+    local netid = NetworkGetNetworkIdFromEntity(vehicle)
+    SetNetworkIdExistsOnAllMachines(netid, 1)
+    NetworkSetNetworkIdDynamic(netid, 0)
+    SetNetworkIdCanMigrate(netid, 0)
+    return vehicle
 end
 
 -- Drive 
