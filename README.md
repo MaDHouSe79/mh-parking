@@ -47,7 +47,7 @@ subscribe to my channel It helps the channel grow
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
 
 ## 💪 Optional
-- ✅ [mh-vehiclekeys](https://github.com/MaDHouSe79/mh-vehiclekeys)
+- ✅ [mh-autopark](https://github.com/MaDHouSe79/mh-autopark)
 - ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
 
 ## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
