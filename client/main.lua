@@ -304,8 +304,7 @@ local function DeleteLocalVehicle(vehicle)
     IsDeleting = true
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
         for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~=
-                'nil' then
+            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
                 if vehicle.plate == LocalVehicles[i].plate then
                     DeleteEntity(LocalVehicles[i].entity)
                     table.remove(LocalVehicles, i)
@@ -313,6 +312,8 @@ local function DeleteLocalVehicle(vehicle)
             end
         end
     end
+    LocalVehicles = {}
+    Wait(500)
     IsDeleting = false
 end
 
