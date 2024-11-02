@@ -36,38 +36,11 @@ end
 -- Do Vehicle damage
 local function doCarDamage(vehicle, health)
     local engine = health.engine + 0.0
-    local body = health.body + 0.0
-    if body < 900.0 then
-        SmashVehicleWindow(vehicle, 0)
-        SmashVehicleWindow(vehicle, 1)
-        SmashVehicleWindow(vehicle, 2)
-        SmashVehicleWindow(vehicle, 3)
-        SmashVehicleWindow(vehicle, 4)
-        SmashVehicleWindow(vehicle, 5)
-        SmashVehicleWindow(vehicle, 6)
-        SmashVehicleWindow(vehicle, 7)
-    end
-    if body < 800.0 then
-        SetVehicleDoorBroken(vehicle, 0, true)
-        SetVehicleDoorBroken(vehicle, 1, true)
-        SetVehicleDoorBroken(vehicle, 2, true)
-        SetVehicleDoorBroken(vehicle, 3, true)
-        SetVehicleDoorBroken(vehicle, 4, true)
-        SetVehicleDoorBroken(vehicle, 5, true)
-        SetVehicleDoorBroken(vehicle, 6, true)
-    end
-    if engine < 700.0 then
-        SetVehicleTyreBurst(vehicle, 1, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 2, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 3, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 4, false, 990.0)
-    end
-    if engine < 500.0 then
-        SetVehicleTyreBurst(vehicle, 0, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 5, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 6, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 7, false, 990.0)
-    end
+    local body = health.body + 0.0    
+    if body < 900.0 then for i = 0, 7, 1 do SmashVehicleWindow(vehicle, i) end end
+    if body < 800.0 then for i = 1, 6, 1 do SetVehicleDoorBroken(vehicle, i, true) end end
+    if engine < 700.0 then for i = 0, 7, 1 do SetVehicleTyreBurst(vehicle, i, false, 990.0) end end
+    if engine < 500.0 then for i = 0, 7, 1 do SetVehicleTyreBurst(vehicle, i, false, 990.0) end end
     SetVehicleEngineHealth(vehicle, engine)
     SetVehicleBodyHealth(vehicle, body)
 end
@@ -334,24 +307,17 @@ end
 -- Spawn local vehicles(server data)
 local function SpawnVehicles(vehicles)
     CreateThread(function()
-        while IsDeleting do
-            Citizen.Wait(100)
-        end
+        while IsDeleting do Citizen.Wait(100) end
         if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
             for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
-                if Config.UseSpawnDelay then
-                    Wait(Config.DeleteDelay)
-                end
                 DeleteLocalVehicle(vehicles[i].vehicle)
                 LoadEntity(vehicles[i], 'server')
                 SetVehicleEngineOn(VehicleEntity, false, false, true)
                 doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
                 TableInsert(VehicleEntity, vehicles[i])
-                if Config.UseSpawnDelay then
-                    Wait(Config.FreezeDelay)
-                end
+                if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
                 FreezeEntityPosition(VehicleEntity, true)
                 SetVehicleSteeringAngle(VehicleEntity, vehicles[i].steerangle)
             end
@@ -363,23 +329,16 @@ end
 local function SpawnVehicle(vehicleData)
     CreateThread(function()
         if LocalPlayer.state.isLoggedIn then
-            while IsDeleting do
-                Wait(100)
-            end
+            while IsDeleting do Wait(100) end
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
-            if Config.UseSpawnDelay then
-                Wait(Config.DeleteDelay)
-            end
             DeleteLocalVehicle(vehicleData.vehicle)
             LoadEntity(vehicleData, 'client')
             PrepareVehicle(VehicleEntity, vehicleData)
             SetVehicleEngineOn(VehicleEntity, false, false, true)
             doCarDamage(VehicleEntity, vehicleData.vehicle.health)
             TableInsert(VehicleEntity, vehicleData)
-            if Config.UseSpawnDelay then
-                Wait(Config.FreezeDelay)
-            end
+            if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
             FreezeEntityPosition(VehicleEntity, true)
             SetVehicleSteeringAngle(VehicleEntity, vehicleData.steerangle)
         end
@@ -404,6 +363,7 @@ local function RemoveVehicles(vehicles)
         end
     end
     LocalVehicles = {}
+    Wait(500)
     IsDeleting = false
 end
 
@@ -429,15 +389,14 @@ local function DeleteNearByVehicle(location)
             tmpModel = nil
         end
     end
+    Wait(500)
     IsDeleting = false
 end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
     local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
-    while not DoesEntityExist(vehicle) do
-        Citizen.Wait(1) 
-    end
+    while not DoesEntityExist(vehicle) do Citizen.Wait(1) end
     local netid = NetworkGetNetworkIdFromEntity(vehicle)
     SetNetworkIdExistsOnAllMachines(netid, 1)
     NetworkSetNetworkIdDynamic(netid, 0)
@@ -471,12 +430,7 @@ local function Drive(player, vehicle, warp)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
-            if Config.UseParkingBlips then
-                RemoveBlip(vehicle.blip)
-            end
-            if Config.UseMHVehicleKeyItem then
-                TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', callback.vehicle)
-            end
+            if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
             QBCore.Functions.Notify(callback.message, "success", 5000)
@@ -515,12 +469,8 @@ end
 local function GetRealModel(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local currentModel = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    if Config.Trailers[currentModel] then
-        currentModel = Config.Trailers[currentModel].model
-    end
-    if Config.Vehicles[currentModel] then
-        currentModel = Config.Vehicles[currentModel].model
-    end
+    if Config.Trailers[currentModel] then currentModel = Config.Trailers[currentModel].model end
+    if Config.Vehicles[currentModel] then currentModel = Config.Vehicles[currentModel].model end
     return currentModel
 end
 
@@ -535,9 +485,6 @@ local function Save(player, vehicle, wheelangle, warp)
         local currenModel = GetRealModel(vehicle)
         QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
             if callback.status then
-                if Config.UseMHVehicleKeyItem then
-                    TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', props.plate)
-                end
                 QBCore.Functions.DeleteVehicle(vehicle)
                 QBCore.Functions.Notify(callback.message, "success", 1000)
             else
@@ -655,8 +602,7 @@ local function DrawParkedLocation(coords)
                             end
                         else
                             if data.parktype == 'free' then
-                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g,
-                                    Config.ParkColours['white'].b
+                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
                                 if vehicle and distance <= 1 then
                                     r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
                                 end
@@ -734,27 +680,19 @@ end
 -- NUI Menu
 local function closeNUI()
     SetNuiFocus(false, false)
-    SendNUIMessage({
-        type = "newParkSetup",
-        enable = false
-    })
+    SendNUIMessage({type = "newParkSetup", enable = false})
     Wait(10)
 end
 
 local function hideNUI()
     SetNuiFocus(false, false)
-    SendNUIMessage({
-        type = "hide"
-    })
+    SendNUIMessage({type = "hide"})
     Wait(1)
 end
 
 local function openNUI()
     SetNuiFocus(true, true)
-    SendNUIMessage({
-        type = "newDoorSetup",
-        enable = true
-    })
+    SendNUIMessage({type = "newDoorSetup", enable = true})
     Wait(1)
 end
 
@@ -843,18 +781,12 @@ end)
 
 RegisterNetEvent("mh-parking:client:openmenu", function(source)
     openNUI()
-    SendNUIMessage({
-        type = "newParkSetup",
-        enable = true
-    })
+    SendNUIMessage({type = "newParkSetup", enable = true})
 end)
 
 RegisterNetEvent("mh-parking:client:closemenu", function(source)
     hideNUI()
-    SendNUIMessage({
-        type = "hide",
-        enable = false
-    })
+    SendNUIMessage({type = "hide", enable = false})
 end)
 
 RegisterNUICallback('close', function(data, cb)
@@ -910,9 +842,7 @@ end)
 
 RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
     if QBCore.Functions.GetPlayerData().citizenid == citizenid then
-        QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {
-            plate = plate
-        }), "success")
+        QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {plate = plate}), "success")
         -- TriggerEvent('qb-vehiclekeys:client:AddKeys', plate)
         TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
     end
