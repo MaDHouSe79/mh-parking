@@ -72,6 +72,7 @@ end
 local function RefreshVehicles(source)
     if source ~= nil then
         local vehicles = {}
+	local Player = QBCore.Functions.GetPlayer(src)
         MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
             if type(rs) == 'table' and #rs > 0 then
                 for k, v in pairs(rs) do
@@ -88,7 +89,7 @@ local function RefreshVehicles(source)
                         engine = v.engine,
                         coords = json.decode(v.coords)
                     }
-                    -- TriggerClientEvent("mh-parking:client:addkey", source, v.plate, v.citizenid)
+                    if Player.PlayerData.citizenid == v.citizenid then TriggerClientEvent('qb-vehiclekeys:client:AddKeys', Player.PlayerData.source, v.plate) end
                 end
                 TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
             end
