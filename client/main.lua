@@ -2,34 +2,17 @@
 --[[         MH Realistic Parking Script by MaDHouSe       ]] --
 --[[ ===================================================== ]] --
 local QBCore = exports['qb-core']:GetCoreObject()
-local PlayerData = {}
-local LocalVehicles = {}
-local GlobalVehicles = {}
+local PlayerData, LocalVehicles, GlobalVehicles = {}, {}, {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
 local InParking, CreateMode, LastUsedPlate, ParkOwnerName, VehicleEntity = false, false, nil, nil, nil
-local ParkAction, extraRadius, Cost, ParkTime = 'none', 3, 0, 0
+local extraRadius, Cost, ParkTime = 3, 0, 0
 
 local function CreateParkDisPlay(vehicleData)
-    local info = nil
-    local model = nil
-    local owner = nil
-    local plate = nil
-    if Config.UseOwnerNames then
-        owner = string.format(Lang:t("info.owner", {
-            owner = vehicleData.citizenname
-        })) .. '\n'
-    end
-    model = string.format(Lang:t("info.model", {
-        model = vehicleData.modelname
-    })) .. '\n'
-    plate = string.format(Lang:t("info.plate", {
-        plate = vehicleData.plate
-    })) .. '\n'
-    if Config.UseOwnerNames then
-        info = string.format("%s", model .. plate .. owner)
-    else
-        info = string.format("%s", model .. plate)
-    end
+    local info, model, owner, plate = nil, nil, nil, nil
+    if Config.UseOwnerNames then owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname})) .. '\n' end
+    model = string.format(Lang:t("info.model", {model = vehicleData.modelname})) .. '\n'
+    plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate})) .. '\n'
+    if Config.UseOwnerNames then info = string.format("%s", model .. plate .. owner) else info = string.format("%s", model .. plate) end
     return info
 end
 
