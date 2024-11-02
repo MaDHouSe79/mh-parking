@@ -48,9 +48,7 @@ end
 -- Set No Collission between 2 entities
 local function NoColission(entity, location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
-    if distance <= 1 then
-        SetEntityNoCollisionEntity(entity, vehicle, true)
-    end
+    if distance <= 1 then SetEntityNoCollisionEntity(entity, vehicle, true) end
 end
 
 -- Set fuel
@@ -85,9 +83,7 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, true)
     
-    while not DoesEntityExist(VehicleEntity) do
-        Citizen.Wait(1) 
-    end
+    while not DoesEntityExist(VehicleEntity) do Citizen.Wait(1)  end
     local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetNetworkIdExistsOnAllMachines(netid, 1)
     NetworkSetNetworkIdDynamic(netid, 0)
@@ -105,9 +101,7 @@ local function trailerOffset(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext = GetDisplayNameFromVehicleModel(vehicleProps["model"])
     local offset = 0.0
-    if Config.Trailers[displaytext] then
-        offset = Config.Trailers[displaytext].offset
-    end
+    if Config.Trailers[displaytext] then offset = Config.Trailers[displaytext].offset end
     return offset
 end
 
@@ -143,14 +137,10 @@ end
 local function TableInsert(entity, data)
     if not IsVehicleAlreadyListed(data.plate) then
         local tmpBlip = nil
-        TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
-        if Config.UseMHVehicleKeyItem then
-            TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity)
+        if PlayerData.citizenid == data.citizenid then
+            tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {modelname = data.modelname}), data.vehicle.location)
+            CreateTargetEntityMenu(entity)
         end
-        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {
-            modelname = data.modelname
-        }), data.vehicle.location)
-        CreateTargetEntityMenu(entity)
         local angle = data.steerangle
         if angle == 0 then angle = math.random(-50, 50) end
         LocalVehicles[#LocalVehicles + 1] = {
