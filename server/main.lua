@@ -73,27 +73,28 @@ local function RefreshVehicles(source)
     if source ~= nil then
         local vehicles = {}
 	local Player = QBCore.Functions.GetPlayer(source)
-        MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
-            if type(rs) == 'table' and #rs > 0 then
-                for k, v in pairs(rs) do
-                    vehicles[#vehicles + 1] = {
-                        vehicle = json.decode(v.data),
-                        steerangle = v.steerangle,
-                        plate = v.plate,
-                        citizenid = v.citizenid,
-                        citizenname = v.citizenname,
-                        model = v.model,
-                        modelname = v.modelname,
-                        fuel = v.fuel,
-                        body = v.body,
-                        engine = v.engine,
-                        coords = json.decode(v.coords)
-                    }
-                    if Player.PlayerData.citizenid == v.citizenid then TriggerClientEvent('qb-vehiclekeys:client:AddKeys', source, v.plate) end
+	if Player then
+            MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
+                if type(rs) == 'table' and #rs > 0 then
+                    for k, v in pairs(rs) do
+                        vehicles[#vehicles + 1] = {
+                            vehicle = json.decode(v.data),
+                            steerangle = v.steerangle,
+                            plate = v.plate,
+                            citizenid = v.citizenid,
+                            citizenname = v.citizenname,
+                            model = v.model,
+                            modelname = v.modelname,
+                            fuel = v.fuel,
+                            body = v.body,
+                            engine = v.engine,
+                            coords = json.decode(v.coords)
+                        }
+                    end
+                    TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
                 end
-                TriggerClientEvent("mh-parking:client:refreshVehicles", source, vehicles)
-            end
-        end)
+            end)
+        end
     end
 end
 
