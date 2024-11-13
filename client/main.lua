@@ -2,28 +2,62 @@
 --[[         MH Realistic Parking Script by MaDHouSe       ]] --
 --[[ ===================================================== ]] --
 local QBCore = exports['qb-core']:GetCoreObject()
-local PlayerData, LocalVehicles, GlobalVehicles = {}, {}, {}
+local PlayerData = {}
+local LocalVehicles = {}
+local GlobalVehicles = {}
 local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
 local InParking, CreateMode, LastUsedPlate, ParkOwnerName, VehicleEntity = false, false, nil, nil, nil
-local extraRadius, Cost, ParkTime = 3, 0, 0
+local ParkAction, extraRadius, Cost, ParkTime = 'none', 3, 0, 0
+local parkMenu = nil
 
 local function CreateParkDisPlay(vehicleData)
-    local info, model, owner, plate = nil, nil, nil, nil
-    if Config.UseOwnerNames then owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname})) .. '\n' end
-    model = string.format(Lang:t("info.model", {model = vehicleData.modelname})) .. '\n'
-    plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate})) .. '\n'
-    if Config.UseOwnerNames then info = string.format("%s", model .. plate .. owner) else info = string.format("%s", model .. plate) end
+    local info = nil
+    local model = nil
+    local owner = nil
+    local plate = nil
+    if Config.UseOwnerNames then
+        owner = string.format(Lang:t("info.owner", {
+            owner = vehicleData.citizenname
+        })) .. '\n'
+    end
+    model = string.format(Lang:t("info.model", {
+        model = vehicleData.modelname
+    })) .. '\n'
+    plate = string.format(Lang:t("info.plate", {
+        plate = vehicleData.plate
+    })) .. '\n'
+    if Config.UseOwnerNames then
+        info = string.format("%s", model .. plate .. owner)
+    else
+        info = string.format("%s", model .. plate)
+    end
     return info
 end
 
 -- Do Vehicle damage
 local function doCarDamage(vehicle, health)
     local engine = health.engine + 0.0
-    local body = health.body + 0.0    
-    if body < 900.0 then for i = 0, 7, 1 do SmashVehicleWindow(vehicle, i) end end
-    if body < 800.0 then for i = 1, 6, 1 do SetVehicleDoorBroken(vehicle, i, true) end end
-    if engine < 700.0 then for i = 0, 7, 1 do SetVehicleTyreBurst(vehicle, i, false, 990.0) end end
-    if engine < 500.0 then for i = 0, 7, 1 do SetVehicleTyreBurst(vehicle, i, false, 990.0) end end
+    local body = health.body + 0.0
+    if body < 900.0 then
+        for i = 0, 7, 1 do
+            SmashVehicleWindow(vehicle, i)
+        end
+    end
+    if body < 800.0 then
+        for i = 1, 6, 1 do
+            SetVehicleDoorBroken(vehicle, i, true)
+        end
+    end
+    if engine < 700.0 then
+        for i = 0, 7, 1 do
+            SetVehicleTyreBurst(vehicle, i, false, 990.0)
+        end
+    end
+    if engine < 500.0 then
+        for i = 0, 7, 1 do
+            SetVehicleTyreBurst(vehicle, i, false, 990.0)
+        end
+    end
     SetVehicleEngineHealth(vehicle, engine)
     SetVehicleBodyHealth(vehicle, body)
 end
@@ -48,7 +82,9 @@ end
 -- Set No Collission between 2 entities
 local function NoColission(entity, location)
     local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
-    if distance <= 1 then SetEntityNoCollisionEntity(entity, vehicle, true) end
+    if distance <= 1 then
+        SetEntityNoCollisionEntity(entity, vehicle, true)
+    end
 end
 
 -- Set fuel
@@ -62,6 +98,7 @@ local function GetFuel(vehicle)
 end
 
 local function PrepareVehicle(entity, vehicleData)
+    -- Add Vehicle On Ground Properly
     RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
     SetVehicleOnGroundProperly(entity)
     SetEntityAsMissionEntity(entity, true, true)
@@ -76,19 +113,23 @@ local function PrepareVehicle(entity, vehicleData)
     QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
     SetVehicleEngineOn(entity, false, false, true)
     SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
+    local netid = NetworkGetNetworkIdFromEntity(entity)
+    TriggerServerEvent('mh-cuttingbrakes:server:checkVehicle', netid)
 end
 
 -- Load Entity
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
+
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, true)
-    
-    while not DoesEntityExist(VehicleEntity) do Citizen.Wait(1)  end
+    while not DoesEntityExist(VehicleEntity) do
+        Citizen.Wait(1) 
+    end
     local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetNetworkIdExistsOnAllMachines(netid, 1)
     NetworkSetNetworkIdDynamic(netid, 0)
     SetNetworkIdCanMigrate(netid, 0)
-    
+
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
@@ -101,23 +142,28 @@ local function trailerOffset(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext = GetDisplayNameFromVehicleModel(vehicleProps["model"])
     local offset = 0.0
-    if Config.Trailers[displaytext] then offset = Config.Trailers[displaytext].offset end
+    if Config.Trailers[displaytext] then
+        offset = Config.Trailers[displaytext].offset
+    end
     return offset
 end
 
 local function CreateTargetEntityMenu(entity)
     exports['qb-target']:AddTargetEntity(entity, {
-        options = {{
-            type = "client",
-            event = "mh-parking:client:unparking",
-            icon = "fas fa-car",
-            label = "Unpark Vehicle"
-        }, {
-            type = "client",
-            event = "mh-parking:client:parking",
-            icon = "fas fa-car",
-            label = "Park Vehicle"
-        }},
+        options = {
+            {
+                name = "car",
+                type = "client",
+                event = "mh-parking:client:unparking",
+                icon = "fas fa-car",
+                label = "Unpark Vehicle"
+            }, {
+                type = "client",
+                event = "mh-parking:client:parking",
+                icon = "fas fa-car",
+                label = "Park Vehicle"
+            }
+        },
         distance = Config.InteractDistance
     })
 end
@@ -137,10 +183,14 @@ end
 local function TableInsert(entity, data)
     if not IsVehicleAlreadyListed(data.plate) then
         local tmpBlip = nil
-        if PlayerData.citizenid == data.citizenid then
-            tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {modelname = data.modelname}), data.vehicle.location)
-            CreateTargetEntityMenu(entity)
+        TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
+        if Config.UseMHVehicleKeyItem then
+            TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity)
         end
+        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {
+            modelname = data.modelname
+        }), data.vehicle.location)
+        CreateTargetEntityMenu(entity)
         local angle = data.steerangle
         if angle == 0 then angle = math.random(-50, 50) end
         LocalVehicles[#LocalVehicles + 1] = {
@@ -196,7 +246,7 @@ local function DisplayParkedOwnerText()
         for k, vehicle in pairs(LocalVehicles) do
             if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) <
                 Config.ParkedNamesViewDistance then
-                if QBCore.Functions.GetPlayerData().citizenid == vehicle.citizenid then
+                if PlayerData.citizenid == vehicle.citizenid then
                     displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
                     Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
                 end
@@ -250,7 +300,8 @@ local function DeleteLocalVehicle(vehicle)
     IsDeleting = true
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
         for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~=
+                'nil' then
                 if vehicle.plate == LocalVehicles[i].plate then
                     DeleteEntity(LocalVehicles[i].entity)
                     table.remove(LocalVehicles, i)
@@ -258,8 +309,6 @@ local function DeleteLocalVehicle(vehicle)
             end
         end
     end
-    LocalVehicles = {}
-    Wait(500)
     IsDeleting = false
 end
 
@@ -280,17 +329,24 @@ end
 -- Spawn local vehicles(server data)
 local function SpawnVehicles(vehicles)
     CreateThread(function()
-        while IsDeleting do Citizen.Wait(100) end
+        while IsDeleting do
+            Citizen.Wait(1000)
+        end
         if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
             for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
+                if Config.UseSpawnDelay then
+                    Wait(Config.DeleteDelay)
+                end
                 DeleteLocalVehicle(vehicles[i].vehicle)
                 LoadEntity(vehicles[i], 'server')
                 SetVehicleEngineOn(VehicleEntity, false, false, true)
                 doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
                 TableInsert(VehicleEntity, vehicles[i])
-                if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
+                if Config.UseSpawnDelay then
+                    Wait(Config.FreezeDelay)
+                end
                 FreezeEntityPosition(VehicleEntity, true)
                 SetVehicleSteeringAngle(VehicleEntity, vehicles[i].steerangle)
             end
@@ -302,16 +358,23 @@ end
 local function SpawnVehicle(vehicleData)
     CreateThread(function()
         if LocalPlayer.state.isLoggedIn then
-            while IsDeleting do Wait(100) end
+            while IsDeleting do
+                Wait(1000)
+            end
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
+            if Config.UseSpawnDelay then
+                Wait(Config.DeleteDelay)
+            end
             DeleteLocalVehicle(vehicleData.vehicle)
             LoadEntity(vehicleData, 'client')
             PrepareVehicle(VehicleEntity, vehicleData)
             SetVehicleEngineOn(VehicleEntity, false, false, true)
             doCarDamage(VehicleEntity, vehicleData.vehicle.health)
             TableInsert(VehicleEntity, vehicleData)
-            if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
+            if Config.UseSpawnDelay then
+                Wait(Config.FreezeDelay)
+            end
             FreezeEntityPosition(VehicleEntity, true)
             SetVehicleSteeringAngle(VehicleEntity, vehicleData.steerangle)
         end
@@ -336,7 +399,6 @@ local function RemoveVehicles(vehicles)
         end
     end
     LocalVehicles = {}
-    Wait(500)
     IsDeleting = false
 end
 
@@ -362,14 +424,15 @@ local function DeleteNearByVehicle(location)
             tmpModel = nil
         end
     end
-    Wait(500)
     IsDeleting = false
 end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
     local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
-    while not DoesEntityExist(vehicle) do Citizen.Wait(1) end
+    while not DoesEntityExist(vehicle) do
+        Citizen.Wait(1) 
+    end
     local netid = NetworkGetNetworkIdFromEntity(vehicle)
     SetNetworkIdExistsOnAllMachines(netid, 1)
     NetworkSetNetworkIdDynamic(netid, 0)
@@ -403,7 +466,12 @@ local function Drive(player, vehicle, warp)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
-            if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
+            if Config.UseParkingBlips then
+                RemoveBlip(vehicle.blip)
+            end
+            if Config.UseMHVehicleKeyItem then
+                TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', callback.vehicle)
+            end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
             QBCore.Functions.Notify(callback.message, "success", 5000)
@@ -435,15 +503,20 @@ end
 
 -- Get the street name where you are at the moment.
 local function GetStreetName(entity)
-    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
+    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y,
+        GetEntityCoords(entity).z))
 end
 
 -- Get Real Model Name Config.lua to add more
 local function GetRealModel(vehicle)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local currentModel = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    if Config.Trailers[currentModel] then currentModel = Config.Trailers[currentModel].model end
-    if Config.Vehicles[currentModel] then currentModel = Config.Vehicles[currentModel].model end
+    if Config.Trailers[currentModel] then
+        currentModel = Config.Trailers[currentModel].model
+    end
+    if Config.Vehicles[currentModel] then
+        currentModel = Config.Vehicles[currentModel].model
+    end
     return currentModel
 end
 
@@ -458,6 +531,9 @@ local function Save(player, vehicle, wheelangle, warp)
         local currenModel = GetRealModel(vehicle)
         QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
             if callback.status then
+                if Config.UseMHVehicleKeyItem then
+                    TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', props.plate)
+                end
                 QBCore.Functions.DeleteVehicle(vehicle)
                 QBCore.Functions.Notify(callback.message, "success", 1000)
             else
@@ -466,7 +542,7 @@ local function Save(player, vehicle, wheelangle, warp)
         end, {
             props = props,
             livery = GetVehicleLivery(vehicle),
-            citizenid = QBCore.Functions.GetPlayerData().citizenid,
+            citizenid = PlayerData.citizenid,
             plate = props.plate,
             steerangle = wheelangle,
             fuel = GetVehicleFuelLevel(vehicle),
@@ -483,8 +559,10 @@ local function Save(player, vehicle, wheelangle, warp)
                 body = GetVehicleBodyHealth(vehicle),
                 tank = GetVehiclePetrolTankHealth(vehicle)
             },
-            location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-            coords = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle))
+            location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
+                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
+            coords = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
+                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle))
         })
     end
 end
@@ -498,8 +576,8 @@ local function IsNotReservedPosition(coords)
     end
     for _, data in pairs(Config.ReservedParkList) do
         if #(coords - data.coords) <= tonumber(data.radius) then
-            if Config.IgnoreJobs[QBCore.Functions.GetPlayerData().job.name] and
-                QBCore.Functions.GetPlayerData().job.onduty then
+            if Config.IgnoreJobs[PlayerData.job.name] and
+                PlayerData.job.onduty then
                 freeSpot = true
                 QBCore.Functions.Notify(Lang:t('success.parked'), "success", 5000)
             else
@@ -507,7 +585,7 @@ local function IsNotReservedPosition(coords)
                     freeSpot = false
                 else
                     if data.parktype == 'prived' then
-                        if QBCore.Functions.GetPlayerData().citizenid ~= data.citizenid then
+                        if PlayerData.citizenid ~= data.citizenid then
                             freeSpot = false
                             QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
                         else
@@ -515,8 +593,8 @@ local function IsNotReservedPosition(coords)
                         end
                     end
                     if data.parktype == 'job' then
-                        if not Config.IgnoreJobs[QBCore.Functions.GetPlayerData().job.name] and
-                            not QBCore.Functions.GetPlayerData().job.onduty then
+                        if not Config.IgnoreJobs[PlayerData.job.name] and
+                            not PlayerData.job.onduty then
                             freeSpot = false
                             QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
                         else
@@ -556,44 +634,57 @@ local function DrawParkedLocation(coords)
                         local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
                         local r, g, b = 0, 0, 0
                         if data.parktype == 'paid' then
-                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g, Config.ParkColours['blue'].b
+                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g,
+                                Config.ParkColours['blue'].b
                             if vehicle and distance <= 1 then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
+                                    Config.ParkColours['green'].b
                             end
                         elseif data.parktype == 'prived' then
-                            if QBCore.Functions.GetPlayerData().citizenid == data.citizenid then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                            if PlayerData.citizenid == data.citizenid then
+                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
+                                    Config.ParkColours['green'].b
                             else
-                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g, Config.ParkColours['red'].b
+                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g,
+                                    Config.ParkColours['red'].b
                             end
                         elseif data.parktype == 'job' then
-                            if Config.IgnoreJobs[QBCore.Functions.GetPlayerData().job.name] and
-                                QBCore.Functions.GetPlayerData().job.onduty then
-                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g, Config.ParkColours['orange'].b
+                            if Config.IgnoreJobs[PlayerData.job.name] and
+                                PlayerData.job.onduty then
+                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g,
+                                    Config.ParkColours['orange'].b
                             else
-                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g, Config.ParkColours['black'].b
+                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g,
+                                    Config.ParkColours['black'].b
                             end
                         else
                             if data.parktype == 'free' then
-                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g, Config.ParkColours['white'].b
+                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g,
+                                    Config.ParkColours['white'].b
                                 if vehicle and distance <= 1 then
-                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g, Config.ParkColours['green'].b
+                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
+                                        Config.ParkColours['green'].b
                                 end
                             end
                         end
-                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, r, g, b, 222, false, false, false, true, false, false, false)
+                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.3, 0.2, 0.15, r, g, b, 222, false, false, false, true, false, false, false)
                         if data.parktype ~= 'free' then
                             if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~Reserved~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
+                                    "~y~Reserved~s~", 0, 0.04, 0.04)
                             end
-                            if QBCore.Functions.GetPlayerData().citizenid ~= data.citizenid then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                            if PlayerData.citizenid ~= data.citizenid then
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
+                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             else
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4, "~b~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
+                                    "~b~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             end
                         else
                             if data.parktype == 'free' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3, "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
+                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
+                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
                             end
                         end
                     end
@@ -627,7 +718,7 @@ local function CheckDistanceToForceGrounded(distance)
                     end
                     if Config.DebugMode then
                         if not tmp.isGrounded then
-                            print("Parking Force Grounded - Plate (" .. tmp.plate .. ") Model (" .. tmp.modelname .. ") Grounded (" .. tostring(LocalVehicles[i].isGrounded) .. ") ")
+                            print("Parking Force Grounded - Plate (" .. tmp.plate .. ") Model (" .. tmp.modelname ..") Grounded (" .. tostring(LocalVehicles[i].isGrounded) .. ") ")
                         else
                             print("Parking can\'t force a vehicle to the ground at this moment. (No vehicle neerby)")
                         end
@@ -644,28 +735,39 @@ local function CreateState()
     if Config.BuildMode then
         local currentVehicle = GetVehiclePedIsIn(PlayerPedId(), 0)
         local markerCoords = GetOffsetFromEntityInWorldCoords(currentVehicle, 0.0, 2.5, -1.0)
-        DrawMarker(2, markerCoords.x, markerCoords.y, markerCoords.z + 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 0, 255, 26, 126, false, false, false, true, false, false, false)
-        DrawMarker(27, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200, false, false, false, true, false, false, false)
-        DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200, false, false, false, true, false, false, false)
+        DrawMarker(2, markerCoords.x, markerCoords.y, markerCoords.z + 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,
+            0, 255, 26, 126, false, false, false, true, false, false, false)
+        DrawMarker(27, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
+            false, false, false, true, false, false, false)
+        DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
+            false, false, false, true, false, false, false)
     end
 end
 
 -- NUI Menu
 local function closeNUI()
     SetNuiFocus(false, false)
-    SendNUIMessage({type = "newParkSetup", enable = false})
+    SendNUIMessage({
+        type = "newParkSetup",
+        enable = false
+    })
     Wait(10)
 end
 
 local function hideNUI()
     SetNuiFocus(false, false)
-    SendNUIMessage({type = "hide"})
+    SendNUIMessage({
+        type = "hide"
+    })
     Wait(1)
 end
 
 local function openNUI()
     SetNuiFocus(true, true)
-    SendNUIMessage({type = "newDoorSetup", enable = true})
+    SendNUIMessage({
+        type = "newDoorSetup",
+        enable = true
+    })
     Wait(1)
 end
 
@@ -679,7 +781,24 @@ local function CheckWheelState()
     end
 end
 
-local parkMenu = nil
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+        PlayerData = QBCore.Functions.GetPlayerData()
+        local id = GetPlayerServerId(PlayerId())
+        TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
+    end
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+    local id = GetPlayerServerId(PlayerId())
+    TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
+end)
+
+RegisterNetEvent('Config.QBCore:Client:OnPlayerUnload', function()
+    PlayerData = {}
+end)
+
 RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
     if parkMenu ~= nil then
         exports['qb-radialmenu']:RemoveOption(parkMenu)
@@ -712,28 +831,12 @@ RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
 end)
 
 AddEventHandler('onResourceStop', function(resource)
-    if parkMenu ~= nil then
-        exports['qb-radialmenu']:RemoveOption(parkMenu)
-        parkMenu = nil
-    end
-end)
-
-AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
-        PlayerData = QBCore.Functions.GetPlayerData()
-        local id = GetPlayerServerId(PlayerId())
-        TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
+        if parkMenu ~= nil then
+            exports['qb-radialmenu']:RemoveOption(parkMenu)
+            parkMenu = nil
+        end
     end
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-    local id = GetPlayerServerId(PlayerId())
-    TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
-end)
-
-RegisterNetEvent('Config.QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
 end)
 
 -- Command
@@ -749,17 +852,24 @@ RegisterNUICallback('newParkLocation', function(data, cb)
     local offset = 2.5
     local markerOffset = GetOffsetFromEntityInWorldCoords(vehicle, 0, offset, 0)
     Wait(200)
-    TriggerServerEvent('mh-parking:server:AddNewParkingSpot', QBCore.Functions.GetPlayerData().source, data, markerOffset)
+    TriggerServerEvent('mh-parking:server:AddNewParkingSpot', PlayerData.source, data,
+        markerOffset)
 end)
 
 RegisterNetEvent("mh-parking:client:openmenu", function(source)
     openNUI()
-    SendNUIMessage({type = "newParkSetup", enable = true})
+    SendNUIMessage({
+        type = "newParkSetup",
+        enable = true
+    })
 end)
 
 RegisterNetEvent("mh-parking:client:closemenu", function(source)
     hideNUI()
-    SendNUIMessage({type = "hide", enable = false})
+    SendNUIMessage({
+        type = "hide",
+        enable = false
+    })
 end)
 
 RegisterNUICallback('close', function(data, cb)
@@ -814,8 +924,10 @@ RegisterNetEvent('mh-parking:client:setParkedVecihleLocation', function(location
 end)
 
 RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
-    if QBCore.Functions.GetPlayerData().citizenid == citizenid then
-        QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {plate = plate}), "success")
+    if PlayerData.citizenid == citizenid then
+        QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {
+            plate = plate
+        }), "success")
         -- TriggerEvent('qb-vehiclekeys:client:AddKeys', plate)
         TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
     end
@@ -850,6 +962,7 @@ end)
 RegisterNetEvent("mh-parking:client:autoPark", function(netid)
     local vehicle = NetworkGetEntityFromNetworkId(netid)
     if DoesEntityExist(vehicle) then
+        print("Auto Parking.")
         if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
             local wheelangle = GetVehicleSteeringAngle(vehicle)
             Save(PlayerPedId(), vehicle, wheelangle, false)
@@ -873,6 +986,7 @@ RegisterNetEvent("mh-parking:client:leftVehicle", function(driver, netid)
 end)
 
 -- Threads
+
 CreateThread(function()
     while true do
         InParking = true
@@ -925,7 +1039,10 @@ CreateThread(function()
                             local vehicleCoords = GetEntityCoords(vehicle)
                             if speed > 0.9 then
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
-                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
+                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or
+                                IsThisModelABicycle(GetEntityModel(vehicle)) or
+                                IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or
+                                IsThisModelAHeli(GetEntityModel(vehicle)) then
                                 if IsNotReservedPosition(vehicleCoords) then
                                     local wheelangle = GetVehicleSteeringAngle(vehicle)
                                     Save(PlayerPedId(), vehicle, wheelangle, true)
