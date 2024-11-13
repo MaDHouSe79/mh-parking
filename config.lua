@@ -10,8 +10,6 @@ Config.ResetState = 1 -- Default 1, 1 is stored in garage, 0 is police impound.
 
 Config.ImpoundPrice = 1000
 
-Config.FuelScript = "LegacyFuel"
-
 Config.UseMHVehicleKeyItem = false -- you need mh-vehiclekeyitem to use this option
 
 Config.KeyParkBindButton = "F5" -- Default F5
