@@ -31,7 +31,7 @@
 - [Discord](https://discord.gg/vJ9EukCmJQ)
 
 # mh-parking
-- Download V2 here [mh-parkingV2](https://github.com/MaDHouSe79/mh-parkingV2))
+- Download V2 here [mh-parkingV2](https://github.com/MaDHouSe79/mh-parkingV2)
 * An Advanced Parking System build by MaDHouSe79.
 * when you park, befor you hit F5 turn your steel and lock it at that position when parked.
 
