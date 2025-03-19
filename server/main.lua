@@ -20,14 +20,6 @@ local function GetCitizenid(player)
     return player.PlayerData.citizenid
 end
 
-local function countPlayers()
-    local count = 0
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        count = count + 1
-    end
-    return count
-end
-
 local function hasPerMission(source, type)
     local result = false
     if IsPlayerAceAllowed(source, 'command') then
