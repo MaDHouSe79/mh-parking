@@ -238,6 +238,19 @@ local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
+local function AllPlayersLeaveVehicle(vehicle)
+    if DoesEntityExist(vehicle) then
+        for i = -1, GetVehicleModelNumberOfSeats(GetEntityModel(vehicle)), 1 do
+            if not IsVehicleSeatFree(vehicle, i) then
+                local ped = GetPedInVehicleSeat(vehicle, i)
+                if IsPedAPlayer(ped) then
+                    TaskLeaveVehicle(ped, vehicle, 1)
+                end
+            end
+        end
+    end
+end
+
 -- Display Parked Owner Text
 local function DisplayParkedOwnerText()
     if Config.UseParkedVehicleNames then -- for performes
@@ -483,10 +496,9 @@ end
 
 -- Park
 local function Park(player, vehicle, warp)
-    if warp then
-        SetVehicleEngineOn(vehicle, false, false, true)
-        TaskLeaveVehicle(player, vehicle)
-    end
+    AllPlayersLeaveVehicle(vehicle)
+    Wait(3000)
+    SetVehicleEngineOn(vehicle, false, false, true)
     RequestAnimSet("anim@mp_player_intmenu@key_fob@")
     TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
     Wait(2000)
@@ -1092,3 +1104,4 @@ CreateThread(function()
         end
     end
 end)
+
