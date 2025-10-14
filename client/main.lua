@@ -121,7 +121,7 @@ end
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
 
-    VehicleEntity = (vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
+    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     while not DoesEntityExist(VehicleEntity) do
         Citizen.Wait(1) 
     end
@@ -442,7 +442,7 @@ end
 
 local function Entity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    local vehicle = (vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
+    local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
     while not DoesEntityExist(vehicle) do
         Citizen.Wait(1) 
     end
@@ -1104,6 +1104,7 @@ CreateThread(function()
         end
     end
 end)
+
 
 
 
