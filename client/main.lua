@@ -440,25 +440,12 @@ local function DeleteNearByVehicle(location)
     IsDeleting = false
 end
 
-local function Entity(vehicle)
-    QBCore.Functions.LoadModel(vehicle.props.model)
-    local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
-    while not DoesEntityExist(vehicle) do
-        Citizen.Wait(1) 
-    end
-    local netid = NetworkGetNetworkIdFromEntity(vehicle)
-    SetNetworkIdExistsOnAllMachines(netid, 1)
-    NetworkSetNetworkIdDynamic(netid, 0)
-    SetNetworkIdCanMigrate(netid, 0)
-    return vehicle
-end
-
 -- Drive 
 -- Make vehicle ready to drive
 local function MakeVehicleReadyToDrive(vehicle)
     -- Delete the local entity first
     DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
-    local VehicleEntity = CreateVehicleEntity(vehicle)
+    local VehicleEntity = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
     TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicle.props)
     RequestCollisionAtCoord(vehicle.location.x, vehicle.location.y, vehicle.location.z)
@@ -1104,6 +1091,7 @@ CreateThread(function()
         end
     end
 end)
+
 
 
 
