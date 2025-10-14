@@ -121,7 +121,7 @@ end
 local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
 
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false, false)
+    VehicleEntity = (vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     while not DoesEntityExist(VehicleEntity) do
         Citizen.Wait(1) 
     end
@@ -185,7 +185,7 @@ local function TableInsert(entity, data)
         local tmpBlip = nil
         TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
         if Config.UseMHVehicleKeyItem then
-            TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', entity)
+            TriggerEvent('mh-vehiclekeyitem:client:OwnerKey', entity)
         end
         tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {
             modelname = data.modelname
@@ -440,9 +440,9 @@ local function DeleteNearByVehicle(location)
     IsDeleting = false
 end
 
-local function CreateVehicleEntity(vehicle)
+local function Entity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    local vehicle = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false, false)
+    local vehicle = (vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
     while not DoesEntityExist(vehicle) do
         Citizen.Wait(1) 
     end
@@ -483,7 +483,7 @@ local function Drive(player, vehicle, warp)
                 RemoveBlip(vehicle.blip)
             end
             if Config.UseMHVehicleKeyItem then
-                TriggerEvent('mh-vehiclekeyitem:client:CreateVehicleOwnerKey', callback.vehicle)
+                TriggerEvent('mh-vehiclekeyitem:client:OwnerKey', callback.vehicle)
             end
             MakeVehicleReadyToDrive(callback.vehicle)
             vehicle = false
@@ -1104,5 +1104,6 @@ CreateThread(function()
         end
     end
 end)
+
 
 
