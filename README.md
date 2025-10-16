@@ -5,20 +5,20 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MH-Scripts/mh-parking/issues">
-    <img src="https://img.shields.io/github/issues/MH-Scripts/mh-parking"/> 
+  <a href="https://github.com/MaDHouSe79/mh-parking/issues">
+    <img src="https://img.shields.io/github/issues/MaDHouSe79/mh-parking"/> 
   </a>
-  <a href="https://github.com/MH-Scripts/mh-parking/watchers">
-    <img src="https://img.shields.io/github/watchers/MH-Scripts/mh-parking"/> 
+  <a href="https://github.com/MaDHouSe79/mh-parking/watchers">
+    <img src="https://img.shields.io/github/watchers/MaDHouSe79/mh-parking"/> 
   </a> 
-  <a href="https://github.com/MH-Scripts/mh-parking/network/members">
-    <img src="https://img.shields.io/github/forks/MH-Scripts/mh-parking"/> 
+  <a href="https://github.com/MaDHouSe79/mh-parking/network/members">
+    <img src="https://img.shields.io/github/forks/MaDHouSe79/mh-parking"/> 
   </a>  
-  <a href="https://github.com/MH-Scripts/mh-parking/stargazers">
-    <img src="https://img.shields.io/github/stars/MH-Scripts/mh-parking?color=white"/> 
+  <a href="https://github.com/MaDHouSe79/mh-parking/stargazers">
+    <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking?color=white"/> 
   </a>
-  <a href="https://github.com/MH-Scripts/mh-parking/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/MH-Scripts/mh-parking?color=black"/> 
+  <a href="https://github.com/MaDHouSe79/mh-parking/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking?color=black"/> 
   </a>      
 </p>
 
@@ -612,3 +612,4 @@ Config.Garages = Garages
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
 &copy; [MaDHouSe79](https://www.youtube.com/@MaDHouSe79)
+
