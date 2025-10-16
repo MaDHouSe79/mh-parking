@@ -22,6 +22,9 @@
   </a>      
 </p>
 
+<p align="center">
+    <img src="https://komarev.com/ghpvc/?username=MaDHouSe79&label=Profile%20views&color=3464eb&style=for-the-badge&logo=star&abbreviated=true" alt="MaDHouSe79" style="padding-right:20px;" />
+</p>
 
 # Youtube Channel
 - [Subscribe](https://www.youtube.com/@MaDHouSe79) 
@@ -612,4 +615,5 @@ Config.Garages = Garages
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
 &copy; [MaDHouSe79](https://www.youtube.com/@MaDHouSe79)
+
 
