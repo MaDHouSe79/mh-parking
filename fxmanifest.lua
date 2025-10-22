@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'MH - Parking'
+description 'MH - Parking V2'
 author 'MaDHouSe'
 version '2.0.0'
 
@@ -32,3 +32,4 @@ dependencies {
 }
 
 lua54 'yes'
+
