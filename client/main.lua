@@ -460,9 +460,6 @@ RegisterNetEvent('mh-parking:client:OpenParkMenu', function(data)
 	end
 end)
 
-RegisterKeyMapping('park', 'Park or Drive', 'keyboard', Config.ParkingKeyDisplay)
-RegisterCommand('park', function() isUsingParkCommand = true end, false)
-
 -- Display 3D text
 CreateThread(function()
 	while true do
@@ -624,4 +621,5 @@ CreateThread(function()
 			end
 		end
 	end
+
 end)
