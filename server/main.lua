@@ -91,7 +91,7 @@ local function PrepeareVehicles()
         local mods = json.decode(vehicle.mods)
         if not parkedVehicles[vehicle.plate] then
             parkedVehicles[vehicle.plate] = {
-                owner = vehicle.citizenid,
+                owner = owner,
                 fullname = fullname,
                 netid = nil,
                 entity = nil,
@@ -323,4 +323,5 @@ end)
 AddCommand("parkmenu", 'Open Park Systen Menu', {}, true, function(source, args)
     local src = source
     TriggerClientEvent('mh-parking:client:OpenParkMenu', src, {status = true})
+
 end)
