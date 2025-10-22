@@ -1,221 +1,32 @@
---[[ ===================================================== ]] --
---[[         MH Realistic Parking Script by MaDHouSe       ]] --
---[[ ===================================================== ]] --
-local QBCore = exports['qb-core']:GetCoreObject()
-local PlayerData = {}
-local LocalVehicles = {}
-local GlobalVehicles = {}
-local UpdateAvailable, SpawnedVehicles, isUsingParkCommand, IsDeleting = false, false, false, false
-local InParking, CreateMode, LastUsedPlate, ParkOwnerName, VehicleEntity = false, false, nil, nil, nil
-local ParkAction, extraRadius, Cost, ParkTime = 'none', 3, 0, 0
-local parkMenu = nil
+-- [[ ===================================================== ]] --
+-- [[               MH Parking V2 by MaDHouSe79             ]] --
+-- [[ ===================================================== ]] --
+local parkedVehicles = {}
+local noParkingBlips = {}
+local isUsingParkCommand = false
+local isEnteringVehicle = false
+local isInVehicle = false
+local currentVehicle = nil
+local currentSeat = nil
+local currentPlate = nil
 
-local function CreateParkDisPlay(vehicleData)
-    local info = nil
-    local model = nil
-    local owner = nil
-    local plate = nil
-    if Config.UseOwnerNames then
-        owner = string.format(Lang:t("info.owner", {
-            owner = vehicleData.citizenname
-        })) .. '\n'
-    end
-    model = string.format(Lang:t("info.model", {
-        model = vehicleData.modelname
-    })) .. '\n'
-    plate = string.format(Lang:t("info.plate", {
-        plate = vehicleData.plate
-    })) .. '\n'
-    if Config.UseOwnerNames then
-        info = string.format("%s", model .. plate .. owner)
-    else
-        info = string.format("%s", model .. plate)
-    end
-    return info
-end
+local display3DText = Config.Display3DText
+local saveSteeringAngle = Config.SaveSteeringAngle
 
--- Do Vehicle damage
-local function doCarDamage(vehicle, health)
-    local engine = health.engine + 0.0
-    local body = health.body + 0.0
-    if body < 900.0 then
-        for i = 0, 7, 1 do
-            SmashVehicleWindow(vehicle, i)
-        end
-    end
-    if body < 800.0 then
-        for i = 1, 6, 1 do
-            SetVehicleDoorBroken(vehicle, i, true)
-        end
-    end
-    if engine < 700.0 then
-        for i = 0, 7, 1 do
-            SetVehicleTyreBurst(vehicle, i, false, 990.0)
-        end
-    end
-    if engine < 500.0 then
-        for i = 0, 7, 1 do
-            SetVehicleTyreBurst(vehicle, i, false, 990.0)
-        end
-    end
-    SetVehicleEngineHealth(vehicle, engine)
-    SetVehicleBodyHealth(vehicle, body)
-end
-
--- Create parked vehicle blips
-local function CreateParkedBlip(label, location)
-    local blip = nil
-    if Config.UseParkingBlips then
-        blip = AddBlipForCoord(location.x, location.y, location.z)
-        SetBlipSprite(blip, 545)
-        SetBlipDisplay(blip, 4)
-        SetBlipScale(blip, 0.6)
-        SetBlipAsShortRange(blip, true)
-        SetBlipColour(blip, 25)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(label)
-        EndTextCommandSetBlipName(blip)
-    end
-    return blip
-end
-
--- Set No Collission between 2 entities
-local function NoColission(entity, location)
-    local vehicle, distance = QBCore.Functions.GetClosestVehicle(vector3(location.x, location.y, location.z))
-    if distance <= 1 then
-        SetEntityNoCollisionEntity(entity, vehicle, true)
+local function LoadModel(model)
+    while not HasModelLoaded(model) do
+        RequestModel(model)
+        Wait(1)
     end
 end
 
--- Set fuel
-local function SetFuel(vehicle, fuel)
-    exports[Config.FuelScript]:SetFuel(vehicle, fuel)
-end
-
--- Get fuel
-local function GetFuel(vehicle)
-    return exports[Config.FuelScript]:GetFuel(vehicle)
-end
-
-local function PrepareVehicle(entity, vehicleData)
-    -- Add Vehicle On Ground Properly
-    RequestCollisionAtCoord(vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z)
-    SetVehicleOnGroundProperly(entity)
-    SetEntityAsMissionEntity(entity, true, true)
-    SetEntityInvincible(entity, true)
-    SetEntityHeading(vehicle, vehicleData.vehicle.location.w)
-    SetVehicleLivery(entity, vehicleData.vehicle.livery)
-    SetVehicleEngineHealth(entity, vehicleData.vehicle.health.engine)
-    SetVehicleBodyHealth(entity, vehicleData.vehicle.health.body)
-    SetVehiclePetrolTankHealth(entity, vehicleData.vehicle.health.tank)
-    SetVehRadioStation(entity, 'OFF')
-    SetVehicleDirtLevel(entity, 0)
-    QBCore.Functions.SetVehicleProperties(entity, vehicleData.vehicle.props)
-    SetVehicleEngineOn(entity, false, false, true)
-    SetModelAsNoLongerNeeded(vehicleData.vehicle.props["model"])
-    local netid = NetworkGetNetworkIdFromEntity(entity)
-    TriggerServerEvent('mh-cuttingbrakes:server:checkVehicle', netid)
-end
-
--- Load Entity
-local function LoadEntity(vehicleData, type)
-    QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
-
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
-    while not DoesEntityExist(VehicleEntity) do
-        Citizen.Wait(1) 
-    end
-    local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
-    SetNetworkIdExistsOnAllMachines(netid, 1)
-    NetworkSetNetworkIdDynamic(netid, 0)
-    SetNetworkIdCanMigrate(netid, 0)
-
-    QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
-    SetVehicleEngineOn(VehicleEntity, false, false, true)
-    SetVehicleDoorsLocked(VehicleEntity, 2)
-    SetEntityVisible(VehicleEntity, true, 0)
-    PrepareVehicle(VehicleEntity, vehicleData)
-end
-
--- trailer offset position
-local function trailerOffset(vehicle)
-    local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
-    local displaytext = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    local offset = 0.0
-    if Config.Trailers[displaytext] then
-        offset = Config.Trailers[displaytext].offset
-    end
-    return offset
-end
-
-local function CreateTargetEntityMenu(entity)
-    exports['qb-target']:AddTargetEntity(entity, {
-        options = {
-            {
-                name = "car",
-                type = "client",
-                event = "mh-parking:client:unparking",
-                icon = "fas fa-car",
-                label = "Unpark Vehicle"
-            }, {
-                type = "client",
-                event = "mh-parking:client:parking",
-                icon = "fas fa-car",
-                label = "Park Vehicle"
-            }
-        },
-        distance = Config.InteractDistance
-    })
-end
-
-local function IsVehicleAlreadyListed(plate)
-    local isListed = false
-    for i = 1, #LocalVehicles do
-        if LocalVehicles[i].plate == plate then
-            isListed = true
-            break
-        end
-    end
-    return isListed
-end
-
--- Spawn 
-local function TableInsert(entity, data)
-    if not IsVehicleAlreadyListed(data.plate) then
-        local tmpBlip = nil
-        TriggerEvent('mh-parking:client:addkey', data.plate, data.citizenid)
-        if Config.UseMHVehicleKeyItem then
-            TriggerEvent('mh-vehiclekeyitem:client:OwnerKey', entity)
-        end
-        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info', {
-            modelname = data.modelname
-        }), data.vehicle.location)
-        CreateTargetEntityMenu(entity)
-        local angle = data.steerangle
-        if angle == 0 then angle = math.random(-50, 50) end
-        LocalVehicles[#LocalVehicles + 1] = {
-            entity = entity,
-            vehicle = data.mods,
-            steerangle = data.steerangle,
-            plate = data.plate,
-            fuel = data.fuel,
-            body = data.body,
-            engine = data.engine,
-            oil = data.oil,
-            citizenid = data.citizenid,
-            citizenname = data.citizenname,
-            livery = data.vehicle.livery,
-            health = data.vehicle.health,
-            model = data.model,
-            modelname = data.modelname,
-            location = data.vehicle.location,
-            blip = tmpBlip,
-            isGrounded = false
-        }
+local function LoadAnimDict(dict)
+    if not HasAnimDictLoaded(dict) then
+        RequestAnimDict(dict)
+        while not HasAnimDictLoaded(dict) do Wait(1) end
     end
 end
 
--- Draw 3d text on screen
 local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     local p = GetGameplayCamCoords()
     local dist = #(p - vector3(x, y, z))
@@ -238,861 +49,579 @@ local function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
+local function SetFuel(vehicle, fuel)
+	if not DoesEntityExist(vehicle) then return end
+	if fuel < 0 then fuel = 0 end
+	if fuel > 100 then fuel = 100 end	
+	if GetResourceState(Config.FuelScript) ~= 'missing' then
+		exports[Config.FuelScript]:SetFuel(vehicle, fuel)
+	else
+		NetworkRequestControlOfEntity(vehicle)
+		Entity(vehicle).state:set('fuel', fuel + 0.0, true)
+		SetVehicleFuelLevel(vehicle, fuel + 0.0)
+	end
+end
+
+local function GetFuel(vehicle)
+    if not DoesEntityExist(vehicle) then return end
+	if GetResourceState(Config.FuelScript) ~= 'missing' then
+    	return exports[Config.FuelScript]:GetFuel(vehicle)
+	else
+		return Entity(vehicle).state.fuel or -1.0
+	end
+end
+
+local function GetPedVehicleSeat(ped)
+    local vehicle = GetVehiclePedIsIn(ped, false)
+    for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
+        if (GetPedInVehicleSeat(vehicle, i) == ped) then return i end
+    end
+    return -2
+end
+
+local function GetAllPlayersInVehicle(vehicle)
+    local pedsincar = {}
+    local numPas = GetVehicleModelNumberOfSeats(GetEntityModel(vehicle))
+    for i = -1, numPas, 1 do
+        if not IsVehicleSeatFree(vehicle, i) then
+            local ped = GetPedInVehicleSeat(vehicle, i)
+            if IsPedAPlayer(ped) then
+                pedsincar[#pedsincar + 1] = {
+					playerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)),
+					seat = i
+				}
+            end
+        end
+    end
+    return pedsincar
+end
+
 local function AllPlayersLeaveVehicle(vehicle)
     if DoesEntityExist(vehicle) then
-        for i = -1, GetVehicleModelNumberOfSeats(GetEntityModel(vehicle)), 1 do
-            if not IsVehicleSeatFree(vehicle, i) then
-                local ped = GetPedInVehicleSeat(vehicle, i)
-                if IsPedAPlayer(ped) then
-                    TaskLeaveVehicle(ped, vehicle, 1)
-                end
-            end
+		local players = GetAllPlayersInVehicle(vehicle)
+		TriggerServerEvent('mh-parking:server:AllPlayersLeaveVehicle', VehToNet(vehicle), players)
+	end
+end
+
+local function LeaveVehicle(data)
+    local player = GetPlayerServerId(PlayerId())
+    if data.playerId == GetPlayerServerId(PlayerId()) then
+        local vehicle = NetToVeh(data.vehicleNetID)
+        if DoesEntityExist(vehicle) then
+            TaskLeaveVehicle(PlayerPedId(), vehicle, 0)
         end
-    end
+    end    
 end
 
--- Display Parked Owner Text
-local function DisplayParkedOwnerText()
-    if Config.UseParkedVehicleNames then -- for performes
-        local pl = GetEntityCoords(PlayerPedId())
-        local displayWhoOwnesThisCar = nil
-        for k, vehicle in pairs(LocalVehicles) do
-            if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) <
-                Config.ParkedNamesViewDistance then
-                if PlayerData.citizenid == vehicle.citizenid then
-                    displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
-                    Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z + 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
-                end
-            end
-        end
-    end
+local function BlinkVehiclelights(vehicle, state)
+	local ped = PlayerPedId()
+	local model = 'prop_cuff_keys_01'
+	LoadAnimDict('anim@mp_player_intmenu@key_fob@')
+	LoadModel(model)
+	local object = CreateObject(model, 0, 0, 0, true, true, true)
+	while not DoesEntityExist(object) do Wait(1) end
+	AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, 57005), 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 1, true)
+	TaskPlayAnim(ped, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0, -8.0, -1, 52, 0, false, false, false)
+	TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
+	SetVehicleLights(vehicle, 2)
+	Wait(150)
+	SetVehicleLights(vehicle, 0)
+	Wait(150)
+	SetVehicleLights(vehicle, 2)
+	Wait(150)
+	SetVehicleLights(vehicle, 0)
+	if IsEntityPlayingAnim(ped, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3) then
+		DeleteObject(object)
+		StopAnimTask(ped, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0)
+	end
+	local doorLockState = GetVehicleDoorLockStatus(vehicle)
+	if state == doorLockState then
+		TriggerServerEvent('mh-parking:server:setVehLockState', VehToNet(vehicle), state)
+		SetVehicleDoorsLocked(vehicle, state)
+		if state == 1 then
+			Notify("Doords are unlocked","success", 5000)
+		else
+			Notify("Doords are locked","success", 5000)
+		end
+	elseif state ~= doorLockState then
+		if doorLockState == 1 then
+			TriggerServerEvent('mh-parking:server:setVehLockState', VehToNet(vehicle), 2)
+			SetVehicleDoorsLocked(vehicle, 2)
+			Notify("Doords are locked","success", 5000)
+		elseif doorLockState == 2 then
+			TriggerServerEvent('mh-parking:server:setVehLockState', VehToNet(vehicle), 1)
+			SetVehicleDoorsLocked(vehicle, 1)
+			Notify("Doords are unlocked","success", 5000)
+		end
+	end
+
 end
 
-local function MakeVehiclesVisable()
-    local pl = GetEntityCoords(PlayerPedId())
-    for k, vehicle in pairs(LocalVehicles) do
-        if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.ParkedViewDistance then
-            if not IsEntityVisible(vehicle.entity) then
-                SetEntityVisible(vehicle.entity, true, 0)
-            end
-        else
-            if IsEntityVisible(vehicle.entity) then
-                SetEntityVisible(vehicle.entity, false, 0)
-            end
-        end
-    end
+local function IsCloseByStationPump(coords)
+	for hash in pairs(Config.DisableNeedByPumpModels) do
+		local pump = GetClosestObjectOfType(coords.x, coords.y, coords.z, 10.0, hash, false, true, true)
+		if pump ~= 0 then return true end
+	end
+	return false
 end
 
--- Get the stored vehicle player is in
-local function GetPlayerInStoredCar(player)
-    local entity = GetVehiclePedIsIn(player)
-    local findVehicle = false
-    for i = 1, #LocalVehicles do
-        if LocalVehicles[i].entity and LocalVehicles[i].entity == entity then
-            findVehicle = LocalVehicles[i]
-            break
-        end
-    end
-    return findVehicle
+local function IsCloseByCoords(coords)
+	for k, v in pairs(Config.NoParkingLocations) do
+		if GetDistance(coords, v.coords) < v.radius then
+			if v.job == nil then
+				return true
+			elseif v.job ~= nil and v.job ~= PlayerData.job.name then
+				return true
+			end
+		end
+	end
+	return false
 end
 
--- Get the stored vehicle player is in
-local function GetParkeddCar(vehicle)
-    local findVehicle = false
-    for i = 1, #LocalVehicles do
-        if LocalVehicles[i].entity and LocalVehicles[i].entity == vehicle then
-            findVehicle = LocalVehicles[i]
-            break
-        end
-    end
-    return findVehicle
+local function IsCloseByParkingLot(coords)
+	for k, v in pairs(Config.AllowedParkingLots) do
+		if GetDistance(coords, v.coords) < v.radius then return true end
+	end
+	return false
 end
 
--- Delete single vehicle
-local function DeleteLocalVehicle(vehicle)
-    IsDeleting = true
-    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
-        for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~=
-                'nil' then
-                if vehicle.plate == LocalVehicles[i].plate then
-                    DeleteEntity(LocalVehicles[i].entity)
-                    table.remove(LocalVehicles, i)
-                end
-            end
-        end
-    end
-    IsDeleting = false
+local function AllowToPark(coords)
+	local isAllowd = false
+	if Config.UseParkingLotsOnly then
+		if IsCloseByParkingLot(coords) and not IsCloseByStationPump(coords) then isAllowd = true end
+	else
+		if not IsCloseByCoords(coords) and not IsCloseByStationPump(coords) then isAllowd = true end
+	end
+	return isAllowd
 end
 
-local function UnparkVehicle(plate, delete)
-    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 then
-        for i = 1, #LocalVehicles do
-            if LocalVehicles[i].plate == plate then
-                if delete then
-                    DeleteEntity(LocalVehicles[i].entity)
-                end
-                table.remove(LocalVehicles, i)
-                LocalVehicles[i] = nil
-            end
-        end
-    end
+local function CreateParkedBlip(data)
+	local name = "unknow"
+	local brand = "unknow"
+	for k, vehicle in pairs(Config.Vehicles) do
+		if vehicle.model == data.model then
+			name = vehicle.name 
+			brand = vehicle.brand
+			break
+		end
+	end
+	local blip = AddBlipForCoord(data.location.x, data.location.y, data.location.z)
+	SetBlipSprite(blip, 545)
+	SetBlipDisplay(blip, 4)
+	SetBlipScale(blip, 0.6)
+	SetBlipAsShortRange(blip, true)
+	SetBlipColour(blip, 25)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentSubstringPlayerName(name .. " " .. brand)
+	EndTextCommandSetBlipName(blip)
+	return blip
 end
 
--- Spawn local vehicles(server data)
-local function SpawnVehicles(vehicles)
-    CreateThread(function()
-        while IsDeleting do
-            Citizen.Wait(1000)
-        end
-        if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-            for i = 1, #vehicles, 1 do
-                SetEntityCollision(vehicles[i].vehicle, false, true)
-                SetEntityVisible(vehicles[i].vehicle, false, 0)
-                if Config.UseSpawnDelay then
-                    Wait(Config.DeleteDelay)
-                end
-                DeleteLocalVehicle(vehicles[i].vehicle)
-                LoadEntity(vehicles[i], 'server')
-                SetVehicleEngineOn(VehicleEntity, false, false, true)
-                doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
-                TableInsert(VehicleEntity, vehicles[i])
-                if Config.UseSpawnDelay then
-                    Wait(Config.FreezeDelay)
-                end
-                FreezeEntityPosition(VehicleEntity, true)
-                SetVehicleSteeringAngle(VehicleEntity, vehicles[i].steerangle)
-            end
-        end
-    end)
+local function CreateBlipCircle(coords, text, radius, color, sprite)
+	local blip = nil
+	if Config.UseRadiusForBlips then
+		blip = AddBlipForRadius(coords, radius)
+		SetBlipHighDetail(blip, true)
+		SetBlipColour(blip, color)
+		SetBlipAlpha(blip, 128)
+	end
+	blip = AddBlipForCoord(coords)
+	SetBlipHighDetail(blip, true)
+	SetBlipSprite(blip, sprite)
+	SetBlipScale(blip, 0.7)
+	SetBlipColour(blip, color)
+	SetBlipAsShortRange(blip, true)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandSetBlipName(blip)
+	noParkingBlips[#noParkingBlips + 1] = blip
 end
 
--- Spawn single vehicle(client data)
-local function SpawnVehicle(vehicleData)
-    CreateThread(function()
-        if LocalPlayer.state.isLoggedIn then
-            while IsDeleting do
-                Wait(1000)
-            end
-            SetEntityCollision(vehicleData.vehicle, false, true)
-            SetEntityVisible(vehicleData.vehicle, false, 0)
-            if Config.UseSpawnDelay then
-                Wait(Config.DeleteDelay)
-            end
-            DeleteLocalVehicle(vehicleData.vehicle)
-            LoadEntity(vehicleData, 'client')
-            PrepareVehicle(VehicleEntity, vehicleData)
-            SetVehicleEngineOn(VehicleEntity, false, false, true)
-            doCarDamage(VehicleEntity, vehicleData.vehicle.health)
-            TableInsert(VehicleEntity, vehicleData)
-            if Config.UseSpawnDelay then
-                Wait(Config.FreezeDelay)
-            end
-            FreezeEntityPosition(VehicleEntity, true)
-            SetVehicleSteeringAngle(VehicleEntity, vehicleData.steerangle)
-        end
-    end)
+local function DeleteAllBlips()
+	for k, blip in pairs(noParkingBlips) do
+		if DoesBlipExist(blip) then
+			RemoveBlip(blip)
+			blip = nil
+		end
+	end
+	noParkingBlips = {}
 end
 
--- remove all Vehicles
-local function RemoveVehicles(vehicles)
-    IsDeleting = true
-    if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-        for i = 1, #vehicles, 1 do
-            local vehicle, distance = QBCore.Functions.GetClosestVehicle(vehicles[i].vehicle.location)
-            if NetworkGetEntityIsLocal(vehicle) and distance < 1 then
-                local driver = GetPedInVehicleSeat(vehicle, -1)
-                if not DoesEntityExist(driver) or not IsPedAPlayer(driver) then
-                    local tmpModel = GetEntityModel(vehicle)
-                    SetModelAsNoLongerNeeded(tmpModel)
-                    DeleteEntity(vehicle)
-                    Citizen.Wait(300)
-                end
-            end
-        end
-    end
-    LocalVehicles = {}
-    IsDeleting = false
+local function CreateBlips()
+	if Config.UseUnableParkingBlips then
+		for k, zone in pairs(Config.NoParkingLocations) do
+			if not Config.UseRadiusForBlips then Config.UseRadiusForBlips = true end
+			CreateBlipCircle(zone.coords, 'Unable to park', zone.radius, zone.color, zone.sprite)
+			Config.UseRadiusForBlips = false
+		end
+	end
+	if Config.UseParkingLotsOnly then
+		for k, zone in pairs(Config.AllowedParkingLots) do
+			if Config.UseParkingLotsBlips then
+				CreateBlipCircle(zone.coords, 'Parking lot', zone.radius, zone.color, zone.sprite)
+			end
+		end
+	end
 end
 
--- Just some help text
-local function DisplayHelpText(text)
-    SetTextComponentFormat('STRING')
-    AddTextComponentString(text)
-    DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+local function GetPlayerInParkedVehicle(ped)
+	local findVeh = false
+	local entity = GetVehiclePedIsIn(ped, false)
+	for i = 1, #parkedVehicles do
+		if parkedVehicles[i] ~= nil and parkedVehicles[i].entity ~= nil and parkedVehicles[i].entity == entity then
+			findVeh = parkedVehicles[i]
+			break
+		end
+	end
+	return findVeh
 end
 
--- Delete the vehicle near the location
-local function DeleteNearByVehicle(location)
-    IsDeleting = true
-    local vehicle, distance = QBCore.Functions.GetClosestVehicle(location)
-    if distance <= 1 then
-        for i = 1, #LocalVehicles do
-            if LocalVehicles[i].entity == vehicle then
-                table.remove(LocalVehicles, i)
-            end
-            local tmpModel = GetEntityModel(vehicle)
-            SetModelAsNoLongerNeeded(tmpModel)
-            DeleteEntity(vehicle)
-            tmpModel = nil
-        end
-    end
-    IsDeleting = false
+local function SetTable(entity, data)
+	if not parkedVehicles[data.plate] then
+		local blip = false
+		if PlayerData.citizenid == data.owner then blip = CreateParkedBlip(data) end		
+		parkedVehicles[data.plate] = {
+			fullname = data.fullname,
+			owner = data.owner, 
+			netid = data.netid,
+			entity = entity,
+			mods = data.mods,
+			hash = data.hash,
+			plate = data.plate, 
+			model = data.model,
+			fuel = data.fuel,
+			body = data.body,
+			engine = data.engine,
+			steerangle = data.steerangle,
+			location = data.location,
+			blip = blip,
+			isParked = true,
+		}
+	end
 end
 
--- Drive 
--- Make vehicle ready to drive
-local function MakeVehicleReadyToDrive(vehicle)
-    -- Delete the local entity first
-    DeleteNearByVehicle(vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z))
-    local VehicleEntity = CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, false)
-    TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
-    QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicle.props)
-    RequestCollisionAtCoord(vehicle.location.x, vehicle.location.y, vehicle.location.z)
-    SetVehicleOnGroundProperly(VehicleEntity)
-    FreezeEntityPosition(VehicleEntity, false)
-    SetVehicleLivery(VehicleEntity, vehicle.livery)
-    SetVehRadioStation(VehicleEntity, 'OFF')
-    SetVehicleDirtLevel(VehicleEntity, 0)
-    SetVehicleFuelLevel(VehicleEntity, vehicle.fuel)
-    SetModelAsNoLongerNeeded(vehicle.props.model)
-    doCarDamage(VehicleEntity, vehicle.health)
-    SetFuel(VehicleEntity, vehicle.fuel)
+local function SetVehicleWaypoit(coords)
+	local playerCoords = GetEntityCoords(PlayerPedId())
+	local distance = GetDistance(playerCoords, coords)
+	if distance < 200 then
+		Notify(Lang:t('info.no_waipoint', { distance = Round(distance, 2) }), "error", 5000)
+	elseif distance > 200 then
+		SetNewWaypoint(coords.x, coords.y)
+	end
 end
 
--- Drive 
-local function Drive(player, vehicle, warp)
-    QBCore.Functions.TriggerCallback("mh-parking:server:drive", function(callback)
-        if callback.status then
-            QBCore.Functions.DeleteVehicle(vehicle.entity)
-            QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
-            if Config.UseParkingBlips then
-                RemoveBlip(vehicle.blip)
-            end
-            if Config.UseMHVehicleKeyItem then
-                TriggerEvent('mh-vehiclekeyitem:client:OwnerKey', callback.vehicle)
-            end
-            MakeVehicleReadyToDrive(callback.vehicle)
-            vehicle = false
-            QBCore.Functions.Notify(callback.message, "success", 5000)
-        else
-            QBCore.Functions.Notify(callback.message, "error", 5000)
-        end
-    end, vehicle)
+local function GetVehicleMenu()
+	TriggerCallback("mh-parking:server:GetVehicles", function(result)
+		if result.status then
+			if #result.data >= 1 then
+				local options = {}
+				for k, v in pairs(result.data) do
+					if v.state == 3 then
+						local coords = json.decode(v.location)
+						options[#options + 1] = {
+							title = FirstToUpper(v.vehicle) .. " " .. v.plate .. " is parked",
+							description = Lang:t('info.steet', {steet = v.steet}) .. '\n'.. Lang:t('info.fuel', {fuel = v.fuel}) .. '\n'.. Lang:t('info.engine', {engine = v.engine}) .. '\n'.. Lang:t('info.body', {body = v.body}) .. '\n'..Lang:t('info.click_to_set_waypoint'),
+							arrow = false,
+							onSelect = function()
+								SetVehicleWaypoit(coords)
+							end
+						}
+					end
+				end
+				options[#options + 1] = {title = Lang:t('info.close'), icon = "fa-solid fa-stop", description = '', arrow = false, onSelect = function() end}
+				lib.registerContext({id = 'parkMenu', title = "MH Parking V2", icon = "fa-solid fa-warehouse", options = options})
+				lib.showContext('parkMenu')
+			else
+				Notify(Lang:t('info.no_vehicles_parked'), "error", 5000)
+			end
+		end
+	end)
 end
-
--- Park
-local function Park(player, vehicle, warp)
-    AllPlayersLeaveVehicle(vehicle)
-    Wait(3000)
-    SetVehicleEngineOn(vehicle, false, false, true)
-    RequestAnimSet("anim@mp_player_intmenu@key_fob@")
-    TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false)
-    Wait(2000)
-    ClearPedTasks(player)
-    SetVehicleLights(vehicle, 2)
-    Wait(150)
-    SetVehicleLights(vehicle, 0)
-    Wait(150)
-    SetVehicleLights(vehicle, 2)
-    Wait(150)
-    SetVehicleLights(vehicle, 0)
-    TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
-end
-
--- Get the street name where you are at the moment.
-local function GetStreetName(entity)
-    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y,
-        GetEntityCoords(entity).z))
-end
-
--- Get Real Model Name Config.lua to add more
-local function GetRealModel(vehicle)
-    local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
-    local currentModel = GetDisplayNameFromVehicleModel(vehicleProps["model"])
-    if Config.Trailers[currentModel] then
-        currentModel = Config.Trailers[currentModel].model
-    end
-    if Config.Vehicles[currentModel] then
-        currentModel = Config.Vehicles[currentModel].model
-    end
-    return currentModel
-end
-
--- Save
-local function Save(player, vehicle, wheelangle, warp)
-    Park(player, vehicle, warp)
-    local props = QBCore.Functions.GetVehicleProperties(vehicle)
-    if props then
-        local displaytext = GetDisplayNameFromVehicleModel(props.model)
-        local carModelName = GetLabelText(displaytext)
-        local offset = trailerOffset(vehicle)
-        local currenModel = GetRealModel(vehicle)
-        QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
-            if callback.status then
-                if Config.UseMHVehicleKeyItem then
-                    TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', props.plate)
-                end
-                QBCore.Functions.DeleteVehicle(vehicle)
-                QBCore.Functions.Notify(callback.message, "success", 1000)
-            else
-                QBCore.Functions.Notify(callback.message, "error", 5000)
-            end
-        end, {
-            props = props,
-            livery = GetVehicleLivery(vehicle),
-            citizenid = PlayerData.citizenid,
-            plate = props.plate,
-            steerangle = wheelangle,
-            fuel = GetVehicleFuelLevel(vehicle),
-            body = GetVehicleBodyHealth(vehicle),
-            engine = GetVehicleEngineHealth(vehicle),
-            oil = GetVehicleOilLevel(vehicle),
-            model = props.model,
-            modelname = carModelName,
-            cost = Cost,
-            parktime = ParkTime,
-            parking = GetStreetName(vehicle),
-            health = {
-                engine = GetVehicleEngineHealth(vehicle),
-                body = GetVehicleBodyHealth(vehicle),
-                tank = GetVehiclePetrolTankHealth(vehicle)
-            },
-            location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
-                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle)),
-            coords = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y,
-                GetEntityCoords(vehicle).z - offset, GetEntityHeading(vehicle))
-        })
-    end
-end
-
-local function IsNotReservedPosition(coords)
-    local freeSpot = true
-    ParkTime = 0
-    Cost = 0
-    if Config.UseOnlyPreCreatedSpots then
-        freeSpot = false
-    end
-    for _, data in pairs(Config.ReservedParkList) do
-        if #(coords - data.coords) <= tonumber(data.radius) then
-            if Config.IgnoreJobs[PlayerData.job.name] and
-                PlayerData.job.onduty then
-                freeSpot = true
-                QBCore.Functions.Notify(Lang:t('success.parked'), "success", 5000)
-            else
-                if data.parktype == 'nopark' then
-                    freeSpot = false
-                else
-                    if data.parktype == 'prived' then
-                        if PlayerData.citizenid ~= data.citizenid then
-                            freeSpot = false
-                            QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
-                        else
-                            freeSpot = true
-                        end
-                    end
-                    if data.parktype == 'job' then
-                        if not Config.IgnoreJobs[PlayerData.job.name] and
-                            not PlayerData.job.onduty then
-                            freeSpot = false
-                            QBCore.Functions.Notify(Lang:t('system.already_reserved'), "error", 5000)
-                        else
-                            freeSpot = true
-                        end
-                    end
-                    if data.parktype == 'paid' then
-                        Cost = data.cost
-                        ParkTime = data.parktime
-                        freeSpot = true
-                    end
-                    if data.parktype == 'free' then
-                        freeSpot = true
-                    end
-                    ParkOwnerName = data.name
-                end
-            end
-        end
-    end
-    if not freeSpot then
-        QBCore.Functions.Notify(Lang:t('info.not_allowed_to_park'), "error", 5000)
-    end
-    return freeSpot
-end
-
-local function DrawParkedLocation(coords)
-    if Config.UseParkedLocationNames then
-        if Config.UseOnlyPreCreatedSpots then
-            for _, data in pairs(Config.ReservedParkList) do
-                if Config.BuildMode then
-                    extraRadius = tonumber(data.radius) + tonumber(50)
-                else
-                    extraRadius = tonumber(data.radius) + tonumber(25)
-                end
-                if #(coords - data.coords) < tonumber(extraRadius) then
-                    if data.marker then
-                        local vehicle, distance = QBCore.Functions.GetClosestVehicle(data.coords)
-                        local r, g, b = 0, 0, 0
-                        if data.parktype == 'paid' then
-                            r, g, b = Config.ParkColours['blue'].r, Config.ParkColours['blue'].g,
-                                Config.ParkColours['blue'].b
-                            if vehicle and distance <= 1 then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                    Config.ParkColours['green'].b
-                            end
-                        elseif data.parktype == 'prived' then
-                            if PlayerData.citizenid == data.citizenid then
-                                r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                    Config.ParkColours['green'].b
-                            else
-                                r, g, b = Config.ParkColours['red'].r, Config.ParkColours['red'].g,
-                                    Config.ParkColours['red'].b
-                            end
-                        elseif data.parktype == 'job' then
-                            if Config.IgnoreJobs[PlayerData.job.name] and
-                                PlayerData.job.onduty then
-                                r, g, b = Config.ParkColours['orange'].r, Config.ParkColours['orange'].g,
-                                    Config.ParkColours['orange'].b
-                            else
-                                r, g, b = Config.ParkColours['black'].r, Config.ParkColours['black'].g,
-                                    Config.ParkColours['black'].b
-                            end
-                        else
-                            if data.parktype == 'free' then
-                                r, g, b = Config.ParkColours['white'].r, Config.ParkColours['white'].g,
-                                    Config.ParkColours['white'].b
-                                if vehicle and distance <= 1 then
-                                    r, g, b = Config.ParkColours['green'].r, Config.ParkColours['green'].g,
-                                        Config.ParkColours['green'].b
-                                end
-                            end
-                        end
-                        DrawMarker(2, data.markcoords.x, data.markcoords.y, data.markcoords.z + 1, 0.0, 0.0, 0.0, 0.0,
-                            0.0, 0.0, 0.3, 0.2, 0.15, r, g, b, 222, false, false, false, true, false, false, false)
-                        if data.parktype ~= 'free' then
-                            if data.parktype ~= 'nopark' and data.parktype ~= 'paid' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
-                                    "~y~Reserved~s~", 0, 0.04, 0.04)
-                            end
-                            if PlayerData.citizenid ~= data.citizenid then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
-                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
-                            else
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.4,
-                                    "~b~" .. data.display .. "~s~", 0, 0.04, 0.04)
-                            end
-                        else
-                            if data.parktype == 'free' then
-                                Draw3DText(data.markcoords.x, data.markcoords.y, data.markcoords.z - 1.3,
-                                    "~y~" .. data.display .. "~s~", 0, 0.04, 0.04)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-
--- Check Distance To Force Vehicle to the Ground
-local function CheckDistanceToForceGrounded(distance)
-    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
-        for i = 1, #LocalVehicles do
-            if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
-                local tmp = LocalVehicles[i]
-                if DoesEntityExist(LocalVehicles[i].entity) then
-                    local offset = trailerOffset(LocalVehicles[i].entity)
-                    if GetVehicleWheelSuspensionCompression(LocalVehicles[i].entity) == 0 then
-                        SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z - offset)
-                        SetVehicleOnGroundProperly(tmp.entity)
-                        LocalVehicles[i].isGrounded = true
-                    end
-                    if #(GetEntityCoords(PlayerPedId()) - vector3(tmp.location.x, tmp.location.y, tmp.location.z)) < 150 then
-                        if not tmp.isGrounded then
-                            SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z - offset)
-                            SetVehicleOnGroundProperly(tmp.entity)
-                            LocalVehicles[i].isGrounded = true
-                        end
-                    else
-                        LocalVehicles[i].isGrounded = false
-                    end
-                    if Config.DebugMode then
-                        if not tmp.isGrounded then
-                            print("Parking Force Grounded - Plate (" .. tmp.plate .. ") Model (" .. tmp.modelname ..") Grounded (" .. tostring(LocalVehicles[i].isGrounded) .. ") ")
-                        else
-                            print("Parking can\'t force a vehicle to the ground at this moment. (No vehicle neerby)")
-                        end
-                    end
-                end
-            end
-        end
-        Wait(5000)
-    end
-end
-
--- Build Mode Create State
-local function CreateState()
-    if Config.BuildMode then
-        local currentVehicle = GetVehiclePedIsIn(PlayerPedId(), 0)
-        local markerCoords = GetOffsetFromEntityInWorldCoords(currentVehicle, 0.0, 2.5, -1.0)
-        DrawMarker(2, markerCoords.x, markerCoords.y, markerCoords.z + 2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15,
-            0, 255, 26, 126, false, false, false, true, false, false, false)
-        DrawMarker(27, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
-            false, false, false, true, false, false, false)
-        DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 200,
-            false, false, false, true, false, false, false)
-    end
-end
-
--- NUI Menu
-local function closeNUI()
-    SetNuiFocus(false, false)
-    SendNUIMessage({
-        type = "newParkSetup",
-        enable = false
-    })
-    Wait(10)
-end
-
-local function hideNUI()
-    SetNuiFocus(false, false)
-    SendNUIMessage({
-        type = "hide"
-    })
-    Wait(1)
-end
-
-local function openNUI()
-    SetNuiFocus(true, true)
-    SendNUIMessage({
-        type = "newDoorSetup",
-        enable = true
-    })
-    Wait(1)
-end
-
-local function CheckWheelState()
-    for i = 1, #LocalVehicles do
-        if LocalVehicles[i] ~= nil and LocalVehicles[i].entity ~= nil then
-            if DoesEntityExist(LocalVehicles[i].entity) then
-                SetVehicleSteeringAngle(LocalVehicles[i].entity, LocalVehicles[i].steerangle + 0.0)
-            end
-        end
-    end
-end
-
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        PlayerData = QBCore.Functions.GetPlayerData()
-        local id = GetPlayerServerId(PlayerId())
-        TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
-    end
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-    local id = GetPlayerServerId(PlayerId())
-    TriggerServerEvent("mh-parking:server:onjoin", id, PlayerData.citizenid)
-end)
-
-RegisterNetEvent('Config.QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
-end)
-
-RegisterNetEvent('qb-radialmenu:client:onRadialmenuOpen', function()
-    if parkMenu ~= nil then
-        exports['qb-radialmenu']:RemoveOption(parkMenu)
-        parkMenu = nil
-    end
-    if (GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId()) then
-        parkMenu = exports['qb-radialmenu']:AddOption({
-            id = 'park_vehicle',
-            title = 'Park (F5)',
-            icon = "square-parking",
-            type = 'client',
-            event = "mh-parking:client:parking",
-            shouldClose = true
-        }, parkMenu)
-    else
-        local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
-        if vehicle ~= 0 and distance <= 3.0 then
-            if not IsPedInAnyVehicle(PlayerPedId()) then
-                parkMenu = exports['qb-radialmenu']:AddOption({
-                    id = 'park_vehicle',
-                    title = 'Unpark (F5)',
-                    icon = "square-parking",
-                    type = 'client',
-                    event = "mh-parking:client:unparking",
-                    shouldClose = true
-                }, parkMenu)
-            end
-        end
-    end
-end)
 
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
-        if parkMenu ~= nil then
-            exports['qb-radialmenu']:RemoveOption(parkMenu)
-            parkMenu = nil
-        end
+        PlayerData = {}
+        isLoggedIn = false
+		parkedVehicles = {}
+		DeleteAllBlips()
     end
 end)
 
--- Command
-RegisterKeyMapping(Config.Command.park, Lang:t('system.park_or_drive'), 'keyboard', Config.KeyParkBindButton)
-RegisterCommand(Config.Command.park, function()
-    isUsingParkCommand = true
-end, false)
-
-RegisterNUICallback('newParkLocation', function(data, cb)
-    closeNUI()
-    cb('ok')
-    local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
-    local offset = 2.5
-    local markerOffset = GetOffsetFromEntityInWorldCoords(vehicle, 0, offset, 0)
-    Wait(200)
-    TriggerServerEvent('mh-parking:server:AddNewParkingSpot', PlayerData.source, data,
-        markerOffset)
-end)
-
-RegisterNetEvent("mh-parking:client:openmenu", function(source)
-    openNUI()
-    SendNUIMessage({
-        type = "newParkSetup",
-        enable = true
-    })
-end)
-
-RegisterNetEvent("mh-parking:client:closemenu", function(source)
-    hideNUI()
-    SendNUIMessage({
-        type = "hide",
-        enable = false
-    })
-end)
-
-RegisterNUICallback('close', function(data, cb)
-    closeNUI()
-    cb('ok')
-end)
-
--- Events
-RegisterNetEvent("mh-parking:client:addVehicle", function(vehicle)
-    SpawnVehicle(vehicle)
-end)
-
-RegisterNetEvent("mh-parking:client:deleteVehicle", function(vehicle)
-    DeleteLocalVehicle(vehicle)
-end)
-
-RegisterNetEvent("mh-parking:client:unparkVehicle", function(plate, delete)
-    UnparkVehicle(plate, delete)
-end)
-
-RegisterNetEvent("mh-parking:client:refreshVehicles", function(vehicles)
-    GlobalVehicles = vehicles
-    RemoveVehicles(vehicles)
-    Wait(1000)
-    SpawnVehicles(vehicles)
-    Wait(1000)
-end)
-
-RegisterNetEvent("mh-parking:client:unparking", function()
-    local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
-    if distance <= 5.0 then
-        Drive(PlayerPedId(), GetParkeddCar(vehicle), false)
-    else
-        QBCore.Functions.Notify(Lang:t("system.to_far_from_vehicle"), "error", 2000)
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+		PlayerData = GetPlayerData()
+        TriggerServerEvent('mh-parking:server:OnJoin')
     end
 end)
 
-RegisterNetEvent("mh-parking:client:parking", function()
-    local vehicle, distance = QBCore.Functions.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
-    if distance <= 5.0 then
-        if IsNotReservedPosition(GetEntityCoords(vehicle)) then
-            Save(PlayerPedId(), vehicle, false)
-        end
-    else
-        QBCore.Functions.Notify(Lang:t("system.to_far_from_vehicle"), "error", 2000)
-    end
+if Config.Framework ~= 'qb' and Config.Framework ~= 'esx' and Config.Framework ~= 'qbx' then 
+	AddEventHandler('playerSpawned', function()
+		TriggerServerEvent('mh-parking:server:OnJoin')
+	end)
+elseif Config.Framework == 'qb' or Config.Framework == 'esx' or Config.Framework == 'qbx' then 
+	RegisterNetEvent(OnPlayerLoaded)
+	AddEventHandler(OnPlayerLoaded, function()
+		PlayerData = GetPlayerData()
+		TriggerServerEvent('mh-parking:server:OnJoin')	
+	end)
+
+	RegisterNetEvent(OnPlayerUnload)
+	AddEventHandler(OnPlayerUnload, function()
+		PlayerData = {}
+		isLoggedIn = false
+	end)
+end
+
+RegisterNetEvent('mh-parking:client:AddVehicle')
+AddEventHandler('mh-parking:client:AddVehicle', function(result)
+	local vehicle = NetToVeh(result.data.netid)
+	if DoesEntityExist(vehicle) then 
+		SetTable(vehicle, result.data)
+		BlinkVehiclelights(vehicle, 2)
+		FreezeEntityPosition(vehicle, true)
+	end
 end)
 
-RegisterNetEvent('mh-parking:client:setParkedVecihleLocation', function(location)
-    SetNewWaypoint(location.x, location.y)
-    QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
+RegisterNetEvent('mh-parking:client:RemoveVehicle', function(data)
+	local vehicle = NetToVeh(data.netid)
+	if parkedVehicles[data.plate] and parkedVehicles[data.plate].netid == data.netid then
+		if DoesBlipExist(parkedVehicles[data.plate].blip) then RemoveBlip(parkedVehicles[data.plate].blip) end
+		if PlayerData.citizenid == parkedVehicles[data.plate].owner then
+			BlinkVehiclelights(vehicle, 1)
+			FreezeEntityPosition(vehicle, false)
+			parkedVehicles[data.plate].isParked = false 
+		end
+		parkedVehicles[data.plate] = nil
+	end
 end)
 
-RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
-    if PlayerData.citizenid == citizenid then
-        QBCore.Functions.Notify(Lang:t('success.get_vehicle_keys', {
-            plate = plate
-        }), "success")
-        -- TriggerEvent('qb-vehiclekeys:client:AddKeys', plate)
-        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
-    end
+RegisterNetEvent('mh-parking:client:Onjoin')
+AddEventHandler('mh-parking:client:Onjoin', function(data)
+    isLoggedIn = true
+	display3DText = Config.Display3DText
+	saveSteeringAngle = Config.SaveSteeringAngle
+	CreateBlips()
+	if data.status == true then
+		local vehicles = data.vehicles
+		for k, v in pairs(vehicles) do
+			local vehicle = NetToVeh(v.netid)
+			if DoesEntityExist(vehicle) then
+				SetEntityAsMissionEntity(vehicle, true, true)
+				SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
+				RequestCollisionAtCoord(v.location.x, v.location.y, v.location.z)
+				SetVehicleOnGroundProperly(vehicle)
+				SetVehicleProperties(vehicle, v.mods)
+				SetVehicleSteeringAngle(vehicle, v.steerangle + 0.0)
+				DoVehicleDamage(vehicle, v.body, v.engine)
+				SetFuel(vehicle, v.fuel + 0.0)
+				SetTable(vehicle, v)
+				if Config.Framework == 'qb' or Config.Framework == 'esx' or Config.Framework == 'qbx' then
+					if PlayerData ~= nil then
+						if v.owner ~= PlayerData.citizenid then -- if not owner vehicle
+							TriggerServerEvent('mh-parking:server:setVehLockState', v.netid, 2)
+							SetVehicleDoorsLocked(vehicle, 2)
+							FreezeEntityPosition(vehicle, true)
+						elseif v.owner == PlayerData.citizenid then -- if owner vehicle
+							NetworkRequestControlOfEntity(vehicle)
+							SetClientVehicleOwnerKey(v.plate, vehicle)
+							Notify("Je hebt de sleutels gekregen...", "suscess", 5000)
+							TriggerServerEvent('mh-parking:server:setVehLockState', v.netid, 1)
+							SetVehicleDoorsLocked(vehicle, 1)
+							FreezeEntityPosition(vehicle, false)
+						end						
+					end
+				end
+			end
+		end
+	end
 end)
 
--- Server To Client Events
-RegisterNetEvent('mh-parking:client:newParkConfigAdded', function(parkname, data)
-    Config.ReservedParkList[parkname] = data
-    QBCore.Functions.Notify("New park configuration is addedd to the park list.", 'success')
+RegisterNetEvent('mh-parking:client:leaveVehicle', function(data) 
+	LeaveVehicle(data) 
 end)
 
-RegisterNetEvent("mh-parking:client:park", function(state)
-    isUsingParkCommand = true
+RegisterNetEvent('mh-parking:client:toggleParkText', function(data)
+	display3DText = not display3DText
+	local txt
+	if display3DText then txt = "enable" else txt = "disable" end
+	Notify("3D text is now "..txt, "sucess", 5000)
 end)
 
-RegisterNetEvent("mh-parking:client:useparknames", function(state)
-    Config.UseParkedVehicleNames = not Config.UseParkedVehicleNames
+RegisterNetEvent('mh-parking:client:toggleSteerAngle', function(data)
+	saveSteeringAngle = not saveSteeringAngle
+	local txt
+	if saveSteeringAngle then txt = "enable" else txt = "disable" end
+	Notify("Save steering angle is now "..txt, "sucess", 5000)
 end)
 
-RegisterNetEvent("mh-parking:client:useparkspotnames", function(state)
-    Config.UseParkedLocationNames = not Config.UseParkedLocationNames
+RegisterNetEvent('mh-parking:client:OpenParkMenu', function(data)
+	if data.status then
+		GetVehicleMenu()
+	end
 end)
 
-RegisterNetEvent("mh-parking:client:usenotification", function(state)
-    Config.PhoneNotification = not Config.PhoneNotification
-end)
+RegisterKeyMapping('park', 'Park or Drive', 'keyboard', Config.ParkingKeyDisplay)
+RegisterCommand('park', function() isUsingParkCommand = true end, false)
 
-RegisterNetEvent("mh-parking:client:buildmode", function(state)
-    Config.BuildMode = not Config.BuildMode
-end)
-
-RegisterNetEvent("mh-parking:client:autoPark", function(netid)
-    local vehicle = NetworkGetEntityFromNetworkId(netid)
-    if DoesEntityExist(vehicle) then
-        print("Auto Parking.")
-        if IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) then
-            local wheelangle = GetVehicleSteeringAngle(vehicle)
-            Save(PlayerPedId(), vehicle, wheelangle, false)
-        end
-    end
-end)
-
-RegisterNetEvent("mh-parking:client:leftVehicle", function(driver, netid)
-    local player = PlayerPedId()
-    if driver ~= player then
-        local vehicle = NetworkGetEntityFromNetworkId(netid)
-        if DoesEntityExist(vehicle) then
-            if IsPedInAnyVehicle(player) then
-                local currentVehicle = GetVehiclePedIsIn(player)
-                if currentVehicle == vehicle then
-                    TaskLeaveVehicle(player, currentVehicle)
-                end
-            end
-        end
-    end
-end)
-
--- Threads
-
+-- Display 3D text
 CreateThread(function()
-    while true do
-        InParking = true
-        if InParking then
-            if not SpawnedVehicles then
-                RemoveVehicles(GlobalVehicles)
-                TriggerServerEvent("mh-parking:server:refreshVehicles", 'allparking')
-                SpawnedVehicles = true
-                Wait(2000)
-            end
-        else
-            if SpawnedVehicles then
-                RemoveVehicles(GlobalVehicles)
-                SpawnedVehicles = false
-            end
-        end
-        Wait(0)
-    end
+	while true do
+		Wait(0)
+		if isLoggedIn and display3DText then
+			local playerCoords = GetEntityCoords(GetPlayerPed(-1))
+			local txt = ""
+			for k, data in pairs(parkedVehicles) do
+				if data ~= nil and data.isParked then
+					local vehicle = NetToVeh(data.netid)
+					if DoesEntityExist(vehicle) then
+						local entityCoords = GetEntityCoords(vehicle)
+						local distance = GetDistance(playerCoords, entityCoords)
+						if distance < Config.DisplayDistance then
+							local owner, plate, model, brand = data.fullname, data.plate, nil, nil
+							for k, vehicle in pairs(Config.Vehicles) do
+								if vehicle.model == data.model then
+									model, brand = vehicle.name, vehicle.brand
+									break
+								end
+							end
+							if model ~= nil and brand ~= nil then
+								txt = "Model: ~b~"..model.."~s~".. '\n' .. "Brand: ~o~"..brand.."~s~".. '\n' .. "Plate: ~g~"..plate.."~s~".. '\n' .. "Owner: ~y~"..owner.."~s~"
+								if Config.DisplayToAllPlayers then
+									Draw3DText(entityCoords.x, entityCoords.y, entityCoords.z, txt, 0, 0.04, 0.04)
+								else
+									if PlayerData.citizenid == data.owner then
+										Draw3DText(entityCoords.x, entityCoords.y, entityCoords.z, txt, 0, 0.04, 0.04)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
 end)
 
+-- Set vehicle steering angle
 CreateThread(function()
-    if Config.UseParkingSystem then
-        while true do
-            local position = nil
-            local player = PlayerPedId()
-            CreateState()
-            if IsPedInAnyVehicle(player) then
-                position = GetEntityCoords(GetVehiclePedIsIn(player))
-            else
-                position = GetEntityCoords(player)
-            end
-            DrawParkedLocation(position)
-            if IsPedInAnyVehicle(player) then
-                local storedVehicle = GetPlayerInStoredCar(player)
-                local vehicle = GetVehiclePedIsIn(player)
-                local plate = QBCore.Functions.GetPlate(vehicle)
-                if storedVehicle ~= false then
-                    DisplayHelpText(Lang:t("info.press_drive_car"))
-                    if IsControlJustReleased(0, Config.ParkingButton) then
-                        isUsingParkCommand = true
-                    end
-                end
-                if isUsingParkCommand then
-                    isUsingParkCommand = false
-                    if storedVehicle ~= false then
-                        Drive(player, storedVehicle, true)
-                    else
-                        if vehicle then
-                            local speed = GetEntitySpeed(vehicle)
-                            local vehicleCoords = GetEntityCoords(vehicle)
-                            if speed > 0.9 then
-                                QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
-                            elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or
-                                IsThisModelABicycle(GetEntityModel(vehicle)) or
-                                IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) or
-                                IsThisModelAHeli(GetEntityModel(vehicle)) then
-                                if IsNotReservedPosition(vehicleCoords) then
-                                    local wheelangle = GetVehicleSteeringAngle(vehicle)
-                                    Save(PlayerPedId(), vehicle, wheelangle, true)
-                                end
-                            end
-                        end
-                    end
-                end
-            else
-                isUsingParkCommand = false
-            end
-            Wait(0)
-        end
-    end
+	local angle = 0.0
+	local speed = 0.0
+	while true do
+		Wait(0)
+		if isLoggedIn and saveSteeringAngle then
+			local veh = GetVehiclePedIsUsing(PlayerPedId())
+			if DoesEntityExist(veh) then
+				local tangle = GetVehicleSteeringAngle(veh)
+				if tangle > 10.0 or tangle < -10.0 then angle = tangle end
+				speed = GetEntitySpeed(veh)
+				local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
+				if speed < 0.1 and DoesEntityExist(vehicle) and not GetIsTaskActive(PlayerPedId(), 151) and not GetIsVehicleEngineRunning(vehicle) then
+					SetVehicleSteeringAngle(vehicle, angle)
+				end
+			end
+		end
+	end
 end)
 
+-- Keep engine running
+CreateThread(function() 
+	while true do 
+		Wait(0) 
+		if isLoggedIn then
+			if IsPedInAnyVehicle(PlayerPedId(), false) and IsControlPressed(2, 75) and not IsEntityDead(PlayerPedId()) then
+				SetVehicleEngineOn(GetVehiclePedIsIn(PlayerPedId(), false), true, true, true)
+			end
+		end
+	end
+end)
+
+-- Automatic park logic
 CreateThread(function()
-    if Config.UseParkingSystem then
-        while true do
-            MakeVehiclesVisable()
-            Wait(1000)
-        end
-    end
+	while true do 
+		local sleep = 1000 
+		if isLoggedIn then
+			local ped = PlayerPedId()
+			if not isInVehicle and not IsPlayerDead(PlayerId()) then
+				if DoesEntityExist(GetVehiclePedIsTryingToEnter(ped)) and not isEnteringVehicle then
+					currentVehicle = GetVehiclePedIsTryingToEnter(ped)
+					currentSeat = GetSeatPedIsTryingToEnter(ped)
+					isEnteringVehicle = true
+					currentPlate = GetPlate(currentVehicle)
+					local netid = VehToNet(currentVehicle)
+					if not IsDead() and not InLaststand() then
+						TriggerServerEvent('mh-parking:server:EnteringVehicle', netid, currentSeat, currentPlate)
+					end
+				elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(ped)) and not IsPedInAnyVehicle(ped, true) and isEnteringVehicle then
+					isEnteringVehicle = false
+				elseif IsPedInAnyVehicle(ped, false) then
+					isEnteringVehicle = false
+					isInVehicle = true
+					currentVehicle = GetVehiclePedIsUsing(ped)
+					currentSeat = GetPedVehicleSeat(ped)
+					currentPlate = GetPlate(currentVehicle)
+					local netid = VehToNet(currentVehicle)
+					if not IsDead() and not InLaststand() then
+						TriggerServerEvent('mh-parking:server:EnteredVehicle', netid, currentSeat, currentPlate)
+						SetEntityVisible(ped, true)
+					end
+				end
+			elseif isInVehicle then
+				if not IsPedInAnyVehicle(ped, false) and not IsDead() and not InLaststand() then
+					local vehicle = GetVehiclePedIsIn(ped, true)
+					local plate = GetPlate(vehicle)
+					local netid = VehToNet(vehicle)
+					local steerangle = GetVehicleSteeringAngle(vehicle) + 0.0
+					local coords = GetEntityCoords(vehicle)
+					local heading = GetEntityHeading(vehicle)
+					local plate  = GetPlate(vehicle)
+					local street = GetStreetName(vehicle)
+					local location = { x = coords.x, y = coords.y, z = coords.z, h = heading }
+					local canSave = true
+					if AllowToPark(coords) then
+						if Config.OnlyAutoParkWhenEngineIsOff then
+							local engineIsOn = GetIsVehicleEngineRunning(vehicle)
+							if engineIsOn then canSave = false end
+						end
+					else
+						canSave = false
+					end
+					if canSave then
+						AllPlayersLeaveVehicle(vehicle)
+						Wait(2000)
+						TriggerServerEvent('mh-parking:server:LeftVehicle', netid, currentSeat, plate, location, steerangle, street)
+					end
+					isEnteringVehicle = false
+					isInVehicle = false
+					currentVehicle = 0
+					currentSeat = 0
+				elseif not IsPedInAnyVehicle(ped, false) and IsDead() or InLaststand() then
+					isEnteringVehicle = false
+					isInVehicle = false
+					currentVehicle = 0
+					currentSeat = 0
+				end
+			end
+			sleep = 50
+		end
+		Wait(sleep)
+	end
 end)
 
+-- Disable Parked Vehicles Collision
 CreateThread(function()
-    if Config.UseParkingSystem and Config.UseParkedVehicleNames then
-        while true do
-            DisplayParkedOwnerText()
-            Wait(0)
-        end
-    end
+	while true do
+		Wait(0)
+		if isLoggedIn and Config.DisableParkedVehiclesCollision then
+			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+			if vehicle ~= nil and vehicle ~= 0 then
+				for k, v in pairs(parkedVehicles) do
+					local distance = GetDistance(GetEntityCoords(PlayerPedId()), v.location)
+					if distance < 10 then
+						SetEntityNoCollisionEntity(v.entity, vehicle, true)
+                        SetEntityNoCollisionEntity(vehicle, v.entity, true)
+					end
+				end
+			end
+		end
+	end
 end)
-
-CreateThread(function()
-    while true do
-        CheckDistanceToForceGrounded(Config.ForceGroundedDistane)
-        Wait(Config.ForceGroundenInMilSec)
-    end
-end)
-
-CreateThread(function()
-    if Config.UseParkingSystem then
-        while true do
-            CheckWheelState()
-            Wait(0)
-        end
-    end
-end)
-
-
-
-
-

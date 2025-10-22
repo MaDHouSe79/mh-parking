@@ -1,36 +1,34 @@
---[[ ===================================================== ]] --
---[[         MH Realistic Parking Script by MaDHouSe       ]] --
---[[ ===================================================== ]] --
 fx_version 'cerulean'
-games {'gta5'}
+game 'gta5'
 
+description 'MH - Parking'
 author 'MaDHouSe'
-description 'QB Realistic Vehicle Parking'
-version '1.0.0'
-
-ui_page 'html/index.html'
-
-files {'html/*.html', 'html/*.js', 'html/*.css'}
+version '2.0.0'
 
 shared_scripts {
-  '@qb-core/shared/locale.lua',
-  '@qb-core/shared/vehicles.lua',
-  'locales/en.lua', -- change en to your language
-  'config.lua', 
-  'configs/*.lua'
+    '@ox_lib/init.lua',
+    'locales/locale.lua',
+    'locales/*.lua',
+    'shared/config.lua',
+    'shared/vehicles.lua',
+    'shared/functions.lua',
 }
 
 client_scripts {
-  'client/main.lua'
+    'core/framework/client.lua',
+    'client/main.lua',
 }
 
 server_scripts {
-  '@oxmysql/lib/MySQL.lua', 
-  'server/install.lua', -- uncomment this after you restart your server, so it will not run the second time.
-  'server/main.lua', 
-  'server/update.lua'
+    '@oxmysql/lib/MySQL.lua',
+    'core/framework/server.lua',
+    'server/main.lua',
+    'server/update.lua',
 }
 
-dependencies {'oxmysql', 'qb-core'}
+dependencies {
+    'oxmysql',
+    'ox_lib',
+}
 
 lua54 'yes'
