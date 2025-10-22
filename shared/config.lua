@@ -7,18 +7,22 @@ Config.Framework = "qb"             -- For qb/qbx/esx
 Config.FuelScript = "mh-fuel"       -- For qb-fuel/mh-fuel/ox_fuel
 Config.KeyScript = "qb-vehiclekeys" -- For qb-vehiclekeys/qbx_vehiclekeys
 ---------------------------------------------------------------------------------------
--- 3d text above parked vehicles
-Config.Display3DText = false
-Config.DisplayDistance = 15
-Config.DisplayToAllPlayers = false
+
+Config.UseAutoPark = false
+Config.ParkingButton = 155
+Config.KeyParkBindButton = "F5"
 ---------------------------------------------------------------------------------------
-Config.OnlyAutoParkWhenEngineIsOff = true
-Config.keepEngineOnWhenAbandoned = false
+-- 3d text above parked vehicles
+Config.Display3DText = true         -- Default false for improvements
+Config.DisplayDistance = 15
+Config.DisplayToAllPlayers = false  -- Default false for improvements
+---------------------------------------------------------------------------------------
+Config.OnlyAutoParkWhenEngineIsOff = false
+Config.keepEngineOnWhenAbandoned = true 
 ---------------------------------------------------------------------------------------
 Config.DisableParkedVehiclesCollision = false
 ---------------------------------------------------------------------------------------
-Config.Display3DText = false
-Config.SaveSteeringAngle = false
+Config.SaveSteeringAngle = false     -- Default false for improvements
 ---------------------------------------------------------------------------------------
 -- This are gas pumps where you can't use the park system.
 Config.DisableNeedByPumpModels = {

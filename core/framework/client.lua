@@ -47,14 +47,97 @@ function SetClientVehicleOwnerKey(plate, vehicle)
     end
 end
 
+function GetStreetName(entity)
+    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
+end
+
+function LoadModel(model)
+    while not HasModelLoaded(model) do
+        RequestModel(model)
+        Wait(1)
+    end
+end
+
+function LoadAnimDict(dict)
+    if not HasAnimDictLoaded(dict) then
+        RequestAnimDict(dict)
+        while not HasAnimDictLoaded(dict) do Wait(1) end
+    end
+end
+
 function DisplayHelpText(text)
     SetTextComponentFormat('STRING')
     AddTextComponentString(text)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
-function GetStreetName(entity)
-    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
+function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
+    local p = GetGameplayCamCoords()
+    local dist = #(p - vector3(x, y, z))
+    local scale = (1 / dist) * 20
+    local fov = (1 / GetGameplayCamFov()) * 100
+    local scale = scale * fov
+    SetTextScale(scaleX * scale, scaleY * scale)
+    SetTextFont(fontId)
+    SetTextProportional(1)
+    SetTextColour(250, 250, 250, 255)
+    SetTextDropshadow(1, 1, 1, 1, 255)
+    SetTextEdge(2, 0, 0, 0, 150)
+    SetTextDropShadow()
+    SetTextOutline()
+    SetTextEntry("STRING")
+    SetTextCentre(1)
+    AddTextComponentString(textInput)
+    SetDrawOrigin(x, y, z + 2, 0)
+    DrawText(0.0, 0.0)
+    ClearDrawOrigin()
+end
+
+function SetFuel(vehicle, fuel)
+	if not DoesEntityExist(vehicle) then return end
+	if fuel < 0 then fuel = 0 end
+	if fuel > 100 then fuel = 100 end	
+	if GetResourceState(Config.FuelScript) ~= 'missing' then
+		exports[Config.FuelScript]:SetFuel(vehicle, fuel)
+	else
+		NetworkRequestControlOfEntity(vehicle)
+		Entity(vehicle).state:set('fuel', fuel + 0.0, true)
+		SetVehicleFuelLevel(vehicle, fuel + 0.0)
+	end
+end
+
+function GetFuel(vehicle)
+    if not DoesEntityExist(vehicle) then return end
+	if GetResourceState(Config.FuelScript) ~= 'missing' then
+    	return exports[Config.FuelScript]:GetFuel(vehicle)
+	else
+		return Entity(vehicle).state.fuel or -1.0
+	end
+end
+
+function GetPedVehicleSeat(ped)
+    local vehicle = GetVehiclePedIsIn(ped, false)
+    for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
+        if (GetPedInVehicleSeat(vehicle, i) == ped) then return i end
+    end
+    return -2
+end
+
+function GetAllPlayersInVehicle(vehicle)
+    local pedsincar = {}
+    local numPas = GetVehicleModelNumberOfSeats(GetEntityModel(vehicle))
+    for i = -1, numPas, 1 do
+        if not IsVehicleSeatFree(vehicle, i) then
+            local ped = GetPedInVehicleSeat(vehicle, i)
+            if IsPedAPlayer(ped) then
+                pedsincar[#pedsincar + 1] = {
+					playerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)),
+					seat = i
+				}
+            end
+        end
+    end
+    return pedsincar
 end
 
 function DoVehicleDamage(vehicle, body, engine)
