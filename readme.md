@@ -47,11 +47,11 @@
 
 # Admin Commands
 - `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
-- `/removeparkvip [id]` Remove a vip player (admin access)
+- `/removeparkvip [id]` Remove a vip player
+- `/togglesteerangle` Disable or Enable the save teer angle when park
 
 # User Commands
 - `/parkmenu` To Open the parked vehicle menu
-- `/togglesteerangle` Disable or Enable the save teer angle when park
 - `/toggleparktext` Disable or Enable the text above the parked vehicles (for streamers)
 
 # LICENSE
