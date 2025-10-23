@@ -1,9 +1,13 @@
 fx_version 'cerulean'
 game 'gta5'
-
-description 'MH - Parking V2'
+lua54 'yes'
+description 'MH Parking - A Real Life Advanced Parking System.'
 author 'MaDHouSe'
 version '2.0.0'
+
+files {
+	'images/*.*'
+}
 
 shared_scripts {
     '@ox_lib/init.lua',
@@ -17,6 +21,7 @@ shared_scripts {
 client_scripts {
     'core/framework/client.lua',
     'client/main.lua',
+    'client/*.lua',
 }
 
 server_scripts {
@@ -31,4 +36,4 @@ dependencies {
     'ox_lib',
 }
 
-lua54 'yes'
+

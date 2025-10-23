@@ -262,10 +262,10 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
 	local citizenid = GetCitizenId(src)
 	local result = nil
 	if Config.Framework == 'esx' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? ORDER BY vehicle ASC", { citizenid })
+		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? ORDER BY id ASC", { citizenid })
 		result.state = result.stored
 	elseif Config.Framework == 'qb' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? ORDER BY vehicle ASC", { citizenid })
+		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? ORDER BY id ASC", { citizenid })
 	end
 	cb({status = true, data = result})
 end)

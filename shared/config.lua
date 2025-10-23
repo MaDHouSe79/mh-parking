@@ -6,6 +6,7 @@ Config = {}
 Config.Framework = "qb"             -- For qb/qbx/esx
 Config.FuelScript = "mh-fuel"       -- For qb-fuel/mh-fuel/ox_fuel
 Config.KeyScript = "qb-vehiclekeys" -- For qb-vehiclekeys/qbx_vehiclekeys
+Config.MenuScript = "ox_lib"        -- For qb-menu/ox_lib
 ---------------------------------------------------------------------------------------
 
 Config.UseAutoPark = false
