@@ -34,7 +34,7 @@
 - VIP system included
 - Vehicle spawns are server side
 - Automatic police impound.
-- Park Timer, when the timer is 0 it wil bt impounded.
+- Park Timer, when the timer is 0 it will be impounded.
 
 # Dependencies (QB/QBX/ESX)
 - [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
