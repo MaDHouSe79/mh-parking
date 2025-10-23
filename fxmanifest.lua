@@ -35,5 +35,3 @@ dependencies {
     'oxmysql',
     'ox_lib',
 }
-
-

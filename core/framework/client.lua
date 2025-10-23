@@ -31,6 +31,20 @@ elseif Config.Framework == 'qbx' then
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
 end
 
+function SetFuel(vehicle, fuel)
+	if not DoesEntityExist(vehicle) then return end
+	if fuel < 0 then fuel = 0 end
+	if fuel > 100 then fuel = 100 end	
+	NetworkRequestControlOfEntity(vehicle)
+	Entity(vehicle).state:set('fuel', fuel + 0.0, true)
+	SetVehicleFuelLevel(vehicle, fuel + 0.0)
+end
+
+function GetFuel(vehicle)
+    if not DoesEntityExist(vehicle) then return end
+	return Entity(vehicle).state.fuel or -1.0
+end
+
 function Notify(message, type, length)
     if GetResourceState("ox_lib") ~= 'missing' then
         lib.notify({title = "MH Park System", description = message, type = type})
@@ -43,7 +57,7 @@ function SetClientVehicleOwnerKey(plate, vehicle)
     if Config.KeyScript == "qb-vehiclekeys" then
         TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
     elseif Config.KeyScript == "qbx_vehiclekeys" then
-        TriggerServerEvent('mh-parking:server:GiveKeys', plate, VehToNet(vehicle))
+        TriggerEvent('vehiclekeys:client:SetOwner', plate)
     end
 end
 
@@ -91,28 +105,6 @@ function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     SetDrawOrigin(x, y, z + 2, 0)
     DrawText(0.0, 0.0)
     ClearDrawOrigin()
-end
-
-function SetFuel(vehicle, fuel)
-	if not DoesEntityExist(vehicle) then return end
-	if fuel < 0 then fuel = 0 end
-	if fuel > 100 then fuel = 100 end	
-	if GetResourceState(Config.FuelScript) ~= 'missing' then
-		exports[Config.FuelScript]:SetFuel(vehicle, fuel)
-	else
-		NetworkRequestControlOfEntity(vehicle)
-		Entity(vehicle).state:set('fuel', fuel + 0.0, true)
-		SetVehicleFuelLevel(vehicle, fuel + 0.0)
-	end
-end
-
-function GetFuel(vehicle)
-    if not DoesEntityExist(vehicle) then return end
-	if GetResourceState(Config.FuelScript) ~= 'missing' then
-    	return exports[Config.FuelScript]:GetFuel(vehicle)
-	else
-		return Entity(vehicle).state.fuel or -1.0
-	end
 end
 
 function GetPedVehicleSeat(ped)
