@@ -51,6 +51,7 @@
 - `/togglesteerangle` Disable or Enable the save teer angle when park
 
 # User Commands
+- `/park or F5` To park of drive your vehicle.
 - `/parkmenu` To Open the parked vehicle menu
 - `/toggleparktext` Disable or Enable the text above the parked vehicles (for streamers)
 
