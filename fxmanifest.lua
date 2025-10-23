@@ -10,7 +10,7 @@ files {
 }
 
 shared_scripts {
-    '@ox_lib/init.lua',
+    --'@ox_lib/init.lua', (remove -- is you want to uae this)
     'locales/locale.lua',
     'locales/*.lua',
     'shared/config.lua',
@@ -34,4 +34,5 @@ server_scripts {
 dependencies {
     'oxmysql',
     'ox_lib',
+
 }
