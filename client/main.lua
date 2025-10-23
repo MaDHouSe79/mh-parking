@@ -5,7 +5,6 @@ local parkedVehicles, noParkingBlips = {}, {}
 local display3DText = Config.Display3DText
 local saveSteeringAngle = Config.SaveSteeringAngle
 local disableParkedVehiclesCollision = Config.DisableParkedVehiclesCollision
-local IsUsingParkCommand = false
 
 local function AllPlayersLeaveVehicle(vehicle)
     if DoesEntityExist(vehicle) then
@@ -296,9 +295,6 @@ elseif Config.Framework == 'qb' or Config.Framework == 'esx' or Config.Framework
 	end)
 end
 
-RegisterKeyMapping('park', 'Park or Drive', 'keyboard', Config.KeyParkBindButton)
-RegisterCommand('park', function() IsUsingParkCommand = true end, false)
-
 RegisterNetEvent('mh-parking:client:AddVehicle')
 AddEventHandler('mh-parking:client:AddVehicle', function(result)
 	local vehicle = NetToVeh(result.data.netid)
@@ -466,6 +462,7 @@ CreateThread(function()
 end)
 
 -- Automatic park logic
+local IsUsingParkCommand = false
 local isEnteringVehicle = false
 local isInVehicle = false
 local currentVehicle = nil
@@ -554,7 +551,7 @@ CreateThread(function()
 							if IsUsingParkCommand then
 								IsUsingParkCommand = false
 								if storedVehicle ~= false then
-									TriggerServerEvent('mh-parking:server:DriveVehicle', storedVehicle.netid, -1, storedVehicle.plate)
+									TriggerServerEvent('mh-parking:server:EnteringVehicle', storedVehicle.netid, -1, storedVehicle.plate)
 									storedVehicle = nil
 								else
 									local vehicle = GetVehiclePedIsIn(ped, false)
@@ -589,7 +586,7 @@ CreateThread(function()
 												}
 												local steerangle = GetVehicleSteeringAngle(vehicle) + 0.0
 												local street = GetStreetName(vehicle)
-												TriggerServerEvent('mh-parking:server:SaveVehicle', netid, -1, plate, location, steerangle, street)
+												TriggerServerEvent('mh-parking:server:LeftVehicle', netid, -1, plate, location, steerangle, street)
 												isInVehicle = false
 												currentVehicle = 0
 												currentSeat = 0
@@ -610,3 +607,6 @@ CreateThread(function()
 		Wait(sleep)
 	end
 end)
+
+RegisterKeyMapping('park', 'Park or Drive', 'keyboard', Config.KeyParkBindButton)
+RegisterCommand('park', function() IsUsingParkCommand = true end, false)

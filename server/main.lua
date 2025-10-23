@@ -115,7 +115,6 @@ local function SpawnVehicles()
         DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
         local model = parkedVehicles[vehicle.plate].model
         local entity = CreateVehicle(model, coords.x, coords.y, coords.z, coords.h, true, true)
-        -- Wait until the entity is fully spawned.
         while not DoesEntityExist(entity) or NetworkGetNetworkIdFromEntity(entity) == 0 do Wait(1) end
         local netid = NetworkGetNetworkIdFromEntity(entity)
         SetVehicleNumberPlateText(entity, parkedVehicles[vehicle.plate].plate)
@@ -163,88 +162,6 @@ end)
 
 RegisterNetEvent('mh-parking:server:setVehLockState', function(vehNetId, state)
     SetVehicleDoorsLocked(NetworkGetEntityFromNetworkId(vehNetId), state)
-end)
-
-RegisterNetEvent("mh-parking:server:SaveVehicle", function(netid, seat, plate, location, steerangle, street)
-    local src = source
-    if seat == -1 then
-        local vehicle = NetworkGetEntityFromNetworkId(netid)
-        if DoesEntityExist(vehicle) then
-            local citizenid = GetCitizenId(src)
-            local result = nil
-            local owner = nil
-            if Config.Framework == 'esx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
-                if result ~= nil then owner = result.owner end
-            elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
-                if result ~= nil then owner = result.citizenid end
-            end
-            if result ~= nil and result.plate == plate then
-                if owner ~= nil then
-                    if owner == citizenid then 
-                        local mods = json.encode(result.mods)
-                        local fullname = GetPlayerFullNameFromCitizenid(owner)
-                        parkedVehicles[plate] = { 
-                            owner = owner,
-                            fullname = fullname,
-                            netid = netid,
-                            entity = vehicle,
-                            mods = mods,
-                            hash = result.hash,
-                            plate = plate, 
-                            model = result.vehicle,
-                            fuel = result.fuel,
-                            body = result.body,
-                            engine = result.engine,
-                            steerangle = result.steerangle,
-                            location = location
-                        }
-                        if Config.Framework == 'esx' then
-                            MySQL.Async.execute('UPDATE owned_vehicles SET state = ?, location = ?, steerangle = ?, street = ? WHERE owner = ? AND plate = ?', { 3, json.encode(location), tonumber(steerangle), street, citizenid, plate})
-                        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, steerangle = ?, street = ? WHERE citizenid = ? AND plate = ?', { 3, json.encode(location), tonumber(steerangle), street, citizenid, plate})
-                        end    
-                        TriggerClientEvent("mh-parking:client:AddVehicle", -1, {status = true, data = parkedVehicles[plate]})
-                    end                
-                end
-                --print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..owner)
-            end
-        end
-    end
-end)
-
-RegisterNetEvent("mh-parking:server:DriveVehicle", function(netid, seat, plate)
-    local src = source
-    if seat == -1 then
-        local vehicle = NetworkGetEntityFromNetworkId(netid)
-        if DoesEntityExist(vehicle) then
-            local citizenid = GetCitizenId(src)
-            local result = nil
-            local owner = nil
-            if Config.Framework == 'esx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND plate = ?", { citizenid, plate})[1]
-                if result ~= nil then owner = result.owner end
-            elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ?", { citizenid, plate})[1]
-                if result ~= nil then owner = result.citizenid end
-            end
-            if result ~= nil and result.plate == plate then
-                if owner ~= nil then
-                    if result.citizenid == citizenid then
-                        if Config.Framework == 'esx' then
-                            MySQL.Async.execute('UPDATE owned_vehicles SET state = ?, location = ?, street = ?, steerangle = ? WHERE owner = ? AND plate = ?', { 0, nil, nil, 0, citizenid, plate })
-                        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, steerangle = ? WHERE citizenid = ? AND plate = ?', { 0, nil, nil, 0, citizenid, plate })
-                        end
-                        RemoveVehicle(netid)
-                        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid, owner = citizenid, entity = vehicle, plate = plate})
-                    end
-                end
-                --print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
-            end
-        end
-    end
 end)
 
 RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat, plate)
