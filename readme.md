@@ -44,8 +44,7 @@
 - Step 1: First stop your server.
 - Step 2: Copy the directory `mh-parking` to `resources/[mh]/`.
 - Stap 3: Add `ensure [mh]` in `server.cfg` below `ensure [defaultmaps]`.
-- Stap 4: For QBX you need to set SetConvarReplicated('game_enableFlyThroughWindscreen', 'true') to false in `qbx_seatbelt/server/main.lua` line 1
-- Step 5: Start your server.
+- Step 4: Start your server.
 
 # Admin Commands
 - `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
