@@ -8,14 +8,17 @@ Config.FuelScript = "mh-fuel"        -- For qb-fuel/mh-fuel/ox_fuel
 Config.KeyScript = "qb-vehiclekeys" -- For qb-vehiclekeys/qbx_vehiclekeys
 Config.MenuScript = "ox_lib"         -- For qb-menu/ox_lib
 ---------------------------------------------------------------------------------------
-
 Config.UseAutoPark = true
 Config.ParkingButton = 155
 Config.KeyParkBindButton = "F5"
 ---------------------------------------------------------------------------------------
+Config.UseAsVip = false
+Config.DefaultMaxParking = 1
+---------------------------------------------------------------------------------------
+
 -- 3d text above parked vehicles
 Config.Display3DText = true         -- Default false for improvements
-Config.DisplayDistance = 15
+Config.DisplayDistance = 5
 Config.DisplayToAllPlayers = false  -- Default false for improvements
 ---------------------------------------------------------------------------------------
 Config.OnlyAutoParkWhenEngineIsOff = true
