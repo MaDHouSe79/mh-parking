@@ -122,7 +122,8 @@ local function PrepeareVehicles()
                     body = vehicle.body,
                     engine = vehicle.engine,
                     steerangle = tonumber(vehicle.steerangle) + 0.0,
-                    location = coords
+                    location = coords,
+                    blip = false,
                 }
             end
         end
@@ -242,7 +243,6 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                 result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
                 if result ~= nil and result.citizenid ~= nil then owner = result.citizenid end
             end
-
             if result ~= nil and result.plate == plate and owner ~= nil then
                 if owner == citizenid then 
                     local canSave = CanSave(src)
@@ -262,7 +262,8 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                             body = result.body,
                             engine = result.engine,
                             steerangle = result.steerangle,
-                            location = location
+                            location = location,
+                            blip = false,
                         }
                         if Config.Framework == 'esx' then
                             MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, steerangle = ?, street = ? WHERE owner = ? AND plate = ?', { 3, json.encode(location), tonumber(steerangle), street, citizenid, plate})
@@ -354,12 +355,12 @@ AddCommand("removeparkvip", 'Remove player as vip', {}, true, function(source, a
 	end
 end, 'admin')
 
+-- User Commands
 AddCommand("togglesteerangle", 'Toggle steer angle on or off', {}, true, function(source, args)
     local src = source
-    TriggerClientEvent('mh-parking:client:toggleSteerAngle', -1)
-end, 'admin')
+    TriggerClientEvent('mh-parking:client:toggleSteerAngle', src)
+end)
 
--- User Commands
 AddCommand("toggleparktext", 'Toggle park text on or off', {}, true, function(source, args)
     local src = source
     TriggerClientEvent('mh-parking:client:toggleParkText', src)

@@ -3,30 +3,30 @@
 -- [[ ===================================================== ]] --
 Config = {}
 ---------------------------------------------------------------------------------------
-Config.Framework = "qb"             -- For qb/qbx/esx
+Config.Framework = "qb"              -- For qb/qbx/esx
 Config.FuelScript = "mh-fuel"        -- For qb-fuel/mh-fuel/ox_fuel
-Config.KeyScript = "qb-vehiclekeys" -- For qb-vehiclekeys/qbx_vehiclekeys
+Config.KeyScript = "qb-vehiclekeys"  -- For qb-vehiclekeys/qbx_vehiclekeys
 Config.MenuScript = "ox_lib"         -- For qb-menu/ox_lib
 ---------------------------------------------------------------------------------------
-Config.UseAutoPark = true
-Config.ParkingButton = 155
-Config.KeyParkBindButton = "F5"
+Config.UseAutoPark = false           -- When false it uses the F3 button of /park command when the engine is off.
+Config.ParkingButton = 170           -- QB (155 = F5) QBX (170 = F3)
+Config.KeyParkBindButton = "F3"
 ---------------------------------------------------------------------------------------
+-- VIP System
 Config.UseAsVip = false
 Config.DefaultMaxParking = 1
 ---------------------------------------------------------------------------------------
-
 -- 3d text above parked vehicles
-Config.Display3DText = true         -- Default false for improvements
+Config.Display3DText = true          -- Default false for improvement
+Config.DisplayToAllPlayers = false   -- Default false for improvement
 Config.DisplayDistance = 5
-Config.DisplayToAllPlayers = false  -- Default false for improvements
 ---------------------------------------------------------------------------------------
 Config.OnlyAutoParkWhenEngineIsOff = true
 Config.keepEngineOnWhenAbandoned = true 
 ---------------------------------------------------------------------------------------
 Config.DisableParkedVehiclesCollision = false
 ---------------------------------------------------------------------------------------
-Config.SaveSteeringAngle = true     -- Default false for improvements
+Config.SaveSteeringAngle = false     -- Default false for improvement
 ---------------------------------------------------------------------------------------
 -- This are gas pumps where you can't use the park system.
 Config.DisableNeedByPumpModels = {
