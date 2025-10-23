@@ -12,7 +12,7 @@ local function IfPlayerIsVIPGetMaxParking(src)
 		local data = nil
 		if Config.Framework == 'esx' then
 			data = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = ?", { citizenid })[1]
-		elseif Config.Framework == 'qb' then
+		elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
 			data = MySQL.Sync.fetchAll("SELECT * FROM players WHERE citizenid = ?", { citizenid })[1]
 		end
 		if data ~= nil and data.parkvip == 1 then
@@ -151,7 +151,7 @@ local function CanSave(src)
     local citizenid = GetCitizenId(src)
     if Config.Framework == 'esx' then
         totalParked = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ?", { citizenid, 3 })
-    elseif Config.Framework == 'qb' then
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
         totalParked = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ?", { citizenid, 3 })
     end
     if Config.UseAsVip then defaultMax = IfPlayerIsVIPGetMaxParking(src) end
@@ -297,7 +297,7 @@ CreateCallback("mh-parking:server:GetParkedVehicles", function(source, cb)
 	if Config.Framework == 'esx' then
 		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = 3")
 		result.state = result.stored
-	elseif Config.Framework == 'qb' then
+	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
 		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = 3")
 	end
 	cb({status = true, data = result})
@@ -310,7 +310,7 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
 	if Config.Framework == 'esx' then
 		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? ORDER BY id ASC", { citizenid })
 		result.state = result.stored
-	elseif Config.Framework == 'qb' then
+	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
 		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? ORDER BY id ASC", { citizenid })
 	end
 	cb({status = true, data = result})
@@ -328,7 +328,7 @@ AddCommand("addparkvip", 'Add player as vip', {}, true, function(source, args)
 				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 1, amount, Player.identifier })
 				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
 				Notify(src, 'is added as vip', "success", 10000)
-			elseif Config.Framework == 'qb' then
+			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
 				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 1, amount, Player.PlayerData.citizenid })
 				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
 				Notify(src, 'is added as vip', "success", 10000)
@@ -346,7 +346,7 @@ AddCommand("removeparkvip", 'Remove player as vip', {}, true, function(source, a
 			if Config.Framework == 'esx' then
 				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 0, 0, Player.identifier })
 				Notify(src, 'player removed as vip', "success", 10000)
-			elseif Config.Framework == 'qb' then
+			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
 				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 0, 0, Player.PlayerData.citizenid })
 				Notify(src, 'player removed as vip', "success", 10000)
 			end
