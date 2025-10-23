@@ -10,7 +10,7 @@ files {
 }
 
 shared_scripts {
-    --'@ox_lib/init.lua', (remove -- is you want to uae this)
+    --'@ox_lib/init.lua', -- (remove -- if you want to uae this)
     'locales/locale.lua',
     'locales/*.lua',
     'shared/config.lua',
@@ -36,3 +36,4 @@ dependencies {
     'ox_lib',
 
 }
+
