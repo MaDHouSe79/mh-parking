@@ -32,6 +32,7 @@
 # MH Park System (QB/QBX/ESX) by MaDHouSe79
 - With auto park and unpark vehicles when you press `F`.
 - VIP system included
+- Vehicle spawns are server side
 
 # Dependencies (QB/QBX/ESX)
 - [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
