@@ -1,6 +1,3 @@
--- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
--- [[ ===================================================== ]] --
 local Translations = {
     info = {
         ['not_the_owner'] = "Je bent niet de eigenaar van dit voertuig...",
