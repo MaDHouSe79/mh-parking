@@ -31,6 +31,20 @@ elseif Config.Framework == 'qbx' then
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
 end
 
+function LoadModel(model)
+    while not HasModelLoaded(model) do
+        RequestModel(model)
+        Wait(1)
+    end
+end
+
+function LoadAnimDict(dict)
+    if not HasAnimDictLoaded(dict) then
+        RequestAnimDict(dict)
+        while not HasAnimDictLoaded(dict) do Wait(1) end
+    end
+end
+
 function SetFuel(vehicle, fuel)
 	if not DoesEntityExist(vehicle) then return end
 	if fuel < 0 then fuel = 0 end
@@ -53,30 +67,8 @@ function Notify(message, type, length)
     end
 end
 
-function SetClientVehicleOwnerKey(plate, vehicle)
-    if Config.KeyScript == "qb-vehiclekeys" then
-        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
-    elseif Config.KeyScript == "qbx_vehiclekeys" then
-        TriggerEvent('vehiclekeys:client:SetOwner', plate)
-    end
-end
-
 function GetStreetName(entity)
     return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
-end
-
-function LoadModel(model)
-    while not HasModelLoaded(model) do
-        RequestModel(model)
-        Wait(1)
-    end
-end
-
-function LoadAnimDict(dict)
-    if not HasAnimDictLoaded(dict) then
-        RequestAnimDict(dict)
-        while not HasAnimDictLoaded(dict) do Wait(1) end
-    end
 end
 
 function DisplayHelpText(text)

@@ -123,9 +123,11 @@ local function GetVehicleMenu()
 				local num = 1
 				for k, v in pairs(vehicles) do
 					local description = Lang:t('vehicle.plate', {plate = v.plate}) .. '\n' .. Lang:t('vehicle.fuel', {fuel = v.fuel}) .. '\n' .. Lang:t('vehicle.engine', {engine = Round(v.engine / 10, 0)}) .. '\n' .. Lang:t('vehicle.body', {body = Round(v.body / 10, 0)})
+					local txt = "unknow"
 					options[#options + 1] = {
 						id = num,
-						title = Config.Vehicles[GetHashKey(v.vehicle:lower())].name.." "..Config.Vehicles[GetHashKey(v.vehicle:lower())].brand,
+						title = Config.Vehicles[GetHashKey(v.vehicle)].name.." "..Config.Vehicles[GetHashKey(v.vehicle)].brand,
+						icon = "nui://mh-parking/images/" .. v.vehicle:lower() .. ".png",
 						description = description,
 						arrow = false,
 						onSelect = function()
@@ -142,7 +144,15 @@ local function GetVehicleMenu()
 				local options = {{header = "Call Vehicle Delivery", isMenuHeader = true}}
 				for k, v in pairs(vehicles) do
 					local description = Lang:t('vehicle.model', {model = Config.Vehicles[GetHashKey(v.vehicle:lower())].name}) .. "<br />" .. Lang:t('vehicle.brand', {brand = Config.Vehicles[GetHashKey(v.vehicle:lower())].brand}) .. "<br />" .. Lang:t('vehicle.plate', {plate = v.plate}) .. '<br />' .. Lang:t('vehicle.fuel', {fuel = v.fuel}) .. '<br />' .. Lang:t('vehicle.engine', {engine = Round(v.engine / 10, 0)}) .. '<br />' .. Lang:t('vehicle.body', {body = Round(v.body / 10, 0)})
-					if v.state == 1 then options[#options + 1] = {header = "", txt = '<table><td style="text-align:left; height: 50px; padding: 5px;"><img src='.."nui://mh-parking/images/" .. v.vehicle:lower() .. ".png"..' style="width:80px;"></td><td style="text-align:top; height: 50px; padding: 15px;">'..description..'</td></table>', params = {event = 'mh-parking:client:CallVehicleDelivery', args = {model = v.vehicle:lower(), plate = v.plate}}} end
+					if v.state == 1 then 
+						options[#options + 1] = {
+							header = "", 
+							txt = '<table><td style="text-align:left; height: 50px; padding: 5px;"><img src='.."nui://mh-parking/images/" .. v.vehicle:lower() .. ".png"..' style="width:80px;"></td><td style="text-align:top; height: 50px; padding: 15px;">'..description..'</td></table>', 
+							params = {event = 'mh-parking:client:CallVehicleDelivery', 
+								args = {model = v.vehicle:lower(), plate = v.plate}
+							}
+						} 
+					end
 				end
 				options[#options + 1] = {header = Lang:t('info.close'), txt = '', params = {event = 'qb-menu:client:closeMenu'}}
 				exports['qb-menu']:openMenu(options)

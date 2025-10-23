@@ -33,6 +33,8 @@
 - With auto park and unpark vehicles when you press `F`.
 - VIP system included
 - Vehicle spawns are server side
+- Automatic police impound.
+- Park Timer, when the timer is 0 it wil bt impounded.
 
 # Dependencies (QB/QBX/ESX)
 - [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
@@ -49,6 +51,8 @@
 - `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
 - `/removeparkvip [id]` Remove a vip player
 - `/togglesteerangle` Disable or Enable the save teer angle when park
+- `/parkresetall` Reset all player vehicles.
+- `/parkresetplayer [id]` Reset all vehicles for this player.
 
 # User Commands
 - `/park or F5` To park of drive your vehicle.

@@ -3,28 +3,47 @@
 -- [[ ===================================================== ]] --
 Config = {}
 ---------------------------------------------------------------------------------------
-Config.Framework = "qb"              -- For qb/qbx/esx
-Config.FuelScript = "mh-fuel"        -- For qb-fuel/mh-fuel/ox_fuel
-Config.KeyScript = "qb-vehiclekeys"  -- For qb-vehiclekeys/qbx_vehiclekeys
-Config.MenuScript = "ox_lib"         -- For qb-menu/ox_lib
+Config.Framework = "qb"               -- For qb/qbx/esx
+Config.FuelScript = "qb-fuel"         -- For qb-fuel/mh-fuel/ox_fuel
+Config.KeyScript = "qb-vehiclekeys"   -- For qb-vehiclekeys/qbx_vehiclekeys
+Config.MenuScript = "qb-menu"         -- For qb-menu/ox_lib
 ---------------------------------------------------------------------------------------
-Config.UseAutoPark = false           -- When false it uses the F3 button of /park command when the engine is off.
-Config.ParkingButton = 170           -- QB (155 = F5) QBX (170 = F3)
-Config.KeyParkBindButton = "F3"
+Config.UseAutoPark = true             -- When false it uses the F3 button of /park command or When true Press F when the engine is off.
+Config.ParkingButton = 155            -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.KeyParkBindButton = "F5"       -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
 ---------------------------------------------------------------------------------------
--- VIP System
-Config.UseAsVip = false
-Config.DefaultMaxParking = 1
+Config.UseAsVip = false               -- when true set Config.DefaultMaxParking to 0 or keep it 1
+Config.UseTimerPark = true            -- When true this will delete vehicle after a amount of time not used.
+Config.DefaultMaxParking = 1          -- This is default 0 when you have Config.UseAsVip = true
+-- Police Impound
+Config.PayTimeInSecs = 10             -- 10 dollar or euro...
+Config.ParkPrice = 100                -- price to park
+Config.MaxParkTime = 259200           -- 3 Days, after that the vehicle wil be impounded.
+-- 1 Day  = 86400 Seconden   10 Days   = 864000 Seconden   2500    Days = 216000000 Seconden
+-- 2 Days = 172800 Seconden  20 Days   = 1728000 Seconden  5000    Days = 432000000 Seconden
+-- 3 Days = 259200 Seconden  30 Days   = 2592000 Seconden  10000   Days = 864000000 Seconden
+-- 4 Days = 345600 Seconden  40 Days   = 3456000 Seconden  25000   Days = 2160000000 Seconden
+-- 5 Days = 432000 Seconden  50 Days   = 4320000 Seconden  50000   Days = 4320000000 Seconden
+-- 6 Days = 518400 Seconden  100 Days  = 8640000 Seconden  100000  Days = 8640000000 Seconden
+-- 7 Days = 604800 Seconden  250 Days  = 21600000 Seconden	250000  Days = 21600000000 Seconden
+-- 8 Days = 691200 Seconden  500 Days  = 43200000 Seconden 500000  Days = 43200000000 Seconden
+-- 9 Days = 777600 Seconden  1000 Days = 86400000 Seconden 1000000 Days = 86400000000 Seconden
+
 ---------------------------------------------------------------------------------------
 -- 3d text above parked vehicles
 Config.Display3DText = true          -- Default false for improvement
+Config.DisplayToPlolice = true
 Config.DisplayToAllPlayers = false   -- Default false for improvement
 Config.DisplayDistance = 5
+Config.DisplayOwner = true
 ---------------------------------------------------------------------------------------
-Config.OnlyAutoParkWhenEngineIsOff = true
+-- Default true you can only park when the engine is off
+Config.OnlyAutoParkWhenEngineIsOff = true 
+-- This wil keep the engine on while you get out, 
+-- but heb you press g first the engine is off and you can park.
 Config.keepEngineOnWhenAbandoned = true 
 ---------------------------------------------------------------------------------------
-Config.DisableParkedVehiclesCollision = false
+Config.DisableParkedVehiclesCollision = false -- Default false for improvement
 ---------------------------------------------------------------------------------------
 Config.SaveSteeringAngle = false     -- Default false for improvement
 ---------------------------------------------------------------------------------------
@@ -40,7 +59,7 @@ Config.DisableNeedByPumpModels = {
 }
 ---------------------------------------------------------------------------------------
 Config.UseRadiusForBlips = true -- When true, you see a circle raduis on the map where you can.t park.
--- This are locations where you can't use the park system.
+-- This are locations where you can't use the park system,
 -- the reason for this is it can be that you need to use the vehicle on that point.
 -- So if you want that, you can't use the park system cause you can't use the vehicle when parked.
 -- If you want to see the radius on the map you need to set Config.DebugBlipForRadius to true
@@ -95,3 +114,21 @@ Config.AllowedParkingLots = {
     {coords = vector3(131.8025, -712.3470, 32.4903), radius = 50.0, color = 2, sprite = 237},   -- parkinglot 17
     -- you can add here.
 }
+
+-- Police impound (server side)
+function PoliceImpound(plate, fullImpound, price, body, engine, fuel)
+    if Config.Framework == 'esx' then
+        -- add your trigger here
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        TriggerEvent("police:server:Impound", plate, fullImpound, price, body, engine, fuel)                               
+    end
+end
+
+-- Vehicle keys (client side)
+function SetClientVehicleOwnerKey(plate, vehicle)
+    if Config.KeyScript == "qb-vehiclekeys" then
+        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
+    elseif Config.KeyScript == "qbx_vehiclekeys" then
+        TriggerEvent('vehiclekeys:client:SetOwner', plate)
+    end
+end
