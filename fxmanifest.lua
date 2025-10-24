@@ -34,4 +34,6 @@ server_scripts {
 dependencies {
     'oxmysql',
     'ox_lib',
+
 }
+
