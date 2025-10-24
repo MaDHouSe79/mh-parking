@@ -50,8 +50,8 @@
 - `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
 - `/removeparkvip [id]` Remove a vip player
 - `/togglesteerangle` Disable or Enable the save teer angle when park
-- `/parkresetall` Reset all player vehicles.
-- `/parkresetplayer [id]` Reset all vehicles for this player.
+- `/parkresetall` Reset all players vehicles.
+- `/parkresetplayer [id]` Reset all player vehicles for this player.
 
 # User Commands
 - `/park or F5` To park of drive your vehicle.
