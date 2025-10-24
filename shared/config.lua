@@ -4,7 +4,7 @@
 Config = {}
 ---------------------------------------------------------------------------------------
 Config.Framework = "qb"               -- For qb/qbx/esx
-Config.FuelScript = "qb-fuel"         -- For qb-fuel/mh-fuel/ox_fuel
+Config.FuelScript = "mh-fuel"         -- For qb-fuel/mh-fuel/ox_fuel
 Config.KeyScript = "qb-vehiclekeys"   -- For qb-vehiclekeys/qbx_vehiclekeys
 Config.MenuScript = "qb-menu"         -- For qb-menu/ox_lib
 ---------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ Config.KeyParkBindButton = "F5"       -- QB (F5 = 155) / QBX (F3 = 170) Check: h
 ---------------------------------------------------------------------------------------
 Config.UseAsVip = false               -- when true set Config.DefaultMaxParking to 0 or keep it 1
 Config.UseTimerPark = true            -- When true this will delete vehicle after a amount of time not used.
-Config.DefaultMaxParking = 1          -- This is default 0 when you have Config.UseAsVip = true
+Config.DefaultMaxParking = 3          -- This is default 0 when you have Config.UseAsVip = true
 -- Police Impound
 Config.PayTimeInSecs = 10             -- 10 dollar or euro...
 Config.ParkPrice = 100                -- price to park

@@ -89,15 +89,15 @@ end
 
 local function PrepeareVehicles()
     RemoveVehicles()
-    parkedVehicles = {}
+    Wait(1000)
     local vehicles = nil
     if Config.Framework == 'esx' then
-        vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles")
+        vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = 3")
     elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-        vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles")
+        vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = 3")
     end
     for k, vehicle in pairs(vehicles) do
-        if vehicle.state == 3 then
+        if not parkedVehicles[vehicle.plate] then
             local owner = nil
             if vehicle.citizenid ~= nil then
                 owner = vehicle.citizenid
@@ -107,55 +107,52 @@ local function PrepeareVehicles()
             local fullname = GetPlayerFullNameFromCitizenid(vehicle.citizenid)
             local coords = json.decode(vehicle.location)
             local mods = json.decode(vehicle.mods)
-            if not parkedVehicles[vehicle.plate] then
-                parkedVehicles[vehicle.plate] = {
-                    owner = owner,
-                    fullname = fullname,
-                    netid = nil,
-                    entity = nil,
-                    mods = mods,
-                    hash = vehicle.hash,
-                    plate = vehicle.plate, 
-                    model = vehicle.vehicle,
-                    fuel = vehicle.fuel,
-                    body = vehicle.body,
-                    engine = vehicle.engine,
-                    steerangle = tonumber(vehicle.steerangle) + 0.0,
-                    location = coords,
-                    blip = false,
-                }
-            end
+            parkedVehicles[vehicle.plate] = {
+                owner = owner,
+                fullname = fullname,
+                netid = nil,
+                entity = nil,
+                mods = mods,
+                hash = vehicle.hash,
+                plate = vehicle.plate, 
+                model = vehicle.vehicle,
+                fuel = vehicle.fuel,
+                body = vehicle.body,
+                engine = vehicle.engine,
+                steerangle = tonumber(vehicle.steerangle) + 0.0,
+                location = coords,
+                blip = false,
+                parked = true,
+            }
         end
     end  
 end
 
 local function SpawnVehicles(src)
-    if parkedVehicles == nil or #parkedVehicles <= 0 then
-        PrepeareVehicles()
-    end
+    PrepeareVehicles()
     Wait(1000)
-    for k, vehicle in pairs(parkedVehicles) do
-        local coords = parkedVehicles[vehicle.plate].location
-        DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
-        local model = parkedVehicles[vehicle.plate].model
-        local entity = CreateVehicle(model, coords.x, coords.y, coords.z, coords.h, true, true)
-
-        local zoek = true
-		local count = 15
-		while zoek do
-			if not DoesEntityExist(entity) then 
-				count = count - 1
-			elseif DoesEntityExist(entity) then 
-				zoek = false
-			end
-			if count <= 0 then zoek = false end
-		    Wait(100)
-		end
-
-        local netid = NetworkGetNetworkIdFromEntity(entity)
-        SetVehicleNumberPlateText(entity, parkedVehicles[vehicle.plate].plate)
-        parkedVehicles[vehicle.plate].netid = netid
-        parkedVehicles[vehicle.plate].entity = entity
+    for k, v in pairs(parkedVehicles) do
+        if parkedVehicles[v.plate] then
+            local coords = parkedVehicles[v.plate].location
+            DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
+            local model = parkedVehicles[v.plate].model
+            local entity = CreateVehicle(model, coords.x, coords.y, coords.z, coords.h, true, true)
+            local zoek = true
+            local count = 20
+            while zoek do
+                if not DoesEntityExist(entity) then 
+                    count = count - 1
+                elseif DoesEntityExist(entity) then 
+                    zoek = false
+                end
+                if count <= 0 then zoek = false end
+                Wait(100)
+            end
+            local netid = NetworkGetNetworkIdFromEntity(entity)
+            SetVehicleNumberPlateText(entity, v.plate)
+            parkedVehicles[v.plate].netid = netid
+            parkedVehicles[v.plate].entity = entity
+        end
     end
     TriggerClientEvent("mh-parking:client:Onjoin", src, {data = parkedVehicles})
 end
@@ -190,18 +187,12 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
-AddEventHandler('onResourceStart', function(resource) 
-    if resource == GetCurrentResourceName() then
-        PrepeareVehicles()
-    end 
-end)
-
 RegisterNetEvent("mh-parking:server:OnJoin", function()
     local src = source
     if not hasSpawned then
         hasSpawned = true
         SpawnVehicles(src)
-        --print(json.encode(parkedVehicles,{indent=true}))
+        TriggerClientEvent("mh-parking:client:Onjoin", src, {data = parkedVehicles})  
     else
         if parkedVehicles ~= nil and #parkedVehicles >= 1 then
             TriggerClientEvent("mh-parking:client:Onjoin", src, {data = parkedVehicles})             
@@ -308,6 +299,7 @@ RegisterNetEvent('mh-parking:server:AllPlayersLeaveVehicle', function(vehicleNet
     end
 end)
 
+-- Callbacks
 CreateCallback("mh-parking:server:GetParkedVehicles", function(source, cb)
 	cb(parkedVehicles)
 end)
@@ -317,10 +309,10 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
 	local citizenid = GetCitizenId(src)
 	local result = nil
 	if Config.Framework == 'esx' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ? ORDER BY id ASC", { citizenid, 1 })
+		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ? ORDER BY id ASC", { citizenid, 3 })
 		result.state = result.stored
 	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", { citizenid, 1 })
+		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", { citizenid, 3 })
 	end
 	cb({status = true, data = result})
 end)

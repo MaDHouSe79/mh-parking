@@ -34,25 +34,24 @@
 - VIP system included
 - Vehicle spawns are server side
 - Automatic police impound.
-- Park Timer, when the timer is 0 it wil bt impounded.
+- Park Timer, when the timer is 0 it will be impounded.
 
 # Dependencies (QB/QBX/ESX)
 - [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - [ox_lib](https://github.com/overextended/ox_lib/releases)
 
 # Installation
-- Step 1: First stop your server.
 - Step 2: Copy the directory `mh-parking` to `resources/[mh]/`.
 - Stap 3: Add `ensure [mh]` in `server.cfg` below `ensure [defaultmaps]`.
-- Stap 4: For QBX you need to set SetConvarReplicated('game_enableFlyThroughWindscreen', 'true') to false in `qbx_seatbelt/server/main.lua` line 1
-- Step 5: Start your server.
+- Step 4: Edit the config file in `shared/config.lua` to your needs.
+- Step 5: Retart your server.
 
 # Admin Commands
 - `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
 - `/removeparkvip [id]` Remove a vip player
 - `/togglesteerangle` Disable or Enable the save teer angle when park
-- `/parkresetall` Reset all player vehicles.
-- `/parkresetplayer [id]` Reset all vehicles for this player.
+- `/parkresetall` Reset all players vehicles.
+- `/parkresetplayer [id]` Reset all player vehicles for this player.
 
 # User Commands
 - `/park or F5` To park of drive your vehicle.

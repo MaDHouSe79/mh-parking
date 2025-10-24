@@ -159,11 +159,13 @@ local function CreateBlips()
 end
 
 local function SetTable(entity, data)
-	if parkedVehicles[data.plate] and parkedVehicles[data.plate].blip ~= false then
-		if DoesBlipExist(parkedVehicles[data.plate].blip) then
-			RemoveBlip(parkedVehicles[data.plate].blip)
+	if parkedVehicles[data.plate] then 
+		if parkedVehicles[data.plate].blip ~= nil then
+			if DoesBlipExist(parkedVehicles[data.plate].blip) then
+				RemoveBlip(parkedVehicles[data.plate].blip)
+				parkedVehicles[data.plate].blip = nil
+			end
 		end
-		parkedVehicles[data.plate] = {} 
 	end
 	local blip = false
 	if data.owner == PlayerData.citizenid then blip = CreateParkedBlip(data) end
@@ -348,8 +350,7 @@ AddEventHandler('mh-parking:client:Onjoin', function(result)
 		for _, v in pairs(vehicles) do
 			if not parkedVehicles[v.plate] then
 				local vehicle = NetToVeh(v.netid)
-				if DoesEntityExist(vehicle) then
-					SetTable(vehicle, v)							
+				if DoesEntityExist(vehicle) then					
 					SetEntityAsMissionEntity(vehicle, true, true)
 					SetVehicleProperties(vehicle, v.mods)
 					RequestCollisionAtCoord(v.location.x, v.location.y, v.location.z)
@@ -362,16 +363,16 @@ AddEventHandler('mh-parking:client:Onjoin', function(result)
 					DoVehicleDamage(vehicle, v.body, v.engine)
 					SetFuel(vehicle, v.fuel + 0.0)
 					SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
+					FreezeEntityPosition(vehicle, true)
+					SetTable(vehicle, v)	
 					if Config.Framework == 'qb' or Config.Framework == 'esx' or Config.Framework == 'qbx' then
 						if PlayerData ~= nil then
 							if v.owner ~= PlayerData.citizenid then -- if not owner vehicle
 								DoorsLocked(v.netid)
-								FreezeEntityPosition(vehicle, true)
 							elseif v.owner == PlayerData.citizenid then -- if owner vehicle
 								NetworkRequestControlOfEntity(vehicle)
 								SetClientVehicleOwnerKey(v.plate, vehicle)
-								DoorsUnocked(v.netid)
-								FreezeEntityPosition(vehicle, false)					
+								DoorsUnocked(v.netid)				
 							end
 						end
 					end
@@ -583,7 +584,7 @@ CreateThread(function()
 						currentSeat = 0
 						Wait(100)
 						SetVehicleEngineOn(vehicle, false, false, true)
-					elseif not IsPedInAnyVehicle(ped, false) and IsDead() or InLaststand() then
+					elseif not IsPedInAnyVehicle(ped, false) and not IsPlayerDead(PlayerId()) then
 						isEnteringVehicle = false
 						isInVehicle = false
 						currentVehicle = 0
