@@ -49,7 +49,7 @@ function InstallDatabase()
 		MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS location TEXT NULL DEFAULT NULL')
 		MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS street TEXT NULL DEFAULT NULL')
         MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS parktime INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NOT NULL')
+        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NULL DEFAULT 0')
 	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then --- QB or QBX Database
 		MySQL.Async.execute('ALTER TABLE players ADD COLUMN IF NOT EXISTS parkvip INT NULL DEFAULT 0')
 		MySQL.Async.execute('ALTER TABLE players ADD COLUMN IF NOT EXISTS parkmax INT NULL DEFAULT 0')
@@ -57,7 +57,7 @@ function InstallDatabase()
 		MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS location TEXT NULL DEFAULT NULL')
 		MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS street TEXT NULL DEFAULT NULL')
         MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS parktime INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NOT NULL')
+        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NULL DEFAULT 0')
 	end
 end
 InstallDatabase()
