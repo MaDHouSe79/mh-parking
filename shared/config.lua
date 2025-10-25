@@ -1,5 +1,5 @@
 -- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
 -- [[ ===================================================== ]] --
 Config = {}
 ---------------------------------------------------------------------------------------
@@ -7,6 +7,10 @@ Config.Framework = "qb"               -- For qb/qbx/esx
 Config.FuelScript = "mh-fuel"         -- For qb-fuel/mh-fuel/ox_fuel
 Config.KeyScript = "qb-vehiclekeys"   -- For qb-vehiclekeys/qbx_vehiclekeys
 Config.MenuScript = "qb-menu"         -- For qb-menu/ox_lib
+Config.NotifyScript = "ox_lib"        -- For qb /ox_lib
+Config.RadialMenuScript = "qb-radialmenu" -- for qb-radialmenu/ox_lib
+---------------------------------------------------------------------------------------
+Config.RewriteVehicleFile = true      -- Use this only when vehicles are not working, or you added new vehicles in the vehicle shared file.
 ---------------------------------------------------------------------------------------
 Config.UseAutoPark = true             -- When false it uses the F3 button of /park command or When true Press F when the engine is off.
 Config.ParkingButton = 155            -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
@@ -30,12 +34,15 @@ Config.MaxParkTime = 259200           -- 3 Days, after that the vehicle wil be i
 -- 9 Days = 777600 Seconden  1000 Days = 86400000 Seconden 1000000 Days = 86400000000 Seconden
 
 ---------------------------------------------------------------------------------------
--- 3d text above parked vehicles
+-- 3D text above parked vehicles
 Config.Display3DText = true          -- Default false for improvement
-Config.DisplayToPlolice = true
+Config.DisplayToPlolice = true       -- Default true, this for police to check the vehicle
 Config.DisplayToAllPlayers = false   -- Default false for improvement
-Config.DisplayDistance = 5
-Config.DisplayOwner = true
+Config.DisplayDistance = 5           -- Default 5 meters to display the 3D text above vehicles 
+Config.DisplayBrand = true           -- displays brand name
+Config.DisplayModel = true           -- displays model name
+Config.DisplaPlate = true            -- displays plate name
+Config.DisplayOwner = true           -- displays owner name
 ---------------------------------------------------------------------------------------
 -- Default true you can only park when the engine is off
 Config.OnlyAutoParkWhenEngineIsOff = true 
@@ -45,18 +52,11 @@ Config.keepEngineOnWhenAbandoned = true
 ---------------------------------------------------------------------------------------
 Config.DisableParkedVehiclesCollision = false -- Default false for improvement
 ---------------------------------------------------------------------------------------
-Config.SaveSteeringAngle = false     -- Default false for improvement
+Config.SaveSteeringAngle = false     -- Default false for improvement, when true others players can't damage your vehicle.
 ---------------------------------------------------------------------------------------
--- This are gas pumps where you can't use the park system.
-Config.DisableNeedByPumpModels = {
-    ['prop_vintage_pump'] = true,
-    ['prop_gas_pump_1a'] = true,
-    ['prop_gas_pump_1b'] = true,
-    ['prop_gas_pump_1c'] = true,
-    ['prop_gas_pump_1d'] = true,
-    ['prop_gas_pump_old2'] = true,
-    ['prop_gas_pump_old3'] = true
-}
+Config.UsePrivedParking = true       -- use prived parking lots
+Config.PrivedParking = {}            -- dont change this, this is a plaseholder.
+Config.UseDebugPoly = false
 ---------------------------------------------------------------------------------------
 Config.UseRadiusForBlips = true -- When true, you see a circle raduis on the map where you can.t park.
 -- This are locations where you can't use the park system,
@@ -92,7 +92,7 @@ Config.NoParkingLocations = {
 -- If false players can park anyware, if true they can park only on parkinglots.
 -- Players are not allwed to park close by -> (Config.DisableNeedByLocations or Config.DisableNeedByPumpModels)
 -- If you want to see the radius in the map you need to set Config.DebugBlipForRadius to true
-Config.UseParkingLotsOnly = false
+Config.UseParkingLotsOnly = false  -- if true you only want to park on parking lots
 Config.UseParkingLotsBlips = true  --If true players see parking lot blips on the map
 Config.AllowedParkingLots = {
     {coords = vector3(96.9411, -1402.1882, 28.5636), radius = 10.0, color = 2, sprite = 237},   -- parkinglot 1

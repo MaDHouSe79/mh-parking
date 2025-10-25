@@ -53,10 +53,24 @@
 - `/parkresetall` Reset all players vehicles.
 - `/parkresetplayer [id]` Reset all player vehicles for this player.
 
+# Admin Create/Delete Parking Lots
+- `/toggledebugpoly` You need to to this so you can see how it is placed.
+- `/createpark [player_id] [filename] [job] [label]` To create a prived parking spot.
+- `/deletepark [zone id] [filename]`To delete a created parking pot.
+
 # User Commands
-- `/park or F5` To park of drive your vehicle.
 - `/parkmenu` To Open the parked vehicle menu
+- `/park or F5 or F` To park of drive your vehicle.
 - `/toggleparktext` Disable or Enable the text above the parked vehicles (for streamers)
+
+# Rewrite Vehicle File
+- When you do this you get a file in de root folder inside `mh-parking`, the new file is `vehicles.lua`
+- You need to copy this data to the `shared/vehicles.lua` file in `mh-parking` folder.
+- When you did that you need to set `Config.RewriteVehicleFile` to `false` again.
+
+# You need to rejoin when
+- You change someting in code.
+- There is no onstart but only a onjoin check when a player jois the server.
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />

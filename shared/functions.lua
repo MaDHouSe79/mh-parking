@@ -1,5 +1,5 @@
 -- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
 -- [[ ===================================================== ]] --
 function Trim(value)
     if not value then return nil end

@@ -1,6 +1,3 @@
--- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
--- [[ ===================================================== ]] --
 local function checkVersion(err, github, headers)
     local script = GetCurrentResourceName()
     local insversion, gitversion, cur_inst_version, cur_git_version = '0.0.0', '0.0.0', '0.0.0', '0.0.0'

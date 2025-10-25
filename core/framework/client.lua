@@ -1,5 +1,5 @@
 -- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
 -- [[ ===================================================== ]] --
 Framework, TriggerCallback, OnPlayerLoaded, OnPlayerUnload = nil, nil, nil, nil
 isLoggedIn, PlayerData = false, {}
@@ -60,11 +60,7 @@ function GetFuel(vehicle)
 end
 
 function Notify(message, type, length)
-    if GetResourceState("ox_lib") ~= 'missing' then
-        lib.notify({title = "MH Park System", description = message, type = type})
-    else
-        Framework.Functions.Notify({text = "MH Park System", caption = message}, type, length)
-    end
+    lib.notify({title = "MH Park System", description = message, type = type})
 end
 
 function GetStreetName(entity)
@@ -122,6 +118,19 @@ function GetAllPlayersInVehicle(vehicle)
         end
     end
     return pedsincar
+end
+
+function GiveTakeAnimation(driver, player)
+    LoadAnimDict('anim@mp_player_intmenu@key_fob@')
+    TaskPlayAnim(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false, false)
+    TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false, false)
+    Wait(1000)
+    if IsEntityPlayingAnim(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3) then
+        StopAnimTask(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0)
+    end
+    if IsEntityPlayingAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3) then
+        StopAnimTask(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0)
+    end
 end
 
 function DoVehicleDamage(vehicle, body, engine)

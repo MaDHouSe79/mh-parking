@@ -1,23 +1,20 @@
 -- [[ ===================================================== ]] --
--- [[               MH Parking V2 by MaDHouSe79             ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
 -- [[ ===================================================== ]] --
 local hasSpawned = false
 local parkedVehicles = {}
 
 local function IfPlayerIsVIPGetMaxParking(src)
-	local Player = GetPlayer(src)
 	local citizenid = GetCitizenId(src)
 	local max = Config.Maxparking
-	if Player then
-		local data = nil
-		if Config.Framework == 'esx' then
-			data = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = ?", { citizenid })[1]
-		elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-			data = MySQL.Sync.fetchAll("SELECT * FROM players WHERE citizenid = ?", { citizenid })[1]
-		end
-		if data ~= nil and data.parkvip == 1 then
-			max = data.parkmax
-		end
+	local data = nil
+	if Config.Framework == 'esx' then
+		data = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = ?", { citizenid })[1]
+	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+		data = MySQL.Sync.fetchAll("SELECT * FROM players WHERE citizenid = ?", { citizenid })[1]
+	end
+	if data ~= nil and data.parkvip == 1 then
+		max = data.parkmax
 	end
 	return max
 end
@@ -60,19 +57,7 @@ local function GetPlayerFullNameFromCitizenid(citizenid)
             fullname = info.firstname .." "..info.lastname
         end 
 	end
-
     return fullname
-end
-
-local function RemoveVehicles()
-    for i = 1, #parkedVehicles, 1 do
-        if parkedVehicles[i].entity ~= nil and DoesEntityExist(parkedVehicles[i].entity) then
-            DeleteEntity(parkedVehicles[i].entity)
-            parkedVehicles[i] = nil
-            break
-        end
-    end
-    parkedVehicles = {}
 end
 
 local function RemoveVehicle(netid)
@@ -85,6 +70,16 @@ local function RemoveVehicle(netid)
             end
         end
     end
+end
+
+local function RemoveVehicles()
+    for i = 1, #parkedVehicles, 1 do
+        if parkedVehicles[i].entity ~= nil and DoesEntityExist(parkedVehicles[i].entity) then
+            DeleteEntity(parkedVehicles[i].entity)
+            parkedVehicles[i] = nil
+        end
+    end
+    parkedVehicles = {}
 end
 
 local function PrepeareVehicles()
@@ -129,12 +124,11 @@ local function PrepeareVehicles()
 end
 
 local function SpawnVehicles(src)
-    PrepeareVehicles()
-    Wait(1000)
     for k, v in pairs(parkedVehicles) do
         if parkedVehicles[v.plate] then
             local coords = parkedVehicles[v.plate].location
             DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
+            Wait(100)
             local model = parkedVehicles[v.plate].model
             local entity = CreateVehicle(model, coords.x, coords.y, coords.z, coords.h, true, true)
             local zoek = true
@@ -171,7 +165,12 @@ local function CanSave(src)
     if type(totalParked) == 'table' and #totalParked >= defaultMax then
         canSave = false
     end
-    return canSave
+    return canSave, defaultMax
+end
+
+local function isAdmin(src)
+    if IsPlayerAceAllowed(src, 'admin') or IsPlayerAceAllowed(src, 'command') then return true end
+    return false
 end
 
 AddEventHandler('onResourceStop', function(resource) 
@@ -184,6 +183,63 @@ AddEventHandler('onResourceStop', function(resource)
             end
         end
         parkedVehicles = {}
+    end
+end)
+
+AddEventHandler('onResourceStop', function(resource) 
+    if resource == GetCurrentResourceName() then
+        hasSpawned = false
+        PrepeareVehicles()
+    end
+end)
+
+RegisterNetEvent('mh-parking:server:DeletePark', function(input)
+    local src = source
+    if isAdmin(src) then
+        local path = GetResourcePath(GetCurrentResourceName())
+        path = path:gsub('//', '/') .. '/shared/configs/'..input.filename..'.lua'
+        local file = io.open(path, "r")
+        if file ~= nil then
+            file:close()
+            os.remove(path)
+            Config.PrivedParking[input.zoneid] = nil
+            TriggerClientEvent('mh-parking:client:reloadZone', -1, {state = false, zoneid = input.zoneid })
+        end
+    end
+end)
+
+RegisterNetEvent('mh-parking:server:CreatePark', function(input)
+    local src = source
+    if isAdmin(src) then
+        local citizenid = GetCitizenId(input.id)
+        local path = GetResourcePath(GetCurrentResourceName())
+        path = path:gsub('//', '/') .. '/shared/configs/' .. string.gsub(input.name, ".lua", "") .. '.lua'
+        local file = io.open(path, 'a+')
+        local count = #Config.PrivedParking + 1
+        local label = '\nConfig.PrivedParking[' .. count .. '] = {\n'..    
+        '    id = ' .. count .. ',\n'..
+        '    citizenid = "' .. citizenid .. '",\n'..
+        '    label = "' .. input.label .. '",\n'..  
+        '    name = "' .. input.name ..'",\n'..       
+        '    coords = vector4(' .. input.coords.x .. ', ' .. input.coords.y .. ', ' .. input.coords.z .. ', ' .. input.heading .. '),\n'..   
+        '    size = { width = 1.5, length = 4.0 },\n'..     
+        '    job = ' .. input.job .. ',\n'..     
+        '}\n'
+        file:write(label)
+        file:close()
+        local data = {
+            id = count,
+            citizenid = citizenid,
+            label = input.label,
+            name = input.name,
+            coords = vector4(input.coords.x, input.coords.y, input.coords.z, input.heading),
+            size = { width = 1.5, length = 4.0 },
+            job = input.job,
+        }
+        Config.PrivedParking[count] = data
+        TriggerClientEvent('mh-parking:client:reloadZone', -1, {state = true, zoneid = count, data = data})
+    else
+        print("not a admin")
     end
 end)
 
@@ -251,7 +307,7 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
             end
             if result ~= nil and result.plate == plate and owner ~= nil then
                 if owner == citizenid then 
-                    local canSave = CanSave(src)
+                    local canSave, defaultMax = CanSave(src)
                     if canSave then
                         local mods = json.encode(result.mods)
                         local fullname = GetPlayerFullNameFromCitizenid(owner)
@@ -280,7 +336,7 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                         end    
                         TriggerClientEvent("mh-parking:client:AddVehicle", -1, {status = true, data = parkedVehicles[plate]})
                     else
-                        Notify(src, Lang:t('info.limit_parking', {limit=defaultMax}, "error", 5000))
+                        Notify(src, Lang:t('info.limit_parking', {limit = defaultMax}, "error", 5000))
                     end                
                 end
             end
@@ -304,6 +360,11 @@ CreateCallback("mh-parking:server:GetParkedVehicles", function(source, cb)
 	cb(parkedVehicles)
 end)
 
+CreateCallback("mh-parking:server:IsAdmin", function(source, cb)
+    local src = source
+	cb({status = true, isadmin = isAdmin(src)})
+end)
+
 CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
     local src = source
 	local citizenid = GetCitizenId(src)
@@ -315,81 +376,6 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
 		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", { citizenid, 3 })
 	end
 	cb({status = true, data = result})
-end)
-
--- Admin Commands
-AddCommand("addparkvip", 'Add player as vip', {}, true, function(source, args)
-	local src, amount, targetID = source, Config.Maxparking, -1
-	if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
-	if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
-	if targetID ~= -1 then
-		local Player = GetPlayer(targetID)
-		if Player then
-			if Config.Framework == 'esx' then
-				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 1, amount, Player.identifier })
-				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
-				Notify(src, 'is added as vip', "success", 10000)
-			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 1, amount, Player.PlayerData.citizenid })
-				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
-				Notify(src, 'is added as vip', "success", 10000)
-			end
-		end
-	end
-end, 'admin')
-
-AddCommand("removeparkvip", 'Remove player as vip', {}, true, function(source, args)
-	local src, targetID = source, -1
-	if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
-	if targetID ~= -1 then
-		local Player = GetPlayer(targetID)
-		if Player then
-			if Config.Framework == 'esx' then
-				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 0, 0, Player.identifier })
-				Notify(src, 'player removed as vip', "success", 10000)
-			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 0, 0, Player.PlayerData.citizenid })
-				Notify(src, 'player removed as vip', "success", 10000)
-			end
-		end
-	end
-end, 'admin')
-
-AddCommand("parkresetall", 'reset all players', {}, true, function(source, args)
-    if Config.Framework == 'esx' then
-        MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, parktime = ?, time = ?', { 1, nil, nil, 0, 0 })
-    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-        MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, parktime = ?, time = ?', { 1, nil, nil, 0, 0 })
-    end
-end, 'admin')
-
-AddCommand("parkresetplayer", 'reset a player', {}, true, function(source, args)
-    if args ~= nil and args[1] ~= nil and type(args[1]) == 'number' then
-        local id = tonumber(args[1])
-        local target = GetPlayer(id)
-        local citizenid = GetCitizenId(id)
-        if Config.Framework == 'esx' then
-             MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, parktime = ?, time = ? WHERE owner = ?', { 1, nil, nil, 0, 0, citizenid })
-        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, parktime = ?, time = ? WHERE citizenid = ?', { 1, nil, nil, 0, 0, citizenid })           
-        end
-    end
-end, 'admin')
-
--- User Commands
-AddCommand("togglesteerangle", 'Toggle steer angle on or off', {}, true, function(source, args)
-    local src = source
-    TriggerClientEvent('mh-parking:client:toggleSteerAngle', src)
-end)
-
-AddCommand("toggleparktext", 'Toggle park text on or off', {}, true, function(source, args)
-    local src = source
-    TriggerClientEvent('mh-parking:client:toggleParkText', src)
-end)
-
-AddCommand("parkmenu", 'Open Park Systen Menu', {}, true, function(source, args)
-    local src = source
-    TriggerClientEvent('mh-parking:client:OpenParkMenu', src, {status = true})
 end)
 
 -- Police Impound
