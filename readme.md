@@ -68,9 +68,8 @@
 - You need to copy this data to the `shared/vehicles.lua` file in `mh-parking` folder.
 - When you did that you need to set `Config.RewriteVehicleFile` to `false` again.
 
-# You need to rejoin when
-- You change someting in code.
-- There is no onstart but only a onjoin check when a player jois the server.
+# You need to rejoin the server when
+- you restart this script in game or in console while players are online.
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
