@@ -1,76 +1,46 @@
--- [[ ===================================================== ]] --
--- [[              MH Park System by MaDHouSe79             ]] --
--- [[ ===================================================== ]] --
 Framework, TriggerCallback, OnPlayerLoaded, OnPlayerUnload = nil, nil, nil, nil
 isLoggedIn, PlayerData = false, {}
-if Config.Framework == 'esx' then
+
+if GetResourceState("es_extended") ~= 'missing' then
     Framework = exports['es_extended']:getSharedObject()
     TriggerCallback = Framework.TriggerServerCallback
     OnPlayerLoaded = 'esx:playerLoaded'
     OnPlayerUnload = 'esx:playerUnLoaded'
     function GetPlayerData() TriggerCallback('esx:getPlayerData', function(data) PlayerData = data end) return PlayerData end
     function IsDead() return (GetEntityHealth(PlayerPedId()) <= 0) end
-    function InLaststand() return (GetEntityHealth(PlayerPedId()) <= 0) end
-elseif Config.Framework == 'qb' then
+elseif GetResourceState("qb-core") ~= 'missing' then
     Framework = exports['qb-core']:GetCoreObject()
     TriggerCallback = Framework.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
     function GetPlayerData() return Framework.Functions.GetPlayerData() end
     function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
-    function InLaststand() return Framework.Functions.GetPlayerData().metadata['inlaststand'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-elseif Config.Framework == 'qbx' then
+elseif GetResourceState("qbx_core") ~= 'missing' then
     Framework = exports['qb-core']:GetCoreObject()
     TriggerCallback = Framework.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
     function GetPlayerData() return Framework.Functions.GetPlayerData() end
     function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
-    function InLaststand() return Framework.Functions.GetPlayerData().metadata['inlaststand'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-end
-
-function LoadModel(model)
-    while not HasModelLoaded(model) do
-        RequestModel(model)
-        Wait(1)
-    end
-end
-
-function LoadAnimDict(dict)
-    if not HasAnimDictLoaded(dict) then
-        RequestAnimDict(dict)
-        while not HasAnimDictLoaded(dict) do Wait(1) end
-    end
-end
-
-function SetFuel(vehicle, fuel)
-	if not DoesEntityExist(vehicle) then return end
-	if fuel < 0 then fuel = 0 end
-	if fuel > 100 then fuel = 100 end	
-	NetworkRequestControlOfEntity(vehicle)
-	Entity(vehicle).state:set('fuel', fuel + 0.0, true)
-	SetVehicleFuelLevel(vehicle, fuel + 0.0)
-end
-
-function GetFuel(vehicle)
-    if not DoesEntityExist(vehicle) then return end
-	return Entity(vehicle).state.fuel or -1.0
 end
 
 function Notify(message, type, length)
     lib.notify({title = "MH Park System", description = message, type = type})
 end
 
-function GetStreetName(entity)
-    return GetStreetNameFromHashKey(GetStreetNameAtCoord(GetEntityCoords(entity).x, GetEntityCoords(entity).y, GetEntityCoords(entity).z))
+function SetFuel(vehicle, fuel)
+    if not DoesEntityExist(vehicle) then return end
+    if fuel < 0 then fuel = 0 end
+    if fuel > 100 then fuel = 100 end
+    Entity(vehicle).state:set('fuel', fuel + 0.0, true)
+    SetVehicleFuelLevel(vehicle, fuel + 0.0)
 end
 
-function DisplayHelpText(text)
-    SetTextComponentFormat('STRING')
-    AddTextComponentString(text)
-    DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+function GetFuel(vehicle)
+    if not DoesEntityExist(vehicle) then return end
+    return Entity(vehicle).state.fuel or -1.0
 end
 
 function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
@@ -95,41 +65,21 @@ function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
-function GetPedVehicleSeat(ped)
-    local vehicle = GetVehiclePedIsIn(ped, false)
-    for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
-        if (GetPedInVehicleSeat(vehicle, i) == ped) then return i end
-    end
-    return -2
+function GetStreetName(coords)
+    return GetStreetNameFromHashKey(GetStreetNameAtCoord(coords.x, coords.y, coords.z))
 end
 
-function GetAllPlayersInVehicle(vehicle)
-    local pedsincar = {}
-    local numPas = GetVehicleModelNumberOfSeats(GetEntityModel(vehicle))
-    for i = -1, numPas, 1 do
-        if not IsVehicleSeatFree(vehicle, i) then
-            local ped = GetPedInVehicleSeat(vehicle, i)
-            if IsPedAPlayer(ped) then
-                pedsincar[#pedsincar + 1] = {
-					playerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)),
-					seat = i
-				}
-            end
-        end
+function LoadModel(model)
+    while not HasModelLoaded(model) do
+        RequestModel(model)
+        Wait(1)
     end
-    return pedsincar
 end
 
-function GiveTakeAnimation(driver, player)
-    LoadAnimDict('anim@mp_player_intmenu@key_fob@')
-    TaskPlayAnim(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false, false)
-    TaskPlayAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3.0, 3.0, -1, 49, 0, false, false, false)
-    Wait(1000)
-    if IsEntityPlayingAnim(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3) then
-        StopAnimTask(driver, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0)
-    end
-    if IsEntityPlayingAnim(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 3) then
-        StopAnimTask(player, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0)
+function LoadAnimDict(dict)
+    if not HasAnimDictLoaded(dict) then
+        RequestAnimDict(dict)
+        while not HasAnimDictLoaded(dict) do Wait(1) end
     end
 end
 

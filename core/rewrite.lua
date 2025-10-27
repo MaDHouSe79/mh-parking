@@ -1,4 +1,4 @@
-local rewrite = Config.RewriteVehicleFile
+local rewrite = false
 
 local function RewriteVehicleFile()
     local path = GetResourcePath(GetCurrentResourceName())
