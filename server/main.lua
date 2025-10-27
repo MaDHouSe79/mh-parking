@@ -3,6 +3,11 @@
 local hasSpawned = false
 local parkedVehicles = {}
 
+local function isAdmin(src)
+    if IsPlayerAceAllowed(src, 'admin') or IsPlayerAceAllowed(src, 'command') then return true end
+    return false
+end
+
 local function GetClosestVehicle(coords)
     local vehicles = GetGamePool('CVehicle')
     local closestDistance = -1
@@ -61,7 +66,14 @@ end
 
 local function PrepareVehicles()
     parkedVehicles = {}
-    local vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+    local vehicles = nil
+    if Config.Framework == 'esx' then
+		vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
+		vehicles.state = vehicles.stored
+	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+		vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+	end
+
     for k, vehicle in pairs(vehicles) do
         if not parkedVehicles[vehicle.plate] then
             parkedVehicles[vehicle.plate] = {}
@@ -90,7 +102,13 @@ end
 local function SpawnVehicles(src)
     hasSpawned = true
     parkedVehicles = {}
-    local vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+    local vehicles = nil
+	if Config.Framework == 'esx' then
+		vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
+		vehicles.state = vehicles.stored
+	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+		vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+	end
     for k, vehicle in pairs(vehicles) do
         if not parkedVehicles[vehicle.plate] then
             parkedVehicles[vehicle.plate] = {}
@@ -122,11 +140,6 @@ local function SpawnVehicles(src)
             }
         end
     end
-end
-
-local function isAdmin(src)
-    if IsPlayerAceAllowed(src, 'admin') or IsPlayerAceAllowed(src, 'command') then return true end
-    return false
 end
 
 AddEventHandler('onResourceStop', function(resource) 
@@ -206,8 +219,14 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
         local vehicle = NetworkGetEntityFromNetworkId(netid)
         if DoesEntityExist(vehicle) then
             local Player = GetPlayer(src)
+            local citizenid = GetCitizenId(src)
             local plate = GetVehicleNumberPlateText(vehicle)
-            local result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { Player.PlayerData.citizenid, plate, 3})[1]
+            local result = nil
+            if Config.Framework == 'esx' then
+                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 3})[1]
+            elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 3})[1]
+            end
             if result ~= nil and result.plate == plate and result.citizenid == Player.PlayerData.citizenid then
                 MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ? WHERE plate = ?', { 0, nil, plate })
                 RemoveVehicle(netid)
@@ -224,9 +243,14 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
 	if seat == -1 then
         local vehicle = NetworkGetEntityFromNetworkId(netid)
         if DoesEntityExist(vehicle) then
-            local Player = GetPlayer(src)
-            local result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { Player.PlayerData.citizenid, plate, 0})[1]
-            if result ~= nil and result.plate == plate and result.citizenid == Player.PlayerData.citizenid then
+            local citizenid = GetCitizenId(src)
+            local result = nil
+            if Config.Framework == 'esx' then
+                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 0})[1]
+            elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
+            end
+            if result ~= nil and result.plate == plate and result.citizenid == citizenid then
                 local mods = json.encode(result.mods)
                 local coords = json.decode(result.location)
                 local target = GetPlayerDataByCitizenId(result.citizenid)
@@ -247,7 +271,11 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                     street = result.street,
                     location = location
                 }
-                MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, steerangle = ?, fuel = ? WHERE plate = ?', { 3, json.encode(location), tonumber(steerangle), fuel, result.plate})
+                if Config.Framework == 'esx' then
+                    MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, steerangle = ?, fuel = ? WHERE plate = ?', { 3, json.encode(location), tonumber(steerangle), fuel, result.plate})
+                elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                    MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, steerangle = ?, fuel = ? WHERE plate = ?', { 3, json.encode(location), tonumber(steerangle), fuel, result.plate})
+                end
                 TriggerClientEvent('mh-parking:client:AddVehicle', -1, {netid = netid, data = parkedVehicles[result.plate]})
                 TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
                 print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
@@ -266,8 +294,6 @@ RegisterNetEvent('mh-parking:server:AllPlayersLeaveVehicle', function(vehicleNet
         end
     end
 end)
-
-----------------------------------------------------------------------------------------------------------
 
 RegisterNetEvent('mh-parking:server:CreatePark', function(input)
     local src = source
@@ -321,7 +347,6 @@ AddCommand("parkmenu", 'Open Park Systen Menu', {}, true, function(source, args)
     local src = source
     TriggerClientEvent('mh-parking:client:OpenParkMenu', src, {status = true})
 end)
-
 
 -- Admin Commands
 AddCommand('toggledebugpoly', 'Toggle Debug Poly On/Off', {}, false, function(source, args)
