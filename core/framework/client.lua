@@ -65,6 +65,12 @@ function Draw3DText(x, y, z, textInput, fontId, scaleX, scaleY)
     ClearDrawOrigin()
 end
 
+function DisplayHelpText(text)
+    SetTextComponentFormat('STRING')
+    AddTextComponentString(text)
+    DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+end
+
 function GetStreetName(coords)
     return GetStreetNameFromHashKey(GetStreetNameAtCoord(coords.x, coords.y, coords.z))
 end

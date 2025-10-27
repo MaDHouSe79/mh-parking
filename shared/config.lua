@@ -3,6 +3,10 @@ Config = {}
 Config.Framework = 'qb' -- qb/esx/qbx
 Config.UseDebugPoly = true
 
+Config.UseAutoPark = true             -- When false it uses the F3 button of /park command or When true Press F when the engine is off.
+Config.ParkingButton = 155            -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.KeyParkBindButton = "F5"       -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
+
 Config.UsePrivedParking = true
 Config.PrivedParking = {}
 

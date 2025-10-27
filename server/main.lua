@@ -1,5 +1,3 @@
-
-
 local hasSpawned = false
 local parkedVehicles = {}
 
@@ -32,27 +30,6 @@ local function DeleteVehicleAtcoords(coords)
 			Wait(50)
 		end
 	end
-end
-
-local function AddVehicle(data)
-    if parkedVehicles[data.plate] then return false end
-    if not parkedVehicles[data.plate] then parkedVehicles[data.plate] = {} end
-    parkedVehicles[data.plate] = {
-        fullname = data.fullname,
-        owner = data.owner, 
-        netid = data.netid,
-        entity = data.vehicle,
-        mods = data.mods,
-        hash = data.hash,
-        plate = data.plate, 
-        model = data.model,
-        fuel = data.fuel,
-        body = data.body,
-        engine = data.engine,
-        steerangle = data.steerangle,
-        location = data.location
-    }
-    TriggerClientEvent('mh-parking:client:AddVehicle', -1, {netid = data.netid, data = parkedVehicles[data.plate]})
 end
 
 local function RemoveVehicle(netid)
@@ -238,7 +215,7 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
 	end
 end)
 
-RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, location, steerangle, fuel, street) 
+RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, location, steerangle, street, fuel) 
     local src = source
 	if seat == -1 then
         local vehicle = NetworkGetEntityFromNetworkId(netid)
@@ -349,6 +326,64 @@ AddCommand("parkmenu", 'Open Park Systen Menu', {}, true, function(source, args)
 end)
 
 -- Admin Commands
+AddCommand("addparkvip", 'Add player as vip', {}, true, function(source, args)
+	local src, amount, targetID = source, Config.Maxparking, -1
+	if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
+	if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
+	if targetID ~= -1 then
+		local Player = GetPlayer(targetID)
+		if Player then
+			if Config.Framework == 'esx' then
+				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 1, amount, Player.identifier })
+				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
+				Notify(src, 'is added as vip', "success", 10000)
+			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 1, amount, Player.PlayerData.citizenid })
+				if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
+				Notify(src, 'is added as vip', "success", 10000)
+			end
+		end
+	end
+end, 'admin')
+
+AddCommand("removeparkvip", 'Remove player as vip', {}, true, function(source, args)
+	local src, targetID = source, -1
+	if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
+	if targetID ~= -1 then
+		local Player = GetPlayer(targetID)
+		if Player then
+			if Config.Framework == 'esx' then
+				MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", { 0, 0, Player.identifier })
+				Notify(src, 'player removed as vip', "success", 10000)
+			elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+				MySQL.Async.execute("UPDATE players SET parkvip = ?, parkmax = ? WHERE citizenid = ?", { 0, 0, Player.PlayerData.citizenid })
+				Notify(src, 'player removed as vip', "success", 10000)
+			end
+		end
+	end
+end, 'admin')
+
+AddCommand("parkresetall", 'reset all players', {}, true, function(source, args)
+    if Config.Framework == 'esx' then
+        MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, parktime = ?, time = ?', { 1, nil, nil, 0, 0 })
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, parktime = ?, time = ?', { 1, nil, nil, 0, 0 })
+    end
+end, 'admin')
+
+AddCommand("parkresetplayer", 'reset a player', {}, true, function(source, args)
+    if args ~= nil and args[1] ~= nil and type(args[1]) == 'number' then
+        local id = tonumber(args[1])
+        local target = GetPlayer(id)
+        local citizenid = GetCitizenId(id)
+        if Config.Framework == 'esx' then
+             MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, parktime = ?, time = ? WHERE owner = ?', { 1, nil, nil, 0, 0, citizenid })
+        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, parktime = ?, time = ? WHERE citizenid = ?', { 1, nil, nil, 0, 0, citizenid })           
+        end
+    end
+end, 'admin')
+
 AddCommand('toggledebugpoly', 'Toggle Debug Poly On/Off', {}, false, function(source, args)
     TriggerClientEvent('mh-parking:client:TogglDebugPoly', -1)
 end, 'admin')
