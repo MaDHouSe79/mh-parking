@@ -464,7 +464,7 @@ local function ParkingTimeCheckLoop()
                 if v.parktime > 0 and total > v.parktime then
                     print("[MH Parking] - [Time Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been impound by the police.")
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and parkedVehicles[v.plate].entity ~= false then
-                        MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ? WHERE plate = ?', { 0, nil, v.plate })
+                        --MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ? WHERE plate = ?', { 0, nil, v.plate })
                         RemoveVehicle(parkedVehicles[v.plate].netid)
                         TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {
                             netid = parkedVehicles[v.plate].netid,
@@ -481,4 +481,5 @@ local function ParkingTimeCheckLoop()
     end
     SetTimeout(10000, ParkingTimeCheckLoop)
 end
+
 ParkingTimeCheckLoop()
