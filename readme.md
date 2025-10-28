@@ -72,9 +72,12 @@
 - You change someting in code.
 - There is no onstart but only a onjoin check when a player jois the server.
 
-# Add Code in your garage
+# Add Code in your garage script
 - you need to this inder to make parking work propperly
-- add in your config `Config.keepEngineOnWhenAbandoned = true`
+- add this below in your config file of your garage script
+```lua
+Config.keepEngineOnWhenAbandoned = true
+```
 - go to your client file and add this after you spawn the vehcle
 ```lua
 SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
