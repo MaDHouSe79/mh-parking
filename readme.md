@@ -76,7 +76,9 @@
 - you need to this inder to make parking work propperly
 - aad in your config `Config.keepEngineOnWhenAbandoned = true`
 - go to your client file and add this after you spawn the vehcle
-- `SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)`
+```lua
+SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
+```
 - `vehicle` can also by `veh` in your script.
 
 # For qb-garage/html/script.js around line 43
