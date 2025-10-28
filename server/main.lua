@@ -41,40 +41,6 @@ local function RemoveVehicle(netid)
     end
 end
 
-local function PrepareVehicles()
-    parkedVehicles = {}
-    local vehicles = nil
-    if Config.Framework == 'esx' then
-        vehicles = MySQL.query.await('SELECT mods FROM owned_vehicles WHERE stored = ?', {3})
-		vehicles.state = vehicles.stored
-	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-        vehicles = MySQL.query.await('SELECT mods FROM player_vehicles WHERE state = ?', {3})
-	end
-    for k, vehicle in pairs(vehicles) do
-        if not parkedVehicles[vehicle.plate] then
-            parkedVehicles[vehicle.plate] = {}
-            local target = GetPlayerDataByCitizenId(vehicle.citizenid)
-            local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
-            parkedVehicles[vehicle.plate] = {
-                netid = false,
-                entity = false,
-                fullname = fullname,
-                owner = vehicle.citizenid, 
-                hash = vehicle.hash,
-                plate = vehicle.plate, 
-                model = vehicle.vehicle,
-                fuel = vehicle.fuel,
-                body = vehicle.body,
-                engine = vehicle.engine,
-                street = vehicle.street,
-                steerangle = tonumber(vehicle.steerangle),
-                mods = json.decode(vehicle.mods),
-                location = json.decode(vehicle.location)
-            }
-        end
-    end
-end
-
 local function SpawnVehicles(src)
     hasSpawned = true
     parkedVehicles = {}
@@ -430,4 +396,5 @@ AddCommand('createpark', 'Create parked', { {name = "id", info = "player id"}, {
     if id ~= nil and name ~= nil and label ~= nil then
 	    TriggerClientEvent('mh-parking:client:CreatePark', src, {id = id, name = name, job = job, label = label})
     end
+
 end, 'admin')
