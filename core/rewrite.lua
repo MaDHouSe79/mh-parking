@@ -1,5 +1,3 @@
-local rewrite = false
-
 local function RewriteVehicleFile()
     local path = GetResourcePath(GetCurrentResourceName())
     path = path:gsub('//', '/') .. '/vehicles.lua'
@@ -167,7 +165,4 @@ local function RewriteVehicleFile()
     file:write(label)
     file:close()
 end
-
-if rewrite then
-    RewriteVehicleFile()
-end
+RewriteVehicleFile()

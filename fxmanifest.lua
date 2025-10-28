@@ -34,6 +34,7 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'core/framework/server.lua',
+    --'core/rewrite.lua',
     'server/main.lua',
     'server/update.lua',
 }

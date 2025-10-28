@@ -16,6 +16,8 @@ elseif GetResourceState("qb-core") ~= 'missing' then
     function GetPlayerData() return Framework.Functions.GetPlayerData() end
     function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
+    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject()
+end)
 elseif GetResourceState("qbx_core") ~= 'missing' then
     Framework = exports['qb-core']:GetCoreObject()
     TriggerCallback = Framework.Functions.TriggerCallback
@@ -24,6 +26,8 @@ elseif GetResourceState("qbx_core") ~= 'missing' then
     function GetPlayerData() return Framework.Functions.GetPlayerData() end
     function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
+    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject()
+end)
 end
 
 function Notify(message, type, length)

@@ -61,20 +61,22 @@ local function CreateZoneBlipCircle(coords, text, color, sprite)
 end
 
 local function LoadZone()
-	DeleteZones()
-	Wait(1000)
-	if type(Config.PrivedParking) == 'table' and #Config.PrivedParking >= 1 then
-		for i = 1, #Config.PrivedParking, 1 do
-			if Config.PrivedParking[i] ~= nil then
-				local v = Config.PrivedParking[i] 
-				zones[#zones + 1] = BoxZone:Create(vector3(v.coords.x, v.coords.y, v.coords.z), v.size.length, v.size.width, {
-					name = i.."_parkzone",
-					offset = {0.0, 0.0, 0.0},
-					scale = {v.size.width, v.size.width, v.size.width},
-					heading = v.coords.w,
-					debugPoly = useDebugPoly,
-				})
-				Config.PrivedParking[i].blip = CreateZoneBlipCircle(v.coords, "parking Lot", 2, 225)
+	if Config.UsePrivedParking then
+		DeleteZones()
+		Wait(1000)
+		if type(Config.PrivedParking) == 'table' and #Config.PrivedParking >= 1 then
+			for i = 1, #Config.PrivedParking, 1 do
+				if Config.PrivedParking[i] ~= nil then
+					local data = Config.PrivedParking[i] 
+					zones[#zones + 1] = BoxZone:Create(vector3(data.coords.x, data.coords.y, data.coords.z), data.size.length, data.size.width, {
+						name = data.id.."_parkzone",
+						offset = {0.0, 0.0, 0.0},
+						scale = {data.size.width, data.size.width, data.size.width},
+						heading = data.coords.w,
+						debugPoly = useDebugPoly,
+					})
+					Config.PrivedParking[i].blip = CreateZoneBlipCircle(data.coords, "parking Lot", 2, 225)
+				end
 			end
 		end
 	end
@@ -114,53 +116,6 @@ local function DeleteparkedVehicles()
 		parkedVehicles[i] = nil
 	end
 	parkedVehicles = {}
-end
-
-local disableNeedByPumpModels = {
-    ['prop_vintage_pump'] = true,
-    ['prop_gas_pump_1a'] = true,
-    ['prop_gas_pump_1b'] = true,
-    ['prop_gas_pump_1c'] = true,
-    ['prop_gas_pump_1d'] = true,
-    ['prop_gas_pump_old2'] = true,
-    ['prop_gas_pump_old3'] = true
-}
-local function IsCloseByStationPump(coords)
-	for hash in pairs(disableNeedByPumpModels) do
-		local pump = GetClosestObjectOfType(coords.x, coords.y, coords.z, 10.0, hash, false, true, true)
-		if pump ~= 0 then return true end
-	end
-	return false
-end
-
-local function IsCloseByCoords(coords)
-	for k, v in pairs(Config.NoParkingLocations) do
-		if GetDistance(coords, v.coords) < v.radius then
-			if v.job == nil then
-				return true
-			elseif v.job ~= nil and v.job ~= PlayerData.job.name then
-				return true
-			end
-		end
-	end
-	return false
-end
-
-local function IsCloseByParkingLot(coords)
-	for k, v in pairs(Config.AllowedParkingLots) do
-		if GetDistance(coords, v.coords) < v.radius then return true end
-	end
-	return false
-end
-
-local function AllowToPark(coords)
-	local isAllowd = false
-	if Config.UseParkingLotsOnly then
-		if IsCloseByParkingLot(coords) and not IsCloseByStationPump(coords) then isAllowd = true end
-	else
-		if not IsCloseByCoords(coords) and not IsCloseByStationPump(coords) then isAllowd = true end
-	end
-	return isAllowd
 end
 
 local function CreateBlipCircle(coords, text, radius, color, sprite)
@@ -335,7 +290,7 @@ local function GetVehicleMenu()
 	end)
 end
 
-local function IsCloseByPrivedParkingCoords(coords)
+local function IsCloseByPrivedParkingLot(coords)
 	for k, v in pairs(Config.PrivedParking) do
 		if v.citizenid ~= PlayerData.citizenid then
 			local distance = GetDistance(coords, v.coords)
@@ -345,6 +300,15 @@ local function IsCloseByPrivedParkingCoords(coords)
 	return false
 end
 
+local disableNeedByPumpModels = {
+    ['prop_vintage_pump'] = true,
+    ['prop_gas_pump_1a'] = true,
+    ['prop_gas_pump_1b'] = true,
+    ['prop_gas_pump_1c'] = true,
+    ['prop_gas_pump_1d'] = true,
+    ['prop_gas_pump_old2'] = true,
+    ['prop_gas_pump_old3'] = true
+}
 local function IsCloseByStationPump(coords)
 	for hash in pairs(disableNeedByPumpModels) do
 		local pump = GetClosestObjectOfType(coords.x, coords.y, coords.z, 10.0, hash, false, true, true)
@@ -384,7 +348,7 @@ local function AllowToPark(coords)
 			if Config.UseParkingLotsOnly then
 				if not IsCloseByParkingLot(coords) then
 					if Config.UsePrivedParking then
-						if IsCloseByPrivedParkingCoords(coords) then
+						if IsCloseByPrivedParkingLot(coords) then
 							allow = false
 						end
 					else
@@ -393,7 +357,7 @@ local function AllowToPark(coords)
 				end
 			else
 				if Config.UsePrivedParking then
-					if IsCloseByPrivedParkingCoords(coords) then
+					if IsCloseByPrivedParkingLot(coords) then
 						allow = false
 					end
 				else
@@ -416,8 +380,7 @@ end)
 
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
-		PlayerData = GetPlayerData()
-		isLoggedIn = true
+		LoadZone()
         TriggerServerEvent('mh-parking:server:OnJoin')
     end
 end)
@@ -431,8 +394,7 @@ end)
 
 RegisterNetEvent(OnPlayerLoaded)
 AddEventHandler(OnPlayerLoaded, function()
-    PlayerData = GetPlayerData()
-    isLoggedIn = true
+	LoadZone()
 	TriggerServerEvent('mh-parking:server:OnJoin')
 end)
 
@@ -469,6 +431,7 @@ RegisterNetEvent('mh-parking:client:AddVehicle', function(result)
 		SetEntityAsMissionEntity(vehicle, true, true)
 		SetFuel(vehicle, result.data.fuel + 0.0)
 		SetVehicleSteeringAngle(vehicle, result.data.steerangle + 0.0)
+		SetEntityInvincible(result.data.entity, true)
 		parkedVehicles[#parkedVehicles + 1] = {
 			owner = result.data.owner,
 			fullname = result.data.fullname,
@@ -501,6 +464,7 @@ RegisterNetEvent('mh-parking:client:RemoveVehicle', function(data)
 		if DoesEntityExist(vehicle) then
 			local plate = GetVehicleNumberPlateText(vehicle)
 			if parkedVehicles[i].plate == plate then
+				SetEntityInvincible(result.data.entity, false)
 				if PlayerData.citizenid == parkedVehicles[i].owner then
 					BlinkVehiclelights(parkedVehicles[i].entity)
 				end
@@ -517,13 +481,20 @@ RegisterNetEvent('mh-parking:client:RemoveVehicle', function(data)
 	end
 end)
 
+RegisterNetEvent('mh-parking:client:KeepEngineOnWhenAbandoned', function(netid)
+	local vehicle = NetToVeh(netid)
+	if DoesEntityExist(vehicle) then
+		SetVehRadioStation(vehicle, 'OFF')
+		SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
+	end
+end)
+
 RegisterNetEvent('mh-parking:client:Onjoin', function(data)
     PlayerData = GetPlayerData()
     isLoggedIn = true
 	TriggerCallback('mh-parking:server:IsAdmin', function(result)
 		isAdmin = result.isadmin
 	end)
-	LoadZone()
 	CreateBlips()
 	if data.status == true then
 		local vehicles = data.vehicles
@@ -535,6 +506,7 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
 				SetVehicleSteeringAngle(vehicle, v.steerangle + 0.0)
 				DoVehicleDamage(vehicle, v.body, v.engine)
 				SetFuel(vehicle, v.fuel + 0.0)
+				SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
 				local exist = DoesPlateExist(v.plate)
 				if not exist then
 					parkedVehicles[#parkedVehicles + 1] = {
@@ -587,8 +559,12 @@ RegisterNetEvent('mh-parking:client:toggleSteerAngle', function()
 	Notify("Steer angle save is now "..txt, "success", 5000)
 end)
 
-RegisterNetEvent('mh-parking:client:reloadZones', function(input)
-	Config.PrivedParking = input.data
+RegisterNetEvent('mh-parking:client:reloadZones', function(data)
+	if Config.PrivedParking[data.zoneid] then
+		RemoveParkBlip(data.zoneid)
+		Config.PrivedParking[data.zoneid] = nil
+	end
+	Config.PrivedParking = data.list
 	inparkzone = false
 	Wait(100)
 	LoadZone()
@@ -610,10 +586,11 @@ RegisterNetEvent('mh-parking:client:CreatePark', function(data)
 	end
 end)
 
+-- Create Zone info
 CreateThread(function()
 	while true do
 		local sleep = 1000
-		if isLoggedIn then
+		if isLoggedIn and Config.UsePrivedParking then
 			for k, zone in pairs(zones) do
 				zone:onPointInOut(PolyZone.getPlayerPosition, function(isPointInside, point)
 					local id = string.sub(zone.name, 1, 1)
@@ -628,7 +605,7 @@ CreateThread(function()
 								local adminTxt = ""
 								if isAdmin then adminTxt = "~w~Zone ID: ~o~"..parkZoneId.."\n~w~Filename: ~o~"..data.name.. "~w~\n" end
 								local street = "~w~Street: ~b~"..data.street.."\n"
-								parkLabel = adminTxt .. street.. "Owner: ~g~"..data.label.."~w~\n"
+								parkLabel = adminTxt .. street.. "Owned by: ~g~"..data.label.."~w~\n"
 							end
 						else
 							if Config.UsePrivedParking and inparkzone then
@@ -646,7 +623,21 @@ CreateThread(function()
 		Wait(sleep)
 	end
 end)
+-- Draw Zone info
+CreateThread(function()
+	while true do 
+		local sleep = 100
+		if isLoggedIn and Config.UsePrivedParking then
+			if inparkzone and parkZoneId ~= nil then
+				sleep = 0
+				Draw3DText(parkCoords.x, parkCoords.y, parkCoords.z, parkLabel, 0, 0.04, 0.04)
+			end
+		end
+		Wait(sleep)
+	end
+end)
 
+-- Draw Park vehicle info
 CreateThread(function()
 	while true do
 		Wait(0)
@@ -685,6 +676,7 @@ CreateThread(function()
 	end
 end)
 
+-- Set Steering Angle to save when parking the vehicle.
 CreateThread(function()
 	local angle = 0.0
 	local speed = 0.0
@@ -847,13 +839,21 @@ CreateThread(function()
 	end
 end)
 
+-- Disable Parked Vehicles Collision
 CreateThread(function()
-	while true do 
-		local sleep = 100
-		if isLoggedIn and inparkzone and parkZoneId ~= nil then
-			sleep = 0
-			Draw3DText(parkCoords.x, parkCoords.y, parkCoords.z, parkLabel, 0, 0.04, 0.04)
+	while true do
+		Wait(0)
+		if isLoggedIn and Config.DisableParkedVehiclesCollision then
+			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+			if vehicle ~= nil and vehicle ~= 0 then
+				for k, v in pairs(parkedVehicles) do
+					local distance = GetDistance(GetEntityCoords(PlayerPedId()), v.location)
+					if distance < 10 then
+						SetEntityNoCollisionEntity(v.entity, vehicle, true)
+                        SetEntityNoCollisionEntity(vehicle, v.entity, true)
+					end
+				end
+			end
 		end
-		Wait(sleep)
 	end
 end)

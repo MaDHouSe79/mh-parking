@@ -1,31 +1,23 @@
 Config = {}
 
-Config.Framework = 'qb' -- qb/esx/qbx
-Config.UseDebugPoly = true
+Config.Framework = 'qb'                      -- qb/esx/qbx
+Config.UseDebugPoly = true                   -- Default false, for dev mode to see the polyzones better.
 
-Config.UseAutoPark = true             -- When false it uses the F3 button of /park command or When true Press F when the engine is off.
-Config.ParkingButton = 155            -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
-Config.KeyParkBindButton = "F5"       -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.UseAutoPark = true                    -- When false it uses the F3 button of /park command or When true Press F when the engine is off.
+Config.ParkingButton = 155                   -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.KeyParkBindButton = "F5"              -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
 
-Config.UsePrivedParking = true
-Config.PrivedParking = {}
+Config.UsePrivedParking = true               -- When true you can create prived parking polts for players.
+Config.PrivedParking = {}                    -- Dont edit this is a placeholder.
 
-Config.Display3DText = true
-Config.DisplayDistance = 15
-Config.DisplayToAllPlayers = true -- if false it only displays the the owner of the vehicle
-Config.OnlyAutoParkWhenEngineIsOff = true
+Config.OnlyAutoParkWhenEngineIsOff = true    -- Engine must be off when autopark works
+Config.keepEngineOnWhenAbandoned = true      -- when true it keep the engine on when you get out the vehicle.
 
-Config.SaveSteeringAngle = false
-
-Config.DisableNeedByPumpModels = {
-    ['prop_vintage_pump'] = true,
-    ['prop_gas_pump_1a'] = true,
-    ['prop_gas_pump_1b'] = true,
-    ['prop_gas_pump_1c'] = true,
-    ['prop_gas_pump_1d'] = true,
-    ['prop_gas_pump_old2'] = true,
-    ['prop_gas_pump_old3'] = true
-}
+Config.Display3DText = true                  -- Set false for performe
+Config.DisplayDistance = 15                  -- Default 3 for performe
+Config.DisplayToAllPlayers = true            -- If false it only displays the the owner of the vehicle
+Config.SaveSteeringAngle = false             -- Set false for performe
+Config.DisableParkedVehiclesCollision = true -- Set false for performe
 
 ---------------------------------------No Parking--------------------------------------
 Config.DebugBlipForRadius = true

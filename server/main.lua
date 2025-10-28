@@ -45,12 +45,11 @@ local function PrepareVehicles()
     parkedVehicles = {}
     local vehicles = nil
     if Config.Framework == 'esx' then
-		vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
+        vehicles = MySQL.query.await('SELECT mods FROM owned_vehicles WHERE stored = ?', {3})
 		vehicles.state = vehicles.stored
 	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-		vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+        vehicles = MySQL.query.await('SELECT mods FROM player_vehicles WHERE state = ?', {3})
 	end
-
     for k, vehicle in pairs(vehicles) do
         if not parkedVehicles[vehicle.plate] then
             parkedVehicles[vehicle.plate] = {}
@@ -81,10 +80,10 @@ local function SpawnVehicles(src)
     parkedVehicles = {}
     local vehicles = nil
 	if Config.Framework == 'esx' then
-		vehicles = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
+		vehicles = MySQL.query.await("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
 		vehicles.state = vehicles.stored
 	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-		vehicles = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = ?", {3})
+		vehicles = MySQL.query.await("SELECT * FROM player_vehicles WHERE state = ?", {3})
 	end
     for k, vehicle in pairs(vehicles) do
         if not parkedVehicles[vehicle.plate] then
@@ -172,10 +171,10 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
 	local citizenid = GetCitizenId(src)
 	local result = nil
 	if Config.Framework == 'esx' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ? ORDER BY id ASC", { citizenid, 3 })
+		result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ? ORDER BY id ASC", { citizenid, 3 })
 		result.state = result.stored
 	elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-		result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", { citizenid, 3 })
+		result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", { citizenid, 3 })
 	end
 	cb({status = true, data = result})
 end)
@@ -200,13 +199,16 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
             local plate = GetVehicleNumberPlateText(vehicle)
             local result = nil
             if Config.Framework == 'esx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 3})[1]
+                result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 3})[1]
             elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 3})[1]
+                result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 3})[1]
             end
             if result ~= nil and result.plate == plate and result.citizenid == Player.PlayerData.citizenid then
                 MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ? WHERE plate = ?', { 0, nil, plate })
                 RemoveVehicle(netid)
+                if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
+                    exports['mh-vehiclekeyitem']:AddItem(src, plate, netid)
+                end
                 TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
                 TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid})
                 print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
@@ -223,9 +225,9 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
             local citizenid = GetCitizenId(src)
             local result = nil
             if Config.Framework == 'esx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 0})[1]
+                result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", { citizenid, plate, 0})[1]
             elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
+                result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", { citizenid, plate, 0})[1]
             end
             if result ~= nil and result.plate == plate and result.citizenid == citizenid then
                 local mods = json.encode(result.mods)
@@ -303,9 +305,16 @@ RegisterNetEvent('mh-parking:server:CreatePark', function(input)
             job = input.job,
         }
         Config.PrivedParking[count] = data
-        TriggerClientEvent('mh-parking:client:reloadZones', -1, {state = true, zoneid = count, data = Config.PrivedParking})
+        TriggerClientEvent('mh-parking:client:reloadZones', -1, {zoneid = count, list = Config.PrivedParking})
     else
         print("not a admin")
+    end
+end)
+
+AddEventHandler('entityCreated', function(entity)
+    if GetEntityType(entity) == 2 then
+        local netid = NetworkGetNetworkIdFromEntity(entity)
+        TriggerClientEvent('mh-parking:client:KeepEngineOnWhenAbandoned', -1, netid)
     end
 end)
 
@@ -399,11 +408,11 @@ AddCommand('deletepark', 'Delete Parked', { {name = "zoneid", info = "zone id"},
         local file = io.open(path, "r")
         if file ~= nil then
             file:close()
+            if Config.PrivedParking[zoneid] then
+                table.remove(Config.PrivedParking, zoneid)
+            end             
             os.remove(path)
-        end
-        if Config.PrivedParking[zoneid] then
-            Config.PrivedParking[zoneid] = nil
-            TriggerClientEvent('mh-parking:client:reloadZones', -1, {state = false, zoneid = zoneid, data = Config.PrivedParking})
+            TriggerClientEvent('mh-parking:client:reloadZones', -1, {zoneid = zoneid, list = Config.PrivedParking})
         end
     end
 end, 'admin')
