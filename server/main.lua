@@ -97,12 +97,6 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
-AddEventHandler('onResourceStart', function(resource) 
-    if resource == GetCurrentResourceName() then 
-        --SpawnVehicles(false)
-    end 
-end)
-
 RegisterNetEvent("mh-parking:server:OnJoin", function()
     local src = source
     local players = GetPlayers()
@@ -398,3 +392,4 @@ AddCommand('createpark', 'Create parked', { {name = "id", info = "player id"}, {
     end
 
 end, 'admin')
+
