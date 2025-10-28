@@ -411,14 +411,10 @@ end)
 RegisterNetEvent('mh-parking:client:ToggleFreezeVehicle', function(data)
 	local vehicle = NetworkGetEntityFromNetworkId(data.netid)
 	if DoesEntityExist(vehicle) then
-		if PlayerData.citizenid == data.owner then
-			TriggerServerEvent('mh-parking:server:setVehLockState', data.netid, 1)
-			SetVehicleDoorsLocked(vehicle, 1)
+		if data.owner == PlayerData.citizenid then
 			FreezeEntityPosition(vehicle, false)
 			return
 		else
-			TriggerServerEvent('mh-parking:server:setVehLockState', data.netid, 2)
-			SetVehicleDoorsLocked(vehicle, 2)
 			FreezeEntityPosition(vehicle, true)
 			return
 		end
@@ -464,7 +460,7 @@ RegisterNetEvent('mh-parking:client:RemoveVehicle', function(data)
 		if DoesEntityExist(vehicle) then
 			local plate = GetVehicleNumberPlateText(vehicle)
 			if parkedVehicles[i].plate == plate then
-				SetEntityInvincible(result.data.entity, false)
+				SetEntityInvincible(vehicle, false)
 				if PlayerData.citizenid == parkedVehicles[i].owner then
 					BlinkVehiclelights(parkedVehicles[i].entity)
 				end
@@ -571,19 +567,23 @@ RegisterNetEvent('mh-parking:client:reloadZones', function(data)
 end)
 
 RegisterNetEvent('mh-parking:client:CreatePark', function(data)
-	if data.id ~= nil and data.name ~= nil and data.label ~= nil then
-		local data = {
-			id = data.id, 
-			name = data.name, 
-			job = data.job, 
-			label = data.label, 
-			street = GetStreetName(GetEntityCoords(PlayerPedId())),
-			coords = GetEntityCoords(PlayerPedId()), 
-			heading = GetEntityHeading(PlayerPedId()),
-		}
-		useDebugPoly = true
-		TriggerServerEvent('mh-parking:server:CreatePark', data)			
-	end
+	TriggerCallback('mh-parking:server:IsAdmin', function(result)
+		if result.status and result.isadmin then
+			if data.id ~= nil and data.name ~= nil and data.label ~= nil then
+				local data = {
+					id = data.id, 
+					name = data.name, 
+					job = data.job, 
+					label = data.label, 
+					street = GetStreetName(GetEntityCoords(PlayerPedId())),
+					coords = GetEntityCoords(PlayerPedId()), 
+					heading = GetEntityHeading(PlayerPedId()),
+				}
+				useDebugPoly = true
+				TriggerServerEvent('mh-parking:server:CreatePark', data)			
+			end
+		end
+	end)
 end)
 
 -- Create Zone info
@@ -623,6 +623,7 @@ CreateThread(function()
 		Wait(sleep)
 	end
 end)
+
 -- Draw Zone info
 CreateThread(function()
 	while true do 
