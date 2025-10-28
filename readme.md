@@ -74,7 +74,7 @@
 
 # Add Code in your garage
 - you need to this inder to make parking work propperly
-- aad in your config `Config.keepEngineOnWhenAbandoned = true`
+- add in your config `Config.keepEngineOnWhenAbandoned = true`
 - go to your client file and add this after you spawn the vehcle
 ```lua
 SetVehicleKeepEngineOnWhenAbandoned(vehicle, Config.keepEngineOnWhenAbandoned)
