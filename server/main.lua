@@ -390,4 +390,6 @@ AddCommand('createpark', 'Create parked', { {name = "id", info = "player id"}, {
     if id ~= nil and name ~= nil and label ~= nil then
 	    TriggerClientEvent('mh-parking:client:CreatePark', src, {id = id, name = name, job = job, label = label})
     end
+
 end, 'admin')
+
