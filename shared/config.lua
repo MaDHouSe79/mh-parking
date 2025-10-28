@@ -1,23 +1,41 @@
 Config = {}
-
+---------------------------------------------------------------------------------------
 Config.Framework = 'qb'                      -- qb/esx/qbx
 Config.UseDebugPoly = false                  -- Default false, for dev mode to see the polyzones better.
+---------------------------------------------------------------------------------------
+Config.UseAsVip = false               -- when true set Config.DefaultMaxParking to 0 or keep it 1
+Config.UseTimerPark = true            -- When true this will delete vehicle after a amount of time not used.
+Config.DefaultMaxParking = 3          -- This is default 0 when you have Config.UseAsVip = true
+-- Police Impound
+Config.PayTimeInSecs = 10             -- 10 dollar or euro...
+Config.ParkPrice = 100                -- price to park
+Config.MaxParkTime = 259200           -- 3 Days, after that the vehicle wil be impounded.
+-- 1 Day  = 86400 Seconden   10 Days   = 864000 Seconden   2500    Days = 216000000 Seconden
+-- 2 Days = 172800 Seconden  20 Days   = 1728000 Seconden  5000    Days = 432000000 Seconden
+-- 3 Days = 259200 Seconden  30 Days   = 2592000 Seconden  10000   Days = 864000000 Seconden
+-- 4 Days = 345600 Seconden  40 Days   = 3456000 Seconden  25000   Days = 2160000000 Seconden
+-- 5 Days = 432000 Seconden  50 Days   = 4320000 Seconden  50000   Days = 4320000000 Seconden
+-- 6 Days = 518400 Seconden  100 Days  = 8640000 Seconden  100000  Days = 8640000000 Seconden
+-- 7 Days = 604800 Seconden  250 Days  = 21600000 Seconden	250000  Days = 21600000000 Seconden
+-- 8 Days = 691200 Seconden  500 Days  = 43200000 Seconden 500000  Days = 43200000000 Seconden
+-- 9 Days = 777600 Seconden  1000 Days = 86400000 Seconden 1000000 Days = 86400000000 Seconden
 
+---------------------------------------------------------------------------------------
 Config.UseAutoPark = true                    -- Default true, when false it uses the F3(qbx)/F5(qb) button of /park command or When true Press F when the engine is off.
 Config.ParkingButton = 155                   -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
 Config.KeyParkBindButton = "F5"              -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
-
 Config.UsePrivedParking = true               -- Default true, when true you can create prived parking polts for players.
 Config.PrivedParking = {}                    -- Dont edit this is a placeholder.
-
+---------------------------------------------------------------------------------------
 Config.OnlyAutoParkWhenEngineIsOff = true    -- Default true, engine must be off when autopark works
 Config.keepEngineOnWhenAbandoned = true      -- Default true, when true it keep the engine on when you get out the vehicle.
-
+---------------------------------------------------------------------------------------
 Config.Display3DText = true                  -- Default false for performe
 Config.DisplayDistance = 15                  -- Default 3 for performe
 Config.DisplayToAllPlayers = true            -- Default false, it only displays to the owner of the vehicle when Config.Display3DText = true
 Config.SaveSteeringAngle = false             -- Default false for performe
 Config.DisableParkedVehiclesCollision = true -- Default false for performe
+---------------------------------------------------------------------------------------
 
 ---------------------------------------No Parking--------------------------------------
 Config.DebugBlipForRadius = true
@@ -76,3 +94,13 @@ Config.AllowedParkingLots = {
     {coords = vector3(131.8025, -712.3470, 32.4903), radius = 50.0, color = 2, sprite = 237},   -- parkinglot 17
     -- you can add here.
 }
+
+---------------------------------------------------------------------------------------
+-- Police impound (server side)
+function PoliceImpound(plate, fullImpound, price, body, engine, fuel)
+    if Config.Framework == 'esx' then
+        -- add your trigger here
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        TriggerEvent("police:server:Impound", plate, fullImpound, price, body, engine, fuel)                               
+    end
+end
