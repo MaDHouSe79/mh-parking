@@ -206,7 +206,7 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
                 end
                 TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
                 TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid})
-                print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
+                --print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
             end
         end
 	end
@@ -257,7 +257,7 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                     end             
                     TriggerClientEvent('mh-parking:client:AddVehicle', -1, {netid = netid, data = parkedVehicles[result.plate]})
                     TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
-                    print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
+                    --print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
                 else
                     Notify(src, Lang:t('info.limit_parking', {limit=defaultMax}, "error", 5000))
                 end
@@ -454,9 +454,9 @@ local function ParkingTimeCheckLoop()
     if Config.UseTimerPark then
         local result = nil
         if Config.Framework == 'esx' then
-            result = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE stored = 3", {})
+            result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE stored = 3", {})
         elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-            result = MySQL.Sync.fetchAll("SELECT * FROM player_vehicles WHERE state = 3", {})
+            result = MySQL.query.await("SELECT * FROM player_vehicles WHERE state = 3", {})
         end
         if result ~= nil then
             for k, v in pairs(result) do
@@ -464,6 +464,7 @@ local function ParkingTimeCheckLoop()
                 if v.parktime > 0 and total > v.parktime then
                     print("[MH Parking] - [Time Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been impound by the police.")
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and parkedVehicles[v.plate].entity ~= false then
+                        MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ? WHERE plate = ?', { 0, nil, v.plate })
                         RemoveVehicle(parkedVehicles[v.plate].netid)
                         TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {
                             netid = parkedVehicles[v.plate].netid,
