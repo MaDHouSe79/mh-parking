@@ -42,17 +42,12 @@ local disableNeedByPumpModels = {
 
 local function DeleteZones()
     for k, zone in pairs(zones) do
-        if zone ~= nil then
-            zone:destroy()
-        end
+        if zone ~= nil then zone:destroy() end
     end
     zones = {}
 
     for k, blip in pairs(zonesBlips) do
-        if DoesBlipExist(blip) then
-            RemoveBlip(blip)
-            blip = nil
-        end
+        if DoesBlipExist(blip) then RemoveBlip(blip) end
     end
     zonesBlips = {}
 end
@@ -108,9 +103,7 @@ local function AddBoatToTrailer(vehicle, trailer, leave)
     if not IsVehicleAttachedToTrailer(vehicle) and Config.TrailerBoats[GetEntityModel(vehicle)] then
         local rotation = GetEntityRotation(trailer)
         local plate = GetPlate(trailer)
-        if Config.ParkTrailersWithLoad then
-            trailerLoad[plate] = {hash = GetEntityModel(vehicle), mods = GetVehicleProperties(vehicle), plate = GetPlate(vehicle)}
-        end
+        if Config.ParkTrailersWithLoad then trailerLoad[plate] = {hash = GetEntityModel(vehicle), mods = GetVehicleProperties(vehicle), plate = GetPlate(vehicle)} end
         AttachEntityToEntity(vehicle, trailer, 20, 0.0, -1.05, 0.30, rotation.x, rotation.y, rotation.z, false, false, true, false, 20, true)
         SetEntityCanBeDamaged(vehicle, false)
         if leave == nil then leave = true end
@@ -133,26 +126,20 @@ end
 local function GetPedVehicleSeat(ped)
     local vehicle = GetVehiclePedIsIn(ped, false)
     for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
-        if (GetPedInVehicleSeat(vehicle, i) == ped) then
-            return i
-        end
+        if (GetPedInVehicleSeat(vehicle, i) == ped) then return i end
     end
     return -2
 end
 
 local function DoesPlateExist(plate)
     for i = 1, #parkedVehicles, 1 do
-        if parkedVehicles[i].plate == plate then
-            return true
-        end
+        if parkedVehicles[i].plate == plate then return true end
     end
     return false
 end
 
 local function DeleteparkedVehicles()
-    for i = 1, #parkedVehicles, 1 do
-        parkedVehicles[i] = nil
-    end
+    for i = 1, #parkedVehicles, 1 do parkedVehicles[i] = nil end
     parkedVehicles = {}
 end
 
@@ -207,9 +194,7 @@ local function BlinkVehiclelights(vehicle)
     LoadAnimDict('anim@mp_player_intmenu@key_fob@')
     LoadModel(model)
     local object = CreateObject(model, 0, 0, 0, true, true, true)
-    while not DoesEntityExist(object) do
-        Wait(1)
-    end
+    while not DoesEntityExist(object) do Wait(1) end
     AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, 57005), 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 1, true)
     TaskPlayAnim(ped, 'anim@mp_player_intmenu@key_fob@', 'fob_click', 8.0, -8.0, -1, 52, 0, false, false, false)
     TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 5, "lock", 0.2)
@@ -233,10 +218,7 @@ local function GetAllPlayersInVehicle(vehicle)
         if not IsVehicleSeatFree(vehicle, i) then
             local ped = GetPedInVehicleSeat(vehicle, i)
             if IsPedAPlayer(ped) then
-                pedsincar[#pedsincar + 1] = {
-                    playerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)),
-                    seat = i
-                }
+                pedsincar[#pedsincar + 1] = {playerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)), seat = i}
             end
         end
     end
@@ -248,9 +230,7 @@ local function AllPlayersLeaveVehicle(vehicle)
         local players = GetAllPlayersInVehicle(vehicle)
         if Config.OnlyAutoParkWhenEngineIsOff then
             local engineIsOn = GetIsVehicleEngineRunning(vehicle)
-            if not engineIsOn then
-                TriggerServerEvent('mh-parking:server:AllPlayersLeaveVehicle', VehToNet(vehicle), players)
-            end
+            if not engineIsOn then TriggerServerEvent('mh-parking:server:AllPlayersLeaveVehicle', VehToNet(vehicle), players) end
         else
             TriggerServerEvent('mh-parking:server:AllPlayersLeaveVehicle', VehToNet(vehicle), players)
         end
@@ -321,12 +301,7 @@ local function GetVehicleMenu()
                     onSelect = function()
                     end
                 }
-                lib.registerContext({
-                    id = 'parkMenu',
-                    title = "MH Parking V2",
-                    icon = "fa-solid fa-warehouse",
-                    options = options
-                })
+                lib.registerContext({id = 'parkMenu', title = "MH Parking V2", icon = "fa-solid fa-warehouse", options = options})
                 lib.showContext('parkMenu')
             else
                 Notify(Lang:t('info.no_vehicles_parked'), "error", 5000)
@@ -339,9 +314,7 @@ local function IsCloseByPrivedParkingLot(coords)
     for k, v in pairs(Config.PrivedParking) do
         if v.citizenid ~= PlayerData.citizenid then
             local distance = GetDistance(coords, v.coords)
-            if (distance < v.size.width) or (distance < v.size.length) then
-                return true
-            end
+            if (distance < v.size.width) or (distance < v.size.length) then return true end
         end
     end
     return false
@@ -350,9 +323,7 @@ end
 local function IsCloseByStationPump(coords)
     for hash in pairs(disableNeedByPumpModels) do
         local pump = GetClosestObjectOfType(coords.x, coords.y, coords.z, 10.0, hash, false, true, true)
-        if pump ~= 0 then
-            return true
-        end
+        if pump ~= 0 then return true end
     end
     return false
 end
@@ -372,9 +343,7 @@ end
 
 local function IsCloseByParkingLot(coords)
     for k, v in pairs(Config.AllowedParkingLots) do
-        if GetDistance(coords, v.coords) < v.radius then
-            return true
-        end
+        if GetDistance(coords, v.coords) < v.radius then return true end
     end
     return false
 end
@@ -439,9 +408,7 @@ local function LoadTarget()
                         GetInVehicle(entity)
                     end,
                     canInteract = function(entity, distance, data)
-                        if currentTrailer == -1 then
-                            return false
-                        end
+                        if currentTrailer == -1 then return false end
                         return true
                     end
                 }, {
@@ -453,12 +420,8 @@ local function LoadTarget()
                         RemoveFromTrailer(entity)
                     end,
                     canInteract = function(entity, distance, data)
-                        if not IsEntityAttached(entity) then
-                            return false
-                        end
-                        if currentTrailer == -1 then
-                            return false
-                        end
+                        if not IsEntityAttached(entity) then return false end
+                        if currentTrailer == -1 then return false end
                         return true
                     end
                 }},
@@ -478,9 +441,7 @@ local function LoadTarget()
                         isRampDown = true
                     end,
                     canInteract = function(entity, distance, data)
-                        if isRampDown then
-                            return false
-                        end
+                        if isRampDown then return false end
                         return true
                     end
                 }, {
@@ -494,9 +455,7 @@ local function LoadTarget()
                         isRampDown = false
                     end,
                     canInteract = function(entity, distance, data)
-                        if not isRampDown then
-                            return false
-                        end
+                        if not isRampDown then return false end
                         return true
                     end
                 }, {
@@ -510,12 +469,8 @@ local function LoadTarget()
                         SetVehicleDoorShut(entity, 4, false)
                     end,
                     canInteract = function(entity, distance, data)
-                        if isRampDown then
-                            return false
-                        end
-                        if not isPlatformDown then
-                            return false
-                        end
+                        if isRampDown then return false end
+                        if not isPlatformDown then return false end
                         return true
                     end
                 }, {
@@ -529,12 +484,8 @@ local function LoadTarget()
                         SetVehicleDoorOpen(entity, 4, false)
                     end,
                     canInteract = function(entity, distance, data)
-                        if not isRampDown then
-                            return false
-                        end
-                        if isPlatformDown then
-                            return false
-                        end
+                        if not isRampDown then return false end
+                        if isPlatformDown then return false end
                         return true
                     end
                 }},
@@ -552,9 +503,7 @@ local function LoadTarget()
                         GetInVehicle(entity)
                     end,
                     canInteract = function(entity, distance, data)
-                        if selectedVehicle == nil then
-                            return false
-                        end
+                        if selectedVehicle == nil then return false end
                         return true
                     end
                 }, {
@@ -566,9 +515,7 @@ local function LoadTarget()
                         selectedVehicle = entity
                     end,
                     canInteract = function(entity, distance, data)
-                        if selectedVehicle ~= nil then
-                            return false
-                        end
+                        if selectedVehicle ~= nil then return false end
                         return true
                     end
                 }},
@@ -664,9 +611,7 @@ RegisterNetEvent('mh-parking:client:RemoveVehicle', function(data)
             local plate = GetVehicleNumberPlateText(vehicle)
             if parkedVehicles[i].plate == plate then
                 SetEntityInvincible(vehicle, false)
-                if PlayerData.citizenid == parkedVehicles[i].owner then
-                    BlinkVehiclelights(parkedVehicles[i].entity)
-                end
+                if PlayerData.citizenid == parkedVehicles[i].owner then BlinkVehiclelights(parkedVehicles[i].entity) end
                 if parkedVehicles[i].blip ~= nil then
                     if DoesBlipExist(parkedVehicles[i].blip) then
                         RemoveBlip(parkedVehicles[i].blip)
@@ -707,9 +652,7 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                     SetVehicleSteeringAngle(vehicle, v.steerangle + 0.0)
                     DoVehicleDamage(vehicle, v.body, v.engine)
                     SetFuel(vehicle, v.fuel + 0.0)
-                    if v.owner == PlayerData.citizenid then
-                        SetClientVehicleOwnerKey(plate, vehicle)
-                    end
+                    if v.owner == PlayerData.citizenid then SetClientVehicleOwnerKey(plate, vehicle) end
                     local coords = GetEntityCoords(vehicle)
                     local heading = GetEntityHeading(vehicle)
                     SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
@@ -731,14 +674,10 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                                             local entity_load = NetToVeh(v.trailerdata.load.netid)
                                             if DoesEntityExist(entity_load) then
                                                 local boat_plate = GetPlate(entity_load)
-                                                if v.owner == PlayerData.citizenid then
-                                                    SetClientVehicleOwnerKey(boat_plate, entity_load)
-                                                end
+                                                if v.owner == PlayerData.citizenid then SetClientVehicleOwnerKey(boat_plate, entity_load) end
                                                 SetVehicleProperties(entity_load, v.trailerdata.load.mods)
                                                 local rotation = GetEntityRotation(trailer)
-                                                if not IsEntityAttached(entity_load) then
-                                                    AddBoatToTrailer(entity_load, trailer, false)
-                                                end
+                                                if not IsEntityAttached(entity_load) then AddBoatToTrailer(entity_load, trailer, false) end
                                                 SetEntityCanBeDamaged(entity_load, false)
                                             end
                                         end
@@ -781,12 +720,8 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                                     TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(entity), -1, GetPlate(entity))
                                 end,
                                 canInteract = function(entity)
-                                    if not IsVehicleNotParked(GetPlate(entity)) then
-                                        return false
-                                    end
-                                    if v.owner ~= PlayerData.citizenid then
-                                        return false
-                                    end
+                                    if not IsVehicleNotParked(GetPlate(entity)) then return false end
+                                    if v.owner ~= PlayerData.citizenid then return false end
                                     return true
                                 end
                             }},
@@ -800,12 +735,8 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                             icon = "fas fa-car",
                             label = "Unpark Vehicle",
                             canInteract = function(data)
-                                if not IsVehicleNotParked(GetPlate(data.entity)) then
-                                     return false
-                                end
-                                if v.owner ~= PlayerData.citizenid then
-                                    return false
-                                end
+                                if not IsVehicleNotParked(GetPlate(data.entity)) then return false end
+                                if v.owner ~= PlayerData.citizenid then return false end
                                 return true
                             end,
                             distance = 3.0
@@ -835,11 +766,7 @@ RegisterNetEvent('mh-parking:client:TogglDebugPoly', function(data)
         if result.status and result.isadmin then
             isAdmin = true
             local txt = ""
-            if useDebugPoly then
-                txt = "enable"
-            else
-                txt = "disable"
-            end
+            if useDebugPoly then txt = "enable" else txt = "disable" end
             Notify("Polyzone debug is now " .. txt)
         end
         LoadZone()
@@ -849,22 +776,14 @@ end)
 RegisterNetEvent('mh-parking:client:toggleParkText', function()
     display3DText = not display3DText
     local txt = nil
-    if display3DText then
-        txt = "enable"
-    else
-        txt = "disable"
-    end
+    if display3DText then txt = "enable" else txt = "disable" end
     Notify("Parked vehicle text is now " .. txt, "success", 5000)
 end)
 
 RegisterNetEvent('mh-parking:client:toggleSteerAngle', function()
     saveSteeringAngle = not saveSteeringAngle
     local txt = nil
-    if saveSteeringAngle then
-        txt = "enable"
-    else
-        txt = "disable"
-    end
+    if saveSteeringAngle then txt = "enable" else txt = "disable" end
     Notify("Steer angle save is now " .. txt, "success", 5000)
 end)
 
@@ -883,15 +802,7 @@ RegisterNetEvent('mh-parking:client:CreatePark', function(data)
     TriggerCallback('mh-parking:server:IsAdmin', function(result)
         if result.status and result.isadmin then
             if data.id ~= nil and data.name ~= nil and data.label ~= nil then
-                local data = {
-                    id = data.id,
-                    name = data.name,
-                    job = data.job,
-                    label = data.label,
-                    street = GetStreetName(GetEntityCoords(PlayerPedId())),
-                    coords = GetEntityCoords(PlayerPedId()),
-                    heading = GetEntityHeading(PlayerPedId())
-                }
+                local data = {id = data.id, name = data.name, job = data.job, label = data.label, street = GetStreetName(GetEntityCoords(PlayerPedId())), coords = GetEntityCoords(PlayerPedId()), heading = GetEntityHeading(PlayerPedId())}
                 useDebugPoly = true
                 TriggerServerEvent('mh-parking:server:CreatePark', data)
             end
@@ -906,12 +817,7 @@ CreateThread(function()
             local vehicle = GetVehiclePedIsUsing(PlayerPedId())
             if vehicle ~= nil or vehicle ~= -1 then
                 if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
-                    local data = {
-                        netid = VehToNet(vehicle),
-                        plate = GetPlate(vehicle), 
-                        location = GetEntityCoords(vehicle), 
-                        heading = GetEntityHeading(vehicle)
-                    }
+                    local data = {netid = VehToNet(vehicle), plate = GetPlate(vehicle), location = GetEntityCoords(vehicle), heading = GetEntityHeading(vehicle)}
                     TriggerServerEvent('mh-parking:server:LastDriveLocation', data)
                 end
             end
@@ -1038,17 +944,14 @@ end)
 
 -- Set Steering Angle to save when parking the vehicle.
 CreateThread(function()
-    local angle = 0.0
-    local speed = 0.0
+    local angle, speed = 0.0, 0.0
     while true do
         Wait(0)
         if isLoggedIn and saveSteeringAngle then
             local veh = GetVehiclePedIsUsing(PlayerPedId())
             if DoesEntityExist(veh) then
                 local tangle = GetVehicleSteeringAngle(veh)
-                if tangle > 10.0 or tangle < -10.0 then
-                    angle = tangle
-                end
+                if tangle > 10.0 or tangle < -10.0 then angle = tangle end
                 speed = GetEntitySpeed(veh)
                 local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
                 if speed < 0.1 and DoesEntityExist(vehicle) and not GetIsTaskActive(PlayerPedId(), 151) and
@@ -1101,20 +1004,13 @@ CreateThread(function()
                             local heading = GetEntityHeading(vehicle)
                             local street = GetStreetName(coords)
                             local fuel = GetFuel(vehicle)
-                            local location = {
-                                x = coords.x,
-                                y = coords.y,
-                                z = coords.z,
-                                h = heading
-                            }
+                            local location = {x = coords.x, y = coords.y, z = coords.z, h = heading}
                             local canSave = true
                             local allowToPark = AllowToPark(coords)
                             if allowToPark then
                                 if Config.OnlyAutoParkWhenEngineIsOff then
                                     local engineIsOn = GetIsVehicleEngineRunning(vehicle)
-                                    if engineIsOn then
-                                        canSave = false
-                                    end
+                                    if engineIsOn then canSave = false end
                                 end
                             else
                                 canSave = false
@@ -1167,9 +1063,7 @@ CreateThread(function()
                             sleep = 0
                             local storedVehicle = GetPlayerInParkedVehicle(vehicle)
                             if storedVehicle ~= false then
-                                DisplayHelpText(Lang:t("info.press_drive_car", {
-                                    key = Config.KeyParkBindButton
-                                }))
+                                DisplayHelpText(Lang:t("info.press_drive_car", {key = Config.KeyParkBindButton}))
                                 if IsControlJustReleased(0, Config.ParkingButton) then
                                     IsUsingParkCommand = true
                                 end
@@ -1178,8 +1072,7 @@ CreateThread(function()
                                 IsUsingParkCommand = false
                                 if storedVehicle ~= false then
                                     SetPedIntoVehicle(ped, vehicle, -1)
-                                    TriggerServerEvent('mh-parking:server:EnteringVehicle', storedVehicle.netid, -1,
-                                        storedVehicle.plate)
+                                    TriggerServerEvent('mh-parking:server:EnteringVehicle', storedVehicle.netid, -1, storedVehicle.plate)
                                     storedVehicle = nil
                                     sleep = 2000
                                 else
@@ -1195,9 +1088,7 @@ CreateThread(function()
                                             if AllowToPark(coords) then
                                                 if Config.OnlyAutoParkWhenEngineIsOff then
                                                     local engineIsOn = GetIsVehicleEngineRunning(vehicle)
-                                                    if engineIsOn then
-                                                        canSave = false
-                                                    end
+                                                    if engineIsOn then canSave = false end
                                                 end
                                             else
                                                 canSave = false
@@ -1210,17 +1101,11 @@ CreateThread(function()
                                                 local seat = GetPedVehicleSeat(ped)
                                                 local plate = GetPlate(vehicle)
                                                 local heading = GetEntityHeading(vehicle)
-                                                local location = {
-                                                    x = coords.x,
-                                                    y = coords.y,
-                                                    z = coords.z,
-                                                    h = heading
-                                                }
+                                                local location = {x = coords.x, y = coords.y, z = coords.z, h = heading}
                                                 local steerangle = GetVehicleSteeringAngle(vehicle) + 0.0
                                                 local street = GetStreetName(vehicle)
                                                 local fuel = GetFuel(vehicle)
-                                                TriggerServerEvent('mh-parking:server:LeftVehicle', netid, -1, plate,
-                                                    location, steerangle, street, fuel)
+                                                TriggerServerEvent('mh-parking:server:LeftVehicle', netid, -1, plate, location, steerangle, street, fuel)
                                                 isInVehicle = false
                                                 currentVehicle = 0
                                                 currentSeat = 0

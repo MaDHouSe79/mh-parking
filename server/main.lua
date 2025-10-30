@@ -7,16 +7,14 @@ local parkedVehicles = {}
 local function IfPlayerIsVIPGetMaxParking(src)
     local Player = GetPlayer(src)
     local citizenid = GetCitizenId(src)
-    local max = Config.Maxparking
-    if Player then
-        local data = nil
-        if Config.Framework == 'esx' then
-            data = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = ?", {citizenid})[1]
-        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-            data = MySQL.Sync.fetchAll("SELECT * FROM players WHERE citizenid = ?", {citizenid})[1]
-        end
-        if data ~= nil and data.parkvip == 1 then max = data.parkmax end
+    local max = Config.DefaultMaxParking
+    local data = nil
+    if Config.Framework == 'esx' then
+        data = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = ?", {citizenid})[1]
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        data = MySQL.Sync.fetchAll("SELECT * FROM players WHERE citizenid = ?", {citizenid})[1]
     end
+    if data ~= nil and data.parkvip == 1 then max = data.parkmax end
     return max
 end
 
@@ -61,7 +59,7 @@ local function DeleteVehicleAtcoords(coords)
         DeleteEntity(closestVehicle)
         while DoesEntityExist(closestVehicle) do
             DeleteEntity(closestVehicle)
-            Wait(50)
+            Wait(0)
         end
     end
 end
@@ -355,10 +353,7 @@ RegisterNetEvent('mh-parking:server:AllPlayersLeaveVehicle', function(vehicleNet
         local vehicle = NetworkGetEntityFromNetworkId(vehicleNetID)
         if DoesEntityExist(vehicle) then
             for i = 1, #players, 1 do
-                TriggerClientEvent('mh-parking:client:leaveVehicle', players[i].playerId, {
-                    vehicleNetID = vehicleNetID,
-                    playerId = players[i].playerId
-                })
+                TriggerClientEvent('mh-parking:client:leaveVehicle', players[i].playerId, {vehicleNetID = vehicleNetID, playerId = players[i].playerId})
             end
         end
     end
@@ -391,17 +386,11 @@ RegisterNetEvent('mh-parking:server:CreatePark', function(input)
             name = input.name,
             street = input.street,
             coords = vector4(input.coords.x, input.coords.y, input.coords.z, input.heading),
-            size = {
-                width = 1.5,
-                length = 4.0
-            },
+            size = {width = 1.5, length = 4.0},
             job = input.job
         }
         Config.PrivedParking[count] = data
-        TriggerClientEvent('mh-parking:client:reloadZones', -1, {
-            zoneid = count,
-            list = Config.PrivedParking
-        })
+        TriggerClientEvent('mh-parking:client:reloadZones', -1, {zoneid = count, list = Config.PrivedParking})
     else
         print("not a admin")
     end
@@ -427,18 +416,16 @@ end)
 
 AddCommand(Config.Commands.client.parkmenu.command, Config.Commands.client.parkmenu.info, {}, true, function(source, args)
     local src = source
-    TriggerClientEvent('mh-parking:client:OpenParkMenu', src, {
-        status = true
-    })
+    TriggerClientEvent('mh-parking:client:OpenParkMenu', src, {status = true})
 end)
 
 -- Admin Commands
 AddCommand(Config.Commands.admin.addparkvip.command, Config.Commands.admin.addparkvip.info, {}, true, function(source, args)
-    local src, amount, targetID = source, Config.Maxparking, -1
+    local src, amount, targetID = source, Config.DefaultMaxParking, -1
     if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
     if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
     if targetID ~= -1 then
-         local Player = GetPlayer(targetID)
+        local Player = GetPlayer(targetID)
         if Player then
             if Config.Framework == 'esx' then
                 MySQL.Async.execute("UPDATE users SET parkvip = ?, parkmax = ? WHERE owner = ?", {1, amount, Player.identifier})
@@ -498,26 +485,17 @@ end, 'admin')
 AddCommand(Config.Commands.admin.deletepark.command, Config.Commands.admin.deletepark.info, {{name = "zoneid", info = "zone id"}, {name = "filename", help = "filename"}}, false, function(source, args)
     local src = source
     local zoneid, filename = nil, nil
-    if args[1] ~= nil then
-        zoneid = tonumber(args[1])
-    end
-    if args[2] ~= nil then
-        filename = tostring(args[2])
-    end
+    if args[1] ~= nil then zoneid = tonumber(args[1]) end
+    if args[2] ~= nil then filename = tostring(args[2]) end
     if zoneid ~= nil and filename ~= nil then
         local path = GetResourcePath(GetCurrentResourceName())
         path = path:gsub('//', '/') .. '/shared/configs/' .. filename .. '.lua'
         local file = io.open(path, "r")
         if file ~= nil then
             file:close()
-            if Config.PrivedParking[zoneid] then
-                table.remove(Config.PrivedParking, zoneid)
-            end
+            if Config.PrivedParking[zoneid] then table.remove(Config.PrivedParking, zoneid) end
             os.remove(path)
-            TriggerClientEvent('mh-parking:client:reloadZones', -1, {
-                zoneid = zoneid,
-                list = Config.PrivedParking
-            })
+            TriggerClientEvent('mh-parking:client:reloadZones', -1, {zoneid = zoneid, list = Config.PrivedParking})
         end
     end
 end, 'admin')
@@ -533,12 +511,7 @@ AddCommand(Config.Commands.admin.createpark.command, Config.Commands.admin.creat
     if args[6] ~= nil then label = label .. " " .. args[6] end
     if args[7] ~= nil then label = label .. " " .. args[7] end
     if id ~= nil and name ~= nil and label ~= nil then
-        TriggerClientEvent('mh-parking:client:CreatePark', src, {
-            id = id,
-            name = name,
-            job = job,
-            label = label
-        })
+        TriggerClientEvent('mh-parking:client:CreatePark', src, {id = id, name = name, job = job, label = label})
     end
 end, 'admin')
 
@@ -547,12 +520,7 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
     local src = source
     if parkedVehicles[plate] and parkedVehicles[plate].netid ~= false and parkedVehicles[plate].entity ~= false then
         RemoveVehicle(parkedVehicles[plate].netid)
-        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {
-            netid = parkedVehicles[plate].netid,
-            entity = parkedVehicles[plate].entity,
-            owner = parkedVehicles[plate].owner,
-            plate = parkedVehicles[plate].plate
-        })
+        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = parkedVehicles[plate].netid, entity = parkedVehicles[plate].entity, owner = parkedVehicles[plate].owner, plate = parkedVehicles[plate].plate})
     end
 end)
 
@@ -572,12 +540,7 @@ local function ParkingTimeCheckLoop()
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and
                         parkedVehicles[v.plate].entity ~= false then
                         RemoveVehicle(parkedVehicles[v.plate].netid)
-                        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {
-                            netid = parkedVehicles[v.plate].netid,
-                            entity = parkedVehicles[v.plate].entity,
-                            owner = parkedVehicles[v.plate].owner,
-                            plate = parkedVehicles[v.plate].plate
-                        })
+                        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = parkedVehicles[v.plate].netid, entity = parkedVehicles[v.plate].entity, owner = parkedVehicles[v.plate].owner, plate = parkedVehicles[v.plate].plate})
                     end
                     local cost = (math.floor(((os.time() - v.time) / Config.PayTimeInSecs) * Config.ParkPrice))
                     PoliceImpound(v.plate, true, cost, v.body, v.engine, v.fuel)
