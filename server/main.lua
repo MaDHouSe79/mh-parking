@@ -271,7 +271,7 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
                 TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
                 TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid})
                 MySQL.Async.execute('UPDATE player_vehicles SET trailerdata = ?, lastlocation = ? WHERE plate = ?', {nil, nil, plate})
-                print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
+                --print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
             end
         end
     end
@@ -328,7 +328,7 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
                     elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
                         MySQL.Async.execute('UPDATE player_vehicles SET lastlocation = ? WHERE plate = ?', {nil, plate})
                     end
-                    print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
+                    --print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
                 else
                     Notify(src, Lang:t('info.limit_parking', {limit = defaultMax}, "error", 5000))
                 end

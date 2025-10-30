@@ -68,9 +68,9 @@
 - You need to copy this data to the `shared/vehicles.lua` file in `mh-parking` folder.
 - When you did that you need to set `Config.RewriteVehicleFile` to `false` again.
 
-# You need to rejoin when
-- You change someting in code.
+# You can not restart
 - There is no onstart but only a onjoin check when a player jois the server.
+- so when something does not work you need te restart your game.
 
 # Add Code in your garage/vehicleshop scripts
 - You need to this inder to make parking work propperly,

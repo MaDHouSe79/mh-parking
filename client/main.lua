@@ -587,14 +587,6 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        LoadZone()
-        TriggerCallback('mh-parking:server:IsAdmin', function(result) isAdmin = result.isadmin end)
-        TriggerServerEvent('mh-parking:server:OnJoin')
-    end
-end)
-
 RegisterNetEvent(OnPlayerUnload)
 AddEventHandler(OnPlayerUnload, function()
     PlayerData = {}
@@ -657,9 +649,7 @@ RegisterNetEvent('mh-parking:client:AddVehicle', function(result)
         }
         if PlayerData.citizenid == result.data.owner then
             local last = Config.DebugBlipForRadius
-            if last then
-                Config.DebugBlipForRadius = false
-            end
+            if last then Config.DebugBlipForRadius = false end
             BlinkVehiclelights(vehicle)
             Config.DebugBlipForRadius = last
         end
