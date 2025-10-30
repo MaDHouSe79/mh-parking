@@ -72,7 +72,7 @@
 - You change someting in code.
 - There is no onstart but only a onjoin check when a player jois the server.
 
-# Add Code in your garage script
+# Add Code in your garage/vehicleshop scripts
 - you need to this inder to make parking work propperly
 - add this below in your config file of your garage script
 ```lua

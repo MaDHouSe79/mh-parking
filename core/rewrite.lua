@@ -1,3 +1,6 @@
+-- [[ ===================================================== ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
+-- [[ ===================================================== ]] --
 local function RewriteVehicleFile()
     local path = GetResourcePath(GetCurrentResourceName())
     path = path:gsub('//', '/') .. '/vehicles.lua'

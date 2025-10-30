@@ -1,15 +1,24 @@
+-- [[ ===================================================== ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
+-- [[ ===================================================== ]] --
 Config = {}
 ---------------------------------------------------------------------------------------
-Config.Framework = 'qb'                      -- qb/esx/qbx
-Config.UseDebugPoly = false                  -- Default false, for dev mode to see the polyzones better.
+Config.DevMode = false
+Config.Framework = 'qb' -- qb/esx/qbx
+Config.UseDebugPoly = false -- Default false, for dev mode to see the polyzones better.
+Config.UseTarget = true -- for now false, don't use it yet.
+Config.TargetScript = "qb-target" -- qb-target or ox_target
+Config.KeyScript = "qb-vehiclekeys"  -- qb-vehiclekeys or qbx_vehiclekeys
 ---------------------------------------------------------------------------------------
-Config.UseAsVip = false               -- when true set Config.DefaultMaxParking to 0 or keep it 1
-Config.UseTimerPark = true            -- When true this will delete vehicle after a amount of time not used.
-Config.DefaultMaxParking = 3          -- This is default 0 when you have Config.UseAsVip = true
+Config.UseAsVip = false -- when true set Config.DefaultMaxParking to 0 or keep it 1
+Config.ParkWithTrailers = true -- Default false, when true players can park trailers on the back from the vehicle. (don't use it for now)
+Config.ParkTrailersWithLoad = true -- Default false, if true players can park with trailers and load (don't use it for now)
+Config.UseTimerPark = true -- When true this will delete vehicle after a amount of time not used.
+Config.DefaultMaxParking = 5 -- This is default 0 when you have Config.UseAsVip = true
 -- Police Impound
-Config.PayTimeInSecs = 10             -- 10 dollar or euro...
-Config.ParkPrice = 100                -- price to park
-Config.MaxParkTime = 259200           -- 3 Days, after that the vehicle wil be impounded.
+Config.PayTimeInSecs = 10 -- 10 dollar or euro...
+Config.ParkPrice = 100 -- price to park
+Config.MaxParkTime = 259200 -- 3 Days, after that the vehicle wil be impounded.
 -- 1 Day  = 86400 Seconden   10 Days   = 864000 Seconden   2500    Days = 216000000 Seconden
 -- 2 Days = 172800 Seconden  20 Days   = 1728000 Seconden  5000    Days = 432000000 Seconden
 -- 3 Days = 259200 Seconden  30 Days   = 2592000 Seconden  10000   Days = 864000000 Seconden
@@ -19,21 +28,20 @@ Config.MaxParkTime = 259200           -- 3 Days, after that the vehicle wil be i
 -- 7 Days = 604800 Seconden  250 Days  = 21600000 Seconden	250000  Days = 21600000000 Seconden
 -- 8 Days = 691200 Seconden  500 Days  = 43200000 Seconden 500000  Days = 43200000000 Seconden
 -- 9 Days = 777600 Seconden  1000 Days = 86400000 Seconden 1000000 Days = 86400000000 Seconden
-
 ---------------------------------------------------------------------------------------
-Config.UseAutoPark = true                    -- Default true, when false it uses the F3(qbx)/F5(qb) button of /park command or When true Press F when the engine is off.
-Config.ParkingButton = 155                   -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
-Config.KeyParkBindButton = "F5"              -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
-Config.UsePrivedParking = true               -- Default true, when true you can create prived parking polts for players.
-Config.PrivedParking = {}                    -- Dont edit this is a placeholder.
+Config.UseAutoPark = true -- Default true, when false it uses the F3(qbx)/F5(qb) button of /park command or When true Press F when the engine is off.
+Config.ParkingButton = 155 -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.KeyParkBindButton = "F5" -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.UsePrivedParking = true -- Default true, when true you can create prived parking polts for players.
+Config.PrivedParking = {} -- Dont edit this is a placeholder.
 ---------------------------------------------------------------------------------------
-Config.OnlyAutoParkWhenEngineIsOff = true    -- Default true, engine must be off when autopark works
-Config.keepEngineOnWhenAbandoned = true      -- Default true, when true it keep the engine on when you get out the vehicle.
+Config.OnlyAutoParkWhenEngineIsOff = true -- Default true, engine must be off when autopark works
+Config.keepEngineOnWhenAbandoned = true -- Default true, when true it keep the engine on when you get out the vehicle.
 ---------------------------------------------------------------------------------------
-Config.Display3DText = true                  -- Default false for performe
-Config.DisplayDistance = 15                  -- Default 3 for performe
-Config.DisplayToAllPlayers = true            -- Default false, it only displays to the owner of the vehicle when Config.Display3DText = true
-Config.SaveSteeringAngle = false             -- Default false for performe
+Config.Display3DText = true -- Default false for performe
+Config.DisplayDistance = 15 -- Default 3 for performe
+Config.DisplayToAllPlayers = true -- Default false, it only displays to the owner of the vehicle when Config.Display3DText = true
+Config.SaveSteeringAngle = false -- Default false for performe
 Config.DisableParkedVehiclesCollision = true -- Default false for performe
 ---------------------------------------------------------------------------------------
 
@@ -94,6 +102,24 @@ Config.AllowedParkingLots = {
     {coords = vector3(131.8025, -712.3470, 32.4903), radius = 50.0, color = 2, sprite = 237},   -- parkinglot 17
     -- you can add here.
 }
+---------------------------------------------------------------------------------------
+-- Commands
+Config.Commands = {
+    admin = {
+        toggledebugpoly  = {command = "toggledebugpoly",  info = "Toggle Debug Poly On/Off"},
+        addparkvip       = {command = "addparkvip",       info = "Add player as vip"},
+        removeparkvip    = {command = "removeparkvip",    info = "Remove player as vip"},
+        parkresetall     = {command = "parkresetall",     info = "Reset all players"},
+        parkresetplayer  = {command = "parkresetplayer",  info = "Reset a player"},
+        deletepark       = {command = "deletepark",       info = "Delete Parked"},
+        createpark       = {command = "deletepark",       info = "Create parked"},
+    },
+    client = {
+        parkmenu         = {command = "parkmenu",         info = "Open Park Systen Menu"},
+        togglesteerangle = {command = "togglesteerangle", info = "Toggle steer angle on or off"},
+        toggleparktext   = {command = "toggleparktext",   info = "Toggle park text on or off"},
+    },
+}
 
 ---------------------------------------------------------------------------------------
 -- Police impound (server side)
@@ -101,6 +127,15 @@ function PoliceImpound(plate, fullImpound, price, body, engine, fuel)
     if Config.Framework == 'esx' then
         -- add your trigger here
     elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-        TriggerEvent("police:server:Impound", plate, fullImpound, price, body, engine, fuel)                               
+        TriggerEvent("police:server:Impound", plate, fullImpound, price, body, engine, fuel)
+    end
+end
+
+-- Vehicle keys (client side)
+function SetClientVehicleOwnerKey(plate, vehicle)
+    if Config.KeyScript == "qb-vehiclekeys" then
+        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
+    elseif Config.KeyScript == "qbx_vehiclekeys" then
+        TriggerEvent('vehiclekeys:client:SetOwner', plate)
     end
 end

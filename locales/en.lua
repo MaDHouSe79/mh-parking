@@ -1,3 +1,6 @@
+-- [[ ===================================================== ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
+-- [[ ===================================================== ]] --
 local Translations = {
     info = {
         ['not_the_owner'] = "You don't own this vehicle...",

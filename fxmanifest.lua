@@ -1,7 +1,3 @@
---[[ ===================================================== ]]--
---[[           MH NPC Services Script by MaDHouSe          ]]--
---[[ ===================================================== ]]--
-
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
@@ -17,6 +13,7 @@ shared_scripts {
     'locales/*.lua',
     'shared/config.lua',
     'shared/configs/*.lua',
+    'shared/trailers.lua',
     'shared/vehicles.lua',
     'shared/functions.lua',
 }
@@ -41,7 +38,4 @@ server_scripts {
 
 dependencies {
     'oxmysql',
-    'qb-core',
 }
-
-

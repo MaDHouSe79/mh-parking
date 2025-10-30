@@ -1,3 +1,6 @@
+-- [[ ===================================================== ]] --
+-- [[              MH Park System by MaDHouSe79             ]] --
+-- [[ ===================================================== ]] --
 Framework, TriggerCallback, OnPlayerLoaded, OnPlayerUnload = nil, nil, nil, nil
 isLoggedIn, PlayerData = false, {}
 
@@ -6,44 +9,95 @@ if GetResourceState("es_extended") ~= 'missing' then
     TriggerCallback = Framework.TriggerServerCallback
     OnPlayerLoaded = 'esx:playerLoaded'
     OnPlayerUnload = 'esx:playerUnLoaded'
-    function GetPlayerData() TriggerCallback('esx:getPlayerData', function(data) PlayerData = data end) return PlayerData end
-    function IsDead() return (GetEntityHealth(PlayerPedId()) <= 0) end
+
+    function GetPlayerData()
+        TriggerCallback('esx:getPlayerData', function(data)
+            PlayerData = data
+        end)
+        return PlayerData
+    end
+
+    function IsDead()
+        return (GetEntityHealth(PlayerPedId()) <= 0)
+    end
 elseif GetResourceState("qb-core") ~= 'missing' then
     Framework = exports['qb-core']:GetCoreObject()
     TriggerCallback = Framework.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
-    function GetPlayerData() return Framework.Functions.GetPlayerData() end
-    function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
-    RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject()
-end)
+
+    function GetPlayerData()
+        return Framework.Functions.GetPlayerData()
+    end
+
+    function IsDead()
+        return Framework.Functions.GetPlayerData().metadata['isdead']
+    end
+
+    RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
+        PlayerData = data
+    end)
+
+    RegisterNetEvent('QBCore:Client:UpdateObject', function()
+        Framework = exports['qb-core']:GetCoreObject()
+    end)
 elseif GetResourceState("qbx_core") ~= 'missing' then
     Framework = exports['qb-core']:GetCoreObject()
     TriggerCallback = Framework.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
-    function GetPlayerData() return Framework.Functions.GetPlayerData() end
-    function IsDead() return Framework.Functions.GetPlayerData().metadata['isdead'] end
-    RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject()
-end)
+
+    function GetPlayerData()
+        return Framework.Functions.GetPlayerData()
+    end
+
+    function IsDead()
+        return Framework.Functions.GetPlayerData().metadata['isdead']
+    end
+
+    RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
+        PlayerData = data
+    end)
+
+    RegisterNetEvent('QBCore:Client:UpdateObject', function()
+        Framework = exports['qb-core']:GetCoreObject()
+    end)
+end
+
+function GetInVehicle(entity)
+    TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
+    FreezeEntityPosition(entity, false)
+    SetVehicleHandbrake(entity, false)
+    DetachEntity(entity, true, true)
+    SetVehicleEngineOn(entity, true, true)
 end
 
 function Notify(message, type, length)
-    lib.notify({title = "MH Park System", description = message, type = type})
+    lib.notify({
+        title = "MH Park System",
+        description = message,
+        type = type
+    })
 end
 
 function SetFuel(vehicle, fuel)
-    if not DoesEntityExist(vehicle) then return end
-    if fuel < 0 then fuel = 0 end
-    if fuel > 100 then fuel = 100 end
+    if not DoesEntityExist(vehicle) then
+        return
+    end
+    if fuel < 0 then
+        fuel = 0
+    end
+    if fuel > 100 then
+        fuel = 100
+    end
     Entity(vehicle).state:set('fuel', fuel + 0.0, true)
     SetVehicleFuelLevel(vehicle, fuel + 0.0)
 end
 
 function GetFuel(vehicle)
-    if not DoesEntityExist(vehicle) then return end
+    if not DoesEntityExist(vehicle) then
+        return
+    end
     return Entity(vehicle).state.fuel or -1.0
 end
 
@@ -89,7 +143,9 @@ end
 function LoadAnimDict(dict)
     if not HasAnimDictLoaded(dict) then
         RequestAnimDict(dict)
-        while not HasAnimDictLoaded(dict) do Wait(1) end
+        while not HasAnimDictLoaded(dict) do
+            Wait(1)
+        end
     end
 end
 
@@ -97,39 +153,27 @@ function DoVehicleDamage(vehicle, body, engine)
     local engine = engine + 0.0
     local body = body + 0.0
     if body < 900.0 then
-        SmashVehicleWindow(vehicle, 0)
-        SmashVehicleWindow(vehicle, 1)
-        SmashVehicleWindow(vehicle, 2)
-        SmashVehicleWindow(vehicle, 3)
-        SmashVehicleWindow(vehicle, 4)
-        SmashVehicleWindow(vehicle, 5)
-        SmashVehicleWindow(vehicle, 6)
-        SmashVehicleWindow(vehicle, 7)
+        for i = 0, 7, 1 do
+            SmashVehicleWindow(vehicle, i)
+        end
     end
     if body < 800.0 then
-        SetVehicleDoorBroken(vehicle, 0, true)
-        SetVehicleDoorBroken(vehicle, 1, true)
-        SetVehicleDoorBroken(vehicle, 2, true)
-        SetVehicleDoorBroken(vehicle, 3, true)
-        SetVehicleDoorBroken(vehicle, 4, true)
-        SetVehicleDoorBroken(vehicle, 5, true)
-        SetVehicleDoorBroken(vehicle, 6, true)
+        for i = 1, 6, 1 do
+            SetVehicleDoorBroken(vehicle, i, true)
+        end
     end
     if engine < 700.0 then
-        SetVehicleTyreBurst(vehicle, 1, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 2, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 3, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 4, false, 990.0)
+        for i = 0, 7, 1 do
+            SetVehicleTyreBurst(vehicle, i, false, 990.0)
+        end
     end
     if engine < 500.0 then
-        SetVehicleTyreBurst(vehicle, 0, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 5, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 6, false, 990.0)
-        SetVehicleTyreBurst(vehicle, 7, false, 990.0)
+        for i = 0, 7, 1 do
+            SetVehicleTyreBurst(vehicle, i, false, 990.0)
+        end
     end
     SetVehicleEngineHealth(vehicle, engine)
     SetVehicleBodyHealth(vehicle, body)
-    SetVehiclePetrolTankHealth(vehicle, 1000.0)
 end
 
 function GetVehicleProperties(vehicle)
@@ -139,12 +183,12 @@ function GetVehicleProperties(vehicle)
         local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
         if GetIsVehiclePrimaryColourCustom(vehicle) then
             local r, g, b = GetVehicleCustomPrimaryColour(vehicle)
-            colorPrimary = { r, g, b }
+            colorPrimary = {r, g, b}
         end
 
         if GetIsVehicleSecondaryColourCustom(vehicle) then
             local r, g, b = GetVehicleCustomSecondaryColour(vehicle)
-            colorSecondary = { r, g, b }
+            colorSecondary = {r, g, b}
         end
 
         local extras = {}
@@ -217,12 +261,8 @@ function GetVehicleProperties(vehicle)
             windowTint = GetVehicleWindowTint(vehicle),
             windowStatus = windowStatus,
             doorStatus = doorStatus,
-            neonEnabled = {
-                IsVehicleNeonLightEnabled(vehicle, 0),
-                IsVehicleNeonLightEnabled(vehicle, 1),
-                IsVehicleNeonLightEnabled(vehicle, 2),
-                IsVehicleNeonLightEnabled(vehicle, 3)
-            },
+            neonEnabled = {IsVehicleNeonLightEnabled(vehicle, 0), IsVehicleNeonLightEnabled(vehicle, 1),
+                           IsVehicleNeonLightEnabled(vehicle, 2), IsVehicleNeonLightEnabled(vehicle, 3)},
             neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
             interiorColor = GetVehicleInteriorColour(vehicle),
             extras = extras,
@@ -280,7 +320,7 @@ function GetVehicleProperties(vehicle)
             modKit47 = GetVehicleMod(vehicle, 47),
             modLivery = modLivery,
             modKit49 = GetVehicleMod(vehicle, 49),
-            liveryRoof = GetVehicleRoofLivery(vehicle),
+            liveryRoof = GetVehicleRoofLivery(vehicle)
         }
     else
         return
@@ -381,7 +421,9 @@ function SetVehicleProperties(vehicle, props)
         end
         if props.windowStatus then
             for windowIndex, smashWindow in pairs(props.windowStatus) do
-                if not smashWindow then SmashVehicleWindow(vehicle, windowIndex) end
+                if not smashWindow then
+                    SmashVehicleWindow(vehicle, windowIndex)
+                end
             end
         end
         if props.doorStatus then
