@@ -27,11 +27,11 @@
 </p>
 
 # ScreenShots
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/1.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/2.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/3.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/4.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/5.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/2.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/3.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/4.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/5.png)
 
 # My Youtube Channel
 - [Subscribe](https://www.youtube.com/@MaDHouSe79) 
