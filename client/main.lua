@@ -722,62 +722,63 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                         end
                     end
                 end
-            end
-            local exist = DoesPlateExist(v.plate)
-            if not exist then
-                parkedVehicles[#parkedVehicles + 1] = {
-                    owner = v.owner,
-                    fullname = v.fullname,
-                    netid = v.netid,
-                    entity = v.entity,
-                    mods = v.mods,
-                    hash = v.hash,
-                    plate = v.plate,
-                    model = v.model,
-                    brand = v.brand,
-                    fuel = v.fuel,
-                    body = v.body,
-                    engine = v.engine,
-                    steerangle = v.steerangle,
-                    location = v.location,
-                    blip = CreateParkedBlip(v),
-                    trailerdata = v.trailerdata
-                }
-                if Config.UseTarget then
-                    if Config.TargetScript == "qb-target" then
-                        exports['qb-target']:AddTargetEntity(vehicle, {
-                            options = {{
-                                name = "car",
-                                type = "server",
-                                icon = "fas fa-car",
-                                label = "Unpark Vehicle",
-                                action = function(entity)
-                                    TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(entity), -1, GetPlate(entity))
-                                end,
-                                canInteract = function(entity)
-                                    if not IsVehicleNotParked(GetPlate(entity)) then return false end
-                                    if v.owner ~= PlayerData.citizenid then return false end
-                                    return true
-                                end
-                            }},
-                            distance = 3.0
-                        })
-                    elseif Config.TargetScript == "ox_target" then
-                        exports.ox_target:addLocalEntity(vehicle, {
-                            {
-                                name = "car",
-                                icon = "fas fa-car",
-                                label = "Unpark Vehicle",
-                                onSelect = function(data)
-                                    TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(data.entity), -1, GetPlate(data.entity))
-                                end,
-                                canInteract = function(entity)
-                                    if not IsVehicleNotParked(GetPlate(entity)) then return false end
-                                    if v.owner ~= PlayerData.citizenid then return false end
-                                    return true
-                                end,
-                            }
-                        })
+            
+                local exist = DoesPlateExist(v.plate)
+                if not exist then
+                    parkedVehicles[#parkedVehicles + 1] = {
+                        owner = v.owner,
+                        fullname = v.fullname,
+                        netid = v.netid,
+                        entity = v.entity,
+                        mods = v.mods,
+                        hash = v.hash,
+                        plate = v.plate,
+                        model = v.model,
+                        brand = v.brand,
+                        fuel = v.fuel,
+                        body = v.body,
+                        engine = v.engine,
+                        steerangle = v.steerangle,
+                        location = v.location,
+                        blip = CreateParkedBlip(v),
+                        trailerdata = v.trailerdata
+                    }
+                    if Config.UseTarget then
+                        if Config.TargetScript == "qb-target" then
+                            exports['qb-target']:AddTargetEntity(vehicle, {
+                                options = {{
+                                    name = "car",
+                                    type = "server",
+                                    icon = "fas fa-car",
+                                    label = "Unpark Vehicle",
+                                    action = function(entity)
+                                        TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(entity), -1, GetPlate(entity))
+                                    end,
+                                    canInteract = function(entity)
+                                        if not IsVehicleNotParked(GetPlate(entity)) then return false end
+                                        if v.owner ~= PlayerData.citizenid then return false end
+                                        return true
+                                    end
+                                }},
+                                distance = 3.0
+                            })
+                        elseif Config.TargetScript == "ox_target" then
+                            exports.ox_target:addLocalEntity(vehicle, {
+                                {
+                                    name = "car",
+                                    icon = "fas fa-car",
+                                    label = "Unpark Vehicle",
+                                    onSelect = function(data)
+                                        TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(data.entity), -1, GetPlate(data.entity))
+                                    end,
+                                    canInteract = function(entity)
+                                        if not IsVehicleNotParked(GetPlate(entity)) then return false end
+                                        if v.owner ~= PlayerData.citizenid then return false end
+                                        return true
+                                    end,
+                                }
+                            })
+                        end
                     end
                 end
             end
