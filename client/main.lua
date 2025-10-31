@@ -763,19 +763,21 @@ RegisterNetEvent('mh-parking:client:Onjoin', function(data)
                             distance = 3.0
                         })
                     elseif Config.TargetScript == "ox_target" then
-                        exports.ox_target.AddTargetEntity(vehicle, {{
-                            name = "car",
-                            type = "client",
-                            event = "mh-parking:client:unparking",
-                            icon = "fas fa-car",
-                            label = "Unpark Vehicle",
-                            canInteract = function(data)
-                                if not IsVehicleNotParked(GetPlate(data.entity)) then return false end
-                                if v.owner ~= PlayerData.citizenid then return false end
-                                return true
-                            end,
-                            distance = 3.0
-                        }})
+                        exports.ox_target:addLocalEntity(vehicle, {
+                            {
+                                name = "car",
+                                icon = "fas fa-car",
+                                label = "Unpark Vehicle",
+                                onSelect = function(data)
+                                    TriggerServerEvent('mh-parking:server:EnteringVehicle', VehToNet(data.entity), -1, GetPlate(data.entity))
+                                end,
+                                canInteract = function(entity)
+                                    if not IsVehicleNotParked(GetPlate(entity)) then return false end
+                                    if v.owner ~= PlayerData.citizenid then return false end
+                                    return true
+                                end,
+                            }
+                        })
                     end
                 end
             end
