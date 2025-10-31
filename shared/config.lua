@@ -6,7 +6,7 @@ Config = {}
 Config.DevMode = false
 Config.Framework = 'qb' -- qb/esx/qbx
 Config.UseDebugPoly = false -- Default false, for dev mode to see the polyzones better.
-Config.UseTarget = true -- for now false, don't use it yet.
+Config.UseTarget = false -- for now false, don't use it yet.
 Config.TargetScript = "qb-target" -- qb-target or ox_target
 Config.KeyScript = "qb-vehiclekeys"  -- qb-vehiclekeys or qbx_vehiclekeys
 ---------------------------------------------------------------------------------------
@@ -29,22 +29,26 @@ Config.MaxParkTime = 259200 -- 3 Days, after that the vehicle wil be impounded.
 -- 8 Days = 691200 Seconden  500 Days  = 43200000 Seconden 500000  Days = 43200000000 Seconden
 -- 9 Days = 777600 Seconden  1000 Days = 86400000 Seconden 1000000 Days = 86400000000 Seconden
 ---------------------------------------------------------------------------------------
-Config.UseAutoPark = true -- Default true, when false it uses the F3(qbx)/F5(qb) button of /park command or When true Press F when the engine is off.
-Config.ParkingButton = 155 -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
-Config.KeyParkBindButton = "F5" -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
-Config.UsePrivedParking = true -- Default true, when true you can create prived parking polts for players.
+Config.ParkButton = 155 -- QB (155 = F5) / QBX (170 = F3) Check: https://docs.fivem.net/docs/game-references/controls/
+Config.KeyBindButton = "F5" -- QB (F5 = 155) / QBX (F3 = 170) Check: https://docs.fivem.net/docs/game-references/controls/
+--
 Config.PrivedParking = {} -- Dont edit this is a placeholder.
+Config.UsePrivedParking = true -- Default true, when true you can create prived parking polts for players.
+Config.UseAutoPark = true -- Default true, when false it uses the F3(qbx)/F5(qb) button of /park command or When true Press F when the engine is off.
 ---------------------------------------------------------------------------------------
-Config.OnlyAutoParkWhenEngineIsOff = true -- Default true, engine must be off when autopark works
-Config.keepEngineOnWhenAbandoned = true -- Default true, when true it keep the engine on when you get out the vehicle.
----------------------------------------------------------------------------------------
+-- For performes
 Config.Display3DText = true -- Default false for performe
+Config.DisplayVehicleOwner = true
+Config.DisplayVehicleBrand = true
+Config.DisplayVehicleModel = true
+Config.DisplayVehiclePlate = true
 Config.DisplayDistance = 15 -- Default 3 for performe
 Config.DisplayToAllPlayers = true -- Default false, it only displays to the owner of the vehicle when Config.Display3DText = true
+Config.DisplayToPolicePlayers = true
 Config.SaveSteeringAngle = false -- Default false for performe
 Config.DisableParkedVehiclesCollision = true -- Default false for performe
 ---------------------------------------------------------------------------------------
-
+Config.OnlyAutoParkWhenEngineIsOff = true -- Default true, engine must be off when autopark works
 ---------------------------------------No Parking--------------------------------------
 Config.DebugBlipForRadius = true
 -- This are locations where you can't use the park system.

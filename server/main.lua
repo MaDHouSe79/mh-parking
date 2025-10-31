@@ -53,6 +53,15 @@ local function GetClosestVehicle(coords)
     return closestVehicle, closestDistance
 end
 
+local function RemoveVehicle(netid)
+    for i = 1, #parkedVehicles, 1 do
+        if parkedVehicles[i].netid == netid then
+            parkedVehicles[i] = nil
+            break
+        end
+    end
+end
+
 local function DeleteVehicleAtcoords(coords)
     local closestVehicle, closestDistance = GetClosestVehicle(coords)
     if closestVehicle ~= -1 and closestDistance <= 2.0 then
@@ -60,15 +69,6 @@ local function DeleteVehicleAtcoords(coords)
         while DoesEntityExist(closestVehicle) do
             DeleteEntity(closestVehicle)
             Wait(0)
-        end
-    end
-end
-
-local function RemoveVehicle(netid)
-    for i = 1, #parkedVehicles, 1 do
-        if parkedVehicles[i].netid == netid then
-            parkedVehicles[i] = nil
-            break
         end
     end
 end
@@ -90,73 +90,75 @@ local function SpawnVehicles(src)
     elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
         vehicles = MySQL.query.await("SELECT * FROM player_vehicles WHERE state = ?", {3})
     end
-    for k, vehicle in pairs(vehicles) do
-        if not parkedVehicles[vehicle.plate] then
-            parkedVehicles[vehicle.plate] = {}
-            local coords = json.decode(vehicle.location)
-            local mods = json.decode(vehicle.mods)
-            DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
-            Wait(100)
-            local entity, netid = CreateVehicle2(GetHashKey(vehicle.vehicle), coords)
-            while not DoesEntityExist(entity) do Wait(0) end
-            local netid = NetworkGetNetworkIdFromEntity(entity)
-            SetVehicleNumberPlateText(entity, mods.plate)
-            local target = GetPlayerDataByCitizenId(vehicle.citizenid)
-            local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
-            local trailerdata = false
-            if Config.ParkWithTrailers then
-                if vehicle.trailerdata ~= "null" and vehicle.trailerdata ~= "" and vehicle.trailerdata ~= nil and vehicle.trailerdata ~= false then
-                    local data = json.decode(vehicle.trailerdata)
-                    DeleteVehicleAtcoords(vector3(data.coords.x, data.coords.y, data.coords.z))
-                    Wait(100)
-                    local trailer_entity, trailer_netid = CreateVehicle2(GetHashKey(data.model), data.coords)
-                    while not DoesEntityExist(trailer_entity) do Wait(0) end
-                    local trailer_plate = vehicle.plate .. "T"
-                    SetVehicleNumberPlateText(trailer_entity, trailer_plate)
-                    local trailer_netid = trailer_netid
-                    local trailer_mods = json.decode(vehicle.trailerdata.mods)
-                    local trailer_model = Config.Trailers[GetHashKey(data.model)].model
-                    local trailer_brand = Config.Trailers[GetHashKey(data.model)].brand
-                    local trailerLoad = nil
-                    if Config.ParkTrailersWithLoad then
-                        if data.load ~= nil and data.load ~= false then
-                            local trailer_load_entity, trailer_load_netid = CreateVehicle2(data.load.hash, data.coords)
-                            while not DoesEntityExist(trailer_load_entity) do Wait(0) end
-                            data.load.netid = trailer_load_netid
-                            trailerLoad = data.load
+    if type(vehicles) == 'table' and #vehicles >= 1 then
+        for k, vehicle in pairs(vehicles) do
+            if not parkedVehicles[vehicle.plate] then
+                parkedVehicles[vehicle.plate] = {}
+                local coords = json.decode(vehicle.location)
+                local mods = json.decode(vehicle.mods)
+                DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
+                Wait(100)
+                local entity, netid = CreateVehicle2(GetHashKey(vehicle.vehicle), coords)
+                while not DoesEntityExist(entity) do Wait(0) end
+                local netid = NetworkGetNetworkIdFromEntity(entity)
+                SetVehicleNumberPlateText(entity, mods.plate)
+                local target = GetPlayerDataByCitizenId(vehicle.citizenid)
+                local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
+                local trailerdata = false
+                if Config.ParkWithTrailers then
+                    if vehicle.trailerdata ~= "null" and vehicle.trailerdata ~= "" and vehicle.trailerdata ~= nil and vehicle.trailerdata ~= false then
+                        local data = json.decode(vehicle.trailerdata)
+                        DeleteVehicleAtcoords(vector3(data.coords.x, data.coords.y, data.coords.z))
+                        Wait(100)
+                        local trailer_entity, trailer_netid = CreateVehicle2(GetHashKey(data.model), data.coords)
+                        while not DoesEntityExist(trailer_entity) do Wait(0) end
+                        local trailer_plate = vehicle.plate .. "T"
+                        SetVehicleNumberPlateText(trailer_entity, trailer_plate)
+                        local trailer_netid = trailer_netid
+                        local trailer_mods = json.decode(vehicle.trailerdata.mods)
+                        local trailer_model = Config.Trailers[GetHashKey(data.model)].model
+                        local trailer_brand = Config.Trailers[GetHashKey(data.model)].brand
+                        local trailerLoad = nil
+                        if Config.ParkTrailersWithLoad then
+                            if data.load ~= nil and data.load ~= false then
+                                local trailer_load_entity, trailer_load_netid = CreateVehicle2(data.load.hash, data.coords)
+                                while not DoesEntityExist(trailer_load_entity) do Wait(0) end
+                                data.load.netid = trailer_load_netid
+                                trailerLoad = data.load
+                            end
+                            trailerdata = {
+                                netid = trailer_netid,
+                                entity = trailer_entity,
+                                mods = data.mods,
+                                model = trailer_model,
+                                brand = trailer_brand,
+                                plate = trailer_plate,
+                                hash = data.hash,
+                                coords = data.coords,
+                                heading = coords.h,
+                                load = trailerLoad
+                            }                
                         end
-                        trailerdata = {
-                            netid = trailer_netid,
-                            entity = trailer_entity,
-                            mods = data.mods,
-                            model = trailer_model,
-                            brand = trailer_brand,
-                            plate = trailer_plate,
-                            hash = data.hash,
-                            coords = data.coords,
-                            heading = coords.h,
-                            load = trailerLoad
-                        }                
                     end
                 end
+                parkedVehicles[vehicle.plate] = {
+                    fullname = fullname,
+                    owner = vehicle.citizenid,
+                    netid = netid,
+                    entity = entity,
+                    mods = mods,
+                    hash = vehicle.hash,
+                    plate = vehicle.plate,
+                    model = vehicle.vehicle,
+                    fuel = vehicle.fuel,
+                    body = vehicle.body,
+                    engine = vehicle.engine,
+                    street = vehicle.street,
+                    steerangle = vehicle.steerangle,
+                    location = coords,
+                    trailerdata = trailerdata
+                }
             end
-            parkedVehicles[vehicle.plate] = {
-                fullname = fullname,
-                owner = vehicle.citizenid,
-                netid = netid,
-                entity = entity,
-                mods = mods,
-                hash = vehicle.hash,
-                plate = vehicle.plate,
-                model = vehicle.vehicle,
-                fuel = vehicle.fuel,
-                body = vehicle.body,
-                engine = vehicle.engine,
-                street = vehicle.street,
-                steerangle = vehicle.steerangle,
-                location = coords,
-                trailerdata = trailerdata
-            }
         end
     end
 end
@@ -253,23 +255,33 @@ RegisterNetEvent("mh-parking:server:EnteringVehicle", function(netid, seat)
     if seat == -1 then
         local vehicle = NetworkGetEntityFromNetworkId(netid)
         if DoesEntityExist(vehicle) then
-            local Player = GetPlayer(src)
             local citizenid = GetCitizenId(src)
             local plate = GetVehicleNumberPlateText(vehicle)
             local result = nil
+            local owner = nil
             if Config.Framework == 'esx' then
                 result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE citizenid = ? AND plate = ? AND stored = ?", {citizenid, plate, 3})[1]
             elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
                 result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", {citizenid, plate, 3})[1]
             end
-            if result ~= nil and result.plate == plate and result.citizenid == Player.PlayerData.citizenid then
-                MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, lastlocation = ? WHERE plate = ?', {0, nil, nil, plate})
-                RemoveVehicle(netid)
-                if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then exports['mh-vehiclekeyitem']:AddItem(src, plate, netid) end
-                TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
-                TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid})
-                MySQL.Async.execute('UPDATE player_vehicles SET trailerdata = ?, lastlocation = ? WHERE plate = ?', {nil, nil, plate})
-                --print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
+            if result ~= nil and result.plate == plate then
+                if Config.Framework == 'esx' then
+                    owner = result.owner
+                elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                    owner = result.citizenid
+                end
+                if owner == citizenid then
+                    MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, lastlocation = ? WHERE plate = ?', {0, nil, nil, plate})
+                    RemoveVehicle(netid)
+                    if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then exports['mh-vehiclekeyitem']:AddItem(src, plate, netid) end
+                    TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
+                    TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = netid})
+                    MySQL.Async.execute('UPDATE player_vehicles SET trailerdata = ?, lastlocation = ? WHERE plate = ?', {nil, nil, plate})
+                    --print("Enter Vehicle "..netid..' / '..seat..' / '..result.citizenid)
+                    Notify(src, Lang:t('info.remove_vehicle_zone', "success", 5000))
+                else
+                    Notify(src, Lang:t('info.not_the_owner', "error", 5000))
+                end
             end
         end
     end
@@ -285,48 +297,57 @@ RegisterNetEvent('mh-parking:server:LeftVehicle', function(netid, seat, plate, l
             local owner = nil
             if Config.Framework == 'esx' then
                 result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE owner = ? AND plate = ? AND stored = ?", {citizenid, plate, 0})[1]
-                owner = result.owner
             elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
                 result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ? AND state = ?", {citizenid, plate, 0})[1]
-                owner = result.citizenid
             end
-            if result ~= nil and result.plate == plate and owner == citizenid then
+            if result ~= nil and result.plate == plate then
+                if Config.Framework == 'esx' then
+                    owner = result.owner
+                elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                    owner = result.citizenid
+                end
                 local canSave, defaultMax = CanSave(src)
                 if canSave then
-                    local mods = json.encode(result.mods)
-                    local coords = json.decode(result.location)
-                    local target = GetPlayerDataByCitizenId(owner)
-                    local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
-                    parkedVehicles[plate] = {
-                        fullname = fullname,
-                        owner = owner,
-                        netid = netid,
-                        entity = vehicle,
-                        hash = result.hash,
-                        plate = plate,
-                        model = result.vehicle,
-                        fuel = fuel,
-                        body = result.body,
-                        engine = result.engine,
-                        steerangle = result.steerangle,
-                        mods = mods,
-                        street = result.street,
-                        location = location,
-                        trailerdata = trailerdata
-                    }
-                    if Config.Framework == 'esx' then
-                        MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, steerangle = ?, fuel = ?, trailerdata = ? WHERE plate = ?', {3, json.encode(location), street, tonumber(steerangle), fuel, json.encode(trailerdata), plate})
-                    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                        MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, steerangle = ?, fuel = ?, trailerdata = ? WHERE plate = ?', {3, json.encode(location), street, tonumber(steerangle), fuel, json.encode(trailerdata), plate})
+                    if owner ~= nil and owner == citizenid then
+                        local mods = json.encode(result.mods)
+                        local coords = json.decode(result.location)
+                        local target = GetPlayerDataByCitizenId(owner)
+                        local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
+                        parkedVehicles[plate] = {
+                            fullname = fullname,
+                            owner = owner,
+                            netid = netid,
+                            entity = vehicle,
+                            hash = result.hash,
+                            plate = plate,
+                            model = result.vehicle,
+                            fuel = fuel,
+                            body = result.body,
+                            engine = result.engine,
+                            steerangle = result.steerangle,
+                            mods = mods,
+                            street = result.street,
+                            location = location,
+                            trailerdata = trailerdata
+                        }
+                        if Config.Framework == 'esx' then
+                            MySQL.Async.execute('UPDATE owned_vehicles SET stored = ?, location = ?, street = ?, steerangle = ?, fuel = ?, trailerdata = ? WHERE plate = ?', {3, json.encode(location), street, tonumber(steerangle), fuel, json.encode(trailerdata), plate})
+                        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, street = ?, steerangle = ?, fuel = ?, trailerdata = ? WHERE plate = ?', {3, json.encode(location), street, tonumber(steerangle), fuel, json.encode(trailerdata), plate})
+                        end
+                        TriggerClientEvent('mh-parking:client:AddVehicle', -1, {netid = netid, data = parkedVehicles[plate]})
+                        TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
+                        if Config.Framework == 'esx' then
+                            MySQL.Async.execute('UPDATE owned_vehicles SET lastlocation = ? WHERE plate = ?', {nil, plate})
+                        elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+                            MySQL.Async.execute('UPDATE player_vehicles SET lastlocation = ? WHERE plate = ?', {nil, plate})
+                        end
+
+                        Notify(src, Lang:t('info.vehicle_parked', "success", 5000))
+                        --print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
+                    else
+                        Notify(src, Lang:t('info.not_the_owner', "error", 5000))
                     end
-                    TriggerClientEvent('mh-parking:client:AddVehicle', -1, {netid = netid, data = parkedVehicles[plate]})
-                    TriggerClientEvent('mh-parking:client:ToggleFreezeVehicle', -1, {netid = netid, owner = result.citizenid})
-                    if Config.Framework == 'esx' then
-                        MySQL.Async.execute('UPDATE owned_vehicles SET lastlocation = ? WHERE plate = ?', {nil, plate})
-                    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
-                        MySQL.Async.execute('UPDATE player_vehicles SET lastlocation = ? WHERE plate = ?', {nil, plate})
-                    end
-                    --print("Left Vehicle "..netid..' / '..seat..' / '..steerangle..' / '..result.citizenid)
                 else
                     Notify(src, Lang:t('info.limit_parking', {limit = defaultMax}, "error", 5000))
                 end

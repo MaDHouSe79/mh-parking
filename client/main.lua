@@ -211,6 +211,13 @@ local function BlinkVehiclelights(vehicle)
     end
 end
 
+local function LeaveVehicle(data)
+    local vehicle = NetToVeh(data.vehicleNetID)
+    if DoesEntityExist(vehicle) then
+        TaskLeaveVehicle(PlayerPedId(), vehicle, 1)
+    end
+end
+
 local function GetAllPlayersInVehicle(vehicle)
     local pedsincar = {}
     local numPas = GetVehicleModelNumberOfSeats(GetEntityModel(vehicle))
@@ -380,6 +387,26 @@ local function AllowToPark(coords)
     return allow
 end
 
+local function DisPlayVehicle3DText(owner, model, brand, plate, coords)
+    local txt = ""
+    if Config.DisplayVehicleOwner or Config.DisplayToPolicePlayers then txt = txt .. "Owner: ~y~" .. owner .. "~s~\n" end
+    if Config.DisplayVehicleBrand or Config.DisplayToPolicePlayers then txt = txt .. "Brand: ~o~" .. brand .. "~s~\n" end
+    if Config.DisplayVehicleModel or Config.DisplayToPolicePlayers then txt = txt .. "Model: ~b~" .. model .. "~s~\n" end
+    if Config.DisplayVehiclePlate or Config.DisplayToPolicePlayers then txt = txt .. "Plate: ~g~" .. plate .. "~s~\n" end
+    if Config.DisplayToAllPlayers then
+        Draw3DText(coords.x, coords.y, coords.z, txt, 0, 0.04, 0.04)
+    else
+        if Config.DisplayToPolicePlayers then
+            if (PlayerData.job.type == 'leo' and PlayerData.job.onduty) and (PlayerData.citizenid ~= owner) then
+                Draw3DText(coords.x, coords.y, coords.z, txt, 0, 0.04, 0.04)
+            end
+        end
+        if PlayerData.citizenid == owner then
+            Draw3DText(coords.x, coords.y, coords.z, txt, 0, 0.04, 0.04)
+        end
+    end
+end
+
 local function IsVehicleNotParked(plate)
     for i = 1, #parkedVehicles, 1 do
         if parkedVehicles[i] ~= nil and parkedVehicles[i].plate == plate then
@@ -531,6 +558,14 @@ AddEventHandler('onResourceStop', function(resource)
         isLoggedIn = false
         DeleteAllBlips()
         DeleteparkedVehicles()
+    end
+end)
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+        LoadZone()
+        TriggerCallback('mh-parking:server:IsAdmin', function(result) isAdmin = result.isadmin end)
+        TriggerServerEvent('mh-parking:server:OnJoin')
     end
 end)
 
@@ -894,7 +929,6 @@ CreateThread(function()
                             local entityCoords = GetEntityCoords(vehicle)
                             local distance = GetDistance(playerCoords, entityCoords)
                             if distance < Config.DisplayDistance then
-                                sleep = 0
                                 local owner, plate, model, brand = parkedVehicles[i].fullname, parkedVehicles[i].plate, nil, nil
                                 for k, vehicle in pairs(Config.Vehicles) do
                                     if vehicle.model == parkedVehicles[i].model then
@@ -903,14 +937,8 @@ CreateThread(function()
                                     end
                                 end
                                 if model ~= nil and brand ~= nil then
-                                    txt1 = "Owner: ~y~" .. owner .. "~s~\nBrand: ~o~" .. brand .. "~s~\nModel: ~b~" .. model .. "~s~\nPlate: ~g~" .. plate .. "~s~"
-                                    if Config.DisplayToAllPlayers then
-                                        Draw3DText(entityCoords.x, entityCoords.y, entityCoords.z, txt1, 0, 0.04, 0.04)
-                                    else
-                                        if PlayerData.citizenid == owner then
-                                            Draw3DText(entityCoords.x, entityCoords.y, entityCoords.z, txt1, 0, 0.04, 0.04)
-                                        end
-                                    end
+                                    sleep = 0
+                                    DisPlayVehicle3DText(owner, model, brand, plate, entityCoords)
                                 end
                                 if parkedVehicles[i].trailerdata ~= nil and parkedVehicles[i].trailerdata ~= false then
                                     local trailer_entity = NetToVeh(parkedVehicles[i].trailerdata.netid)
@@ -919,14 +947,8 @@ CreateThread(function()
                                         if data.model ~= nil and data.brand ~= nil then
                                             local trailer_coords = parkedVehicles[i].trailerdata.coords
                                             local trailer_plate = parkedVehicles[i].trailerdata.plate
-                                            txt2 = "Owner: ~y~" .. owner .. "~s~\nBrand: ~o~" .. data.brand .. "~s~\nModel: ~b~" .. data.model .. "~s~\nPlate: ~g~" .. trailer_plate .. "~s~"
-                                            if Config.DisplayToAllPlayers then
-                                                Draw3DText(trailer_coords.x, trailer_coords.y, trailer_coords.z, txt2, 0, 0.04, 0.04)
-                                            else
-                                                if PlayerData.citizenid == owner then
-                                                    Draw3DText(trailer_coords.x, trailer_coords.y, trailer_coords.z, txt2, 0, 0.04, 0.04)
-                                                end
-                                            end
+                                            sleep = 0
+                                            DisPlayVehicle3DText(owner, data.model, data.brand, trailer_plate, trailer_coords)
                                         end
                                     end
                                 end
@@ -934,7 +956,7 @@ CreateThread(function()
                                 sleep = 1000
                             end
                         end
-                    end
+                    end  
                 end
             end
         end
@@ -1063,8 +1085,8 @@ CreateThread(function()
                             sleep = 0
                             local storedVehicle = GetPlayerInParkedVehicle(vehicle)
                             if storedVehicle ~= false then
-                                DisplayHelpText(Lang:t("info.press_drive_car", {key = Config.KeyParkBindButton}))
-                                if IsControlJustReleased(0, Config.ParkingButton) then
+                                DisplayHelpText(Lang:t("info.press_drive_car", {key = Config.KeyBindButton}))
+                                if IsControlJustReleased(0, Config.ParkButton) then
                                     IsUsingParkCommand = true
                                 end
                             end
@@ -1147,7 +1169,7 @@ CreateThread(function()
     end
 end)
 
--- Add baot on a boat trailer
+-- Add boat on a boat trailer
 CreateThread(function()
     while true do
         local sleep = 1000
