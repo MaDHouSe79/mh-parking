@@ -848,6 +848,12 @@ RegisterNetEvent('mh-parking:client:CreatePark', function(data)
     end)
 end)
 
+AddEventHandler('entityCreated', function(entity)
+    if not DoesEntityExist(entity) then return end
+    local entityType = GetEntityType(entity)
+    if entityType == 2 then SetVehicleKeepEngineOnWhenAbandoned(entity, true) end
+end)
+
 CreateThread(function()
     while true do
         Wait(math.random(5000, 10000))
