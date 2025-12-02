@@ -65,7 +65,7 @@
 | **Zero F8 Warnings** (No 65534 BS)                  | ✅ **Clean Console**     | ❌ **Warning Hell**    |
 | **Statebags + Smart Cache**                         | ✅ **Lightning Fast**    | ❌ **DB Spam**         |
 | **QB / QBX / ESX Legacy**                           | ✅ **All Supported**     | ❌ **1 Framework**     |
-| **QB / QBX Target**                                 | ✅ **All Supported**     | ❌ **1 Target**        |
+| **QB Target / OX Target**                           | ✅ **All Supported**     | ❌ **1 Target**        |
 | **No EntityStates Required**                        | ✅ **Works Everywhere**  | ❌ **Crashes**         |
 
 ---
@@ -90,6 +90,22 @@
 3. ➕ Add to server.cfg: `ensure [mh]`
 4. 🗄️ Restart your server, and enjoy the most realistic park system you can find for fivem! :)
 ```
+
+# 📌 When is mh-parking useful?
+- mh-parking is especially useful if you are running a roleplay or modded server where vehicles need to be managed realistically and persistently. 
+
+# 📌 It is a good fit when:
+- Vehicles should persist between server sessions, crashes, or restarts — they shouldn’t just disappear when players log out.
+- Players can park vehicles in personal spaces, such as homes, garages, company areas, or private parking zones.
+- You want realistic parking rules, such as:
+- parking timers,
+- impound behavior when rules aren’t followed,
+- VIP parking limits or special permissions,
+- admin-controlled parking locations.
+- You want vehicle spawning and storage to work in a more advanced way, instead of the basic “take from garage / store in garage” system.
+- Your server aims for a more immersive, real-life handling of player vehicles.
+- If your server is small or you just need a very simple garage system, mh-parking might be more than you need.
+- But for medium-to-large servers, especially serious RP communities, it can add a lot of structure and realism.
 
 ---
 # 🚀 If you need some support.

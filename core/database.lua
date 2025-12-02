@@ -25,12 +25,18 @@ MySQL.ready(function()
     MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS isClamped INT NULL DEFAULT 0')
 end)
 
-function Database.ParkVehicle(plate, location, steerangle, street)
-    MySQL.update('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ? WHERE plate = ?', {3, json.encode(location), street, steerangle, plate})
+function Database.ImpoundVehicle(plate, cost)
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, depotprice = ? WHERE plate = ?', {0, cost, plate})
+end
+
+function Database.ParkVehicle(plate, location, steerangle, street, mods, fuel, body, engine)
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ?, mods = ?, fuel = ?, body = ?, engine = ? WHERE plate = ?', {
+        3, json.encode(location), street, steerangle, json.encode(mods), fuel, body, engine, plate
+    })
 end
 
 function Database.UnparkVehicle(plate)
-    MySQL.update('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ? WHERE plate = ?', {0, nil, nil, plate})
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ? WHERE plate = ?', {0, nil, nil, plate})
 end
 
 function Database.GetVehicleData(plate)
@@ -52,7 +58,7 @@ function Database.GetVehiclesForCitizenid(citizenid)
 end
 
 function Database.GetPlayerData(citizenid)
-    return MySQL.query.await("SELECT * FROM "..ply.table.." WHERE "..sql.citizenid.." = ?", {citizenid})[1]
+    return citizenid ~= false and MySQL.query.await("SELECT * FROM "..ply.table.." WHERE "..sql.citizenid.." = ?", {citizenid})[1]
 end
 
 function Database.UpdateWheelClamp(plate, state)

@@ -17,6 +17,7 @@ shared_scripts {
     'locales/*.lua',
 }
 
+
 client_script {
     'core/framework/client.lua',
     'core/functions/client.lua',

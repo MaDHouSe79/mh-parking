@@ -7,6 +7,8 @@ SV_Config.distance = 500.0
 SV_Config.freezeParkedVehicles = false
 SV_Config.onlyAutoParkWhenEngineIsOff = true
 
+SV_Config.UseSteerAnlgeParking = false -- when true is take some extra cpu, so keep it false if you dont need it
+
 SV_Config.UseTimerPark = true -- when true players have a limit time to park
 SV_Config.PayTimeInSecs = 10
 SV_Config.ParkPrice = 500
@@ -15,6 +17,7 @@ SV_Config.UseAsVip = true
 SV_Config.DefaultMaxParking = 1
 
 SV_Config.PoliceJobs = {'police', 'sheriff'} -- Jobs than can add a clamp to a vehicle
+SV_Config.ImpoundPrice = 500
 SV_Config.ClampFine = 500  -- fine for clamp
 SV_Config.ClampProp = "prop_spot_clamp" -- Attach clamp prop (or use a custom stream model)
 SV_Config.ClampOffset = {
@@ -25,6 +28,11 @@ SV_Config.ClampOffset = {
     ry = 0.0, 
     rz = 0.5,
 }
+
+function PoliceImpound(plate, fullImpound, price, body, engine, fuel)
+    TriggerEvent("police:server:Impound", plate, fullImpound, price, body, engine, fuel) -- qb
+    -- or add your inpound trigger here
+end
 
 SV_Config.Vehicles = {
 

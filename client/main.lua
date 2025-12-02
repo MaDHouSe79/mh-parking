@@ -94,7 +94,8 @@ local function OpenInfoMenu(vehicle)
             }
         }
         local state = Entity(vehicle).state
-        if GetIdentifier() == state.citizenid then
+        local owner = GetIdentifier()
+        if owner == state.citizenid then
             options[#options + 1] = {title = Lang:t("vehicle.body_damage"),   description = body..'/1000',   progress = body/10,   icon = bodyIcon,   colorScheme = bodyColor}
             options[#options + 1] = {title = Lang:t("vehicle.engine_damage"), description = engine..'/1000', progress = engine/10, icon = engineIcon, colorScheme = engineColor}
             options[#options + 1] = {title = Lang:t("vehicle.fuel_level"),    description = tank..'%',       progress = tank,      icon = tankIcon,   colorScheme = tankColor}
@@ -138,13 +139,13 @@ local function CreateParkedBlip(entity, data)
     return blip
 end
 
-local function SyncParked(netId, isParked, pos, mods, steerangle, clamp_netid)
+local function SyncParked(netId, isParked, pos, mods, steerangle)
     while config == nil do Wait(10) end
     while not NetworkDoesNetworkIdExist(netId) do Wait(10) end
     local vehicle = NetworkGetEntityFromNetworkId(netId)
     if not vehicle or not DoesEntityExist(vehicle) then return end
     local plate = GetVehicleNumberPlateText(vehicle):gsub("^%s*(.-)%s*$", "%1"):upper()
-    SetVehicleProperties(vehicle, mods)
+    if mods ~= nil or mods ~= false then SetVehicleProperties(vehicle, mods) end
     SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
     SetNetworkIdCanMigrate(netId, false)
     SetNetworkIdExistsOnAllMachines(netId, true)
@@ -252,10 +253,10 @@ RegisterNetEvent('mh-parking:openparkmenu', function()
     GetVehicleMenu()
 end)
 
-RegisterNetEvent('mh-parking:syncParked', function(netId, isParked, pos, mods, steerangle, clamp_netid)
+RegisterNetEvent('mh-parking:syncParked', function(netId, isParked, pos, mods, steerangle)
     while config == nil do Wait(10) end
     while not NetworkDoesNetworkIdExist(netId) do Wait(10) end
-    SyncParked(netId, isParked, pos, mods, steerangle, clamp_netid)
+    SyncParked(netId, isParked, pos, mods, steerangle)
 end)
 
 RegisterNetEvent('mh-parking:syncWheelClamp', function(netId)
@@ -313,7 +314,7 @@ CreateThread(function()
     while true do
         while config == nil do Wait(10) end
         local sleep = 1000
-        if isLoggedIn then
+        if isLoggedIn and config.UseSteerAnlgeParking then
             local ped = PlayerPedId()
             local veh = GetVehiclePedIsIn(ped, false)
             if DoesEntityExist(veh) and GetPedInVehicleSeat(veh, -1) == ped then
@@ -337,7 +338,7 @@ end)
 CreateThread(function()
     while true do
         Wait(500)
-        while config == nil do Wait(10) end
+        while config == nil do Wait(1000) end
         if isLoggedIn then
             local ped = PlayerPedId()
             local inVeh = IsPedInAnyVehicle(ped, false)
@@ -378,6 +379,10 @@ CreateThread(function()
                                     if config.onlyAutoParkWhenEngineIsOff and GetIsVehicleEngineRunning(currentVehicle) then canSave = false end
                                     local steerangle = GetVehicleSteeringAngle(currentVehicle) 
                                     local street = GetStreetName(GetEntityCoords(ped))
+                                    local fuel = GetVehicleFuelLevel(currentVehicle)
+                                    local engine = GetVehicleEngineHealth(veh)
+                                    local body = GetVehicleBodyHealth(veh)
+                                    local mods = GetVehicleProperties(currentVehicle)
                                     local blinklichts = currentVehicle
                                     if canSave then
                                         currentVehicle = nil
@@ -386,7 +391,7 @@ CreateThread(function()
                                         Citizen.Wait(2500)
                                         BlinkVehiclelights(blinklichts) 
                                         SetVehicleEngineOn(blinklichts, false, false, false)                                    
-                                        TriggerServerEvent('mh-parking:autoPark', netId, steerangle, street) 
+                                        TriggerServerEvent('mh-parking:autoPark', netId, steerangle, street, mods, fuel, body, engine) 
                                         blinklichts = nil
                                     elseif not canSave then
                                         currentVehicle = nil
