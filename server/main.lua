@@ -194,3 +194,31 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
         TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = parkedVehicles[plate].netid, entity = parkedVehicles[plate].entity, owner = parkedVehicles[plate].owner, plate = parkedVehicles[plate].plate})
     end
 end)
+
+local function ParkingTimeCheckLoop()
+    if SV_Config.UseTimerPark then
+        local result = Database.GetVehicles()
+        if result ~= nil then
+            for k, v in pairs(result) do
+                local total = os.time() - v.time
+                if v.parktime > 0 and total > v.parktime then
+                    print("[MH Parking] - [Time Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been auto impound by the police.")
+                    if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and
+                        parkedVehicles[v.plate].entity ~= false then
+                        RemoveVehicle(parkedVehicles[v.plate].netid)
+                        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = parkedVehicles[v.plate].netid, entity = parkedVehicles[v.plate].entity, owner = parkedVehicles[v.plate].owner, plate = parkedVehicles[v.plate].plate})
+                    end
+                    local cost = (math.floor(((os.time() - v.time) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
+                    PoliceImpound(v.plate, true, cost, v.body, v.engine, v.fuel)
+                end
+            end
+        end
+    end
+    SetTimeout(10000, ParkingTimeCheckLoop)
+end
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    Wait(5000)
+    ParkingTimeCheckLoop()
+end)
