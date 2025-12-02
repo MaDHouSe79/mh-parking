@@ -88,6 +88,7 @@ local function createParkingOptions()
             action = function(data)
                 local entity = getEntity(data)
                 local plate = GetPlate(entity)
+                -- add your police impound trigger here
                 lib.notify({title = "Impound", description = "Voertuig " .. plate .. " in beslag genomen", type = "success"})
             end,            
             canInteract = function(data)
