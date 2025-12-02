@@ -15,12 +15,7 @@ local function GiveKeysIfOwnerOnline(plate)
     local players = GetPlayers()
     for _, srcStr in pairs(players) do
         local src = tonumber(srcStr)
-        local Player = nil
-        if GetResourceState('qb-core') == 'started' or GetResourceState('qbx_core') == 'started' then
-            Player = exports['qb-core']:GetPlayer(src) or exports.qbx_core.GetPlayer(src)
-        elseif GetResourceState('es_extended') == 'started' then
-            Player = exports['es_extended']:getSharedObject().GetPlayerFromId(src)
-        end
+        local Player = GetPlayer(src)
         if Player then
             local playerId = Player.PlayerData.citizenid or Player.identifier or Player.PlayerData.identifier
             if playerId == ownerCitizenId then GiveKeys(src, plate, false) end
@@ -103,6 +98,15 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
     cb({status = true, data = result})
 end)
 
+RegisterNetEvent('mh-parking:givekey', function(plate)
+    local src = source
+    local isOwner = Database.IsVehicleOwned(src, plate)
+    if isOwner then 
+        GiveKeysIfOwnerOnline(plate)
+        Notify(src, "You have the vehcile key back!", 'success')
+    end
+end)
+
 RegisterNetEvent('mh-parking:onjoin', function()
     local src = source
     local players = GetPlayers()
@@ -133,11 +137,11 @@ RegisterNetEvent('mh-parking:autoUnpark', function(netId)
             if data ~= nil and data.mods ~= nil then
                 local mods = json.decode(data.mods)
                 TriggerClientEvent('mh-parking:syncParked', -1, netId, false, nil, mods)
-                lib.notify(src, { type = 'success', description = Lang:t('vehicle.unparked') })
+                Notify(src, Lang:t('vehicle.unparked'), 'success')
             end
         end
     else
-        lib.notify(src, { type = 'error', description = Lang:t('info.not_the_owner')})
+        Notify(src, Lang:t('info.not_the_owner'), 'error')
     end
 end)
 
@@ -163,16 +167,20 @@ RegisterNetEvent('mh-parking:autoPark', function(netId, steerangle, street, mods
                     if data ~= nil and data.mods ~= nil then
                         local mods = json.decode(data.mods)
                         TriggerClientEvent('mh-parking:syncParked', -1, netId, true, state.parkedPos, mods)
-                        lib.notify(src, { type = 'success', description = Lang:t('vehicle.parked') })
+                        Notify(src, Lang:t('vehicle.parked'), 'success')
                     end
                 end
             end
         else
-            lib.notify(src, { type = 'error', description = Lang:t('info.not_a_vip')})
+            Notify(src, Lang:t('info.not_a_vip'), 'error')
         end
     else
-        lib.notify(src, { type = 'error', description = Lang:t('info.not_the_owner')})
+        Notify(src, Lang:t('info.not_the_owner'), 'error')
     end
+end)
+
+RegisterNetEvent('mh-parking:server:setVehLockState', function(vehNetId, state)
+    SetVehicleDoorsLocked(NetworkGetEntityFromNetworkId(vehNetId), state)
 end)
 
 RegisterNetEvent('mh-parking:server:AllPlayersLeaveVehicle', function(vehicleNetID, players)
@@ -195,10 +203,10 @@ RegisterNetEvent('mh-parking:server:toggleClamp', function(netid, state)
                 local txt = nil
                 if state then
                     Entity(veh).state.isClamped = true
-                    lib.notify(src, { type = 'success', description = Lang:t('info.wheel_clamp_added', {fine = SV_Config.ClampFine})})
+                    Notify(src, Lang:t('info.wheel_clamp_added', {fine = SV_Config.ClampFine}), 'success')
                 else
-                    Entity(veh).state.isClamped = false 
-                    lib.notify(src, { type = 'success', description = Lang:t('info.wheel_clamp_deleted')})
+                    Entity(veh).state.isClamped = false
+                    Notify(src, Lang:t('info.wheel_clamp_deleted'), 'success')
                 end
                 Wait(100)
                 TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)
@@ -212,7 +220,7 @@ RegisterNetEvent('mh-parking:impound', function(plate)
     if parkedVehicles[plate] and parkedVehicles[plate].netid ~= false and parkedVehicles[plate].entity ~= false then
         RemoveVehicle(parkedVehicles[plate].netid)
         Database.ImpoundVehicle(plate, SV_Config.ImpoundPrice)
-        lib.notify(src, { type = 'success', description = "Vehicle Impounded"})
+        Notify(src, "Vehicle Impounded", 'success')
     end  
 end)
 

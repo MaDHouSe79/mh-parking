@@ -24,8 +24,6 @@ local function createParkingOptions()
             name        = "parking_info",
             icon        = "fas fa-circle-info",
             label       = "Vehicle Info",
-            event       = "mh-parking:infomenu",
-            type        = "client",
             distance    = 3.0,
             action = function(data)
                 TriggerEvent("mh-parking:infomenu")
@@ -40,8 +38,6 @@ local function createParkingOptions()
             name     = "clamp_wheel",
             icon     = "fas fa-lock",
             label    = "Add Wheelclamp (police)",
-            event    = "mh-parking:clampWheel",
-            type     = "client",
             job      = { ["police"] = 0 },
             distance = 3.0,
             action = function(data)
@@ -61,8 +57,6 @@ local function createParkingOptions()
             name     = "unclamp_wheel",
             icon     = "fas fa-lock-open",
             label    = "Remove Wheel Clamp (police)",
-            event    = "mh-parking:unclampWheel",
-            type     = "client",
             job      = { ["police"] = 0 },
             distance = 3.0,
             action = function(data)
@@ -81,8 +75,6 @@ local function createParkingOptions()
             name     = "impound_vehicle",
             icon     = "fas fa-truck-pickup",
             label    = "Impound vehicle (police)",
-            type     = "server",
-            event    = "mh-parking:server:impound",
             job      = { ["police"] = 0 },
             distance = 5.0,
             action = function(data)
@@ -97,6 +89,85 @@ local function createParkingOptions()
                 local entity = getEntity(data)
                 local state = Entity(entity).state
                 return state and state.isParked
+            end,
+        },
+        {
+            num      = 3,
+            name     = "unclamp_wheel",
+            icon     = "fas fa-lock-open",
+            label    = "Give Keys (owner)",
+            distance = 3.0,
+            action = function(data)
+                local entity = getEntity(data)
+                local plate = GetPlate(entity)
+                TriggerServerEvent('mh-parking:givekey', plate)
+            end,
+            canInteract = function(data)
+                local entity = getEntity(data)
+                local state = Entity(entity).state
+                if state then 
+                    if state.citizenid ~= nil and GetIdentifier() ~= state.citizenid then return false end
+                else
+                    return false
+                end
+                return true
+            end,
+        },
+        {
+            num      = 3,
+            name     = "unclamp_wheel",
+            icon     = "fas fa-lock-open",
+            label    = "Unpark Vehicle (owner)",
+            distance = 3.0,
+            action = function(data)
+                local entity = getEntity(data)
+                local netid = SafeNetId(entity)
+                BlinkVehiclelights(entity)
+                TriggerServerEvent('mh-parking:server:setVehLockState', netid, 1)
+                SetVehicleDoorsLocked(entity, 1)
+                TriggerServerEvent('mh-parking:autoUnpark', netid)
+            end,
+            canInteract = function(data)
+                local entity = getEntity(data)
+                local state = Entity(entity).state
+                if state then
+                    if state.citizenid ~= nil and GetIdentifier() ~= state.citizenid then return false end
+                    if not state.isParked then return false end
+                else
+                    return false
+                end
+                return true
+            end,
+        },
+        {
+            num      = 3,
+            name     = "unclamp_wheel",
+            icon     = "fas fa-lock-open",
+            label    = "Park Vehicle (owner)",
+            distance = 3.0,
+            action = function(data)
+                local entity = getEntity(data)
+                local netid = SafeNetId(entity)
+                local steerangle = GetVehicleSteeringAngle(entity) 
+                local street = GetStreetName(GetEntityCoords(ped))
+                local fuel = GetVehicleFuelLevel(entity)
+                local engine = GetVehicleEngineHealth(entity)
+                local body = GetVehicleBodyHealth(entity)
+                local mods = GetVehicleProperties(entity)
+                BlinkVehiclelights(entity) 
+                SetVehicleEngineOn(entity, false, false, false)                                    
+                TriggerServerEvent('mh-parking:autoPark', netid, steerangle, street, mods, fuel, body, engine) 
+            end,
+            canInteract = function(data)
+                local entity = getEntity(data)
+                local state = Entity(entity).state
+                if state then
+                    if state.citizenid ~= nil and GetIdentifier() ~= state.citizenid then return false end
+                    if state.isParked then return false end
+                else
+                    return false
+                end
+                return true
             end,
         },
     }

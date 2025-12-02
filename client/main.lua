@@ -380,8 +380,8 @@ CreateThread(function()
                                     local steerangle = GetVehicleSteeringAngle(currentVehicle) 
                                     local street = GetStreetName(GetEntityCoords(ped))
                                     local fuel = GetVehicleFuelLevel(currentVehicle)
-                                    local engine = GetVehicleEngineHealth(veh)
-                                    local body = GetVehicleBodyHealth(veh)
+                                    local engine = GetVehicleEngineHealth(currentVehicle)
+                                    local body = GetVehicleBodyHealth(currentVehicle)
                                     local mods = GetVehicleProperties(currentVehicle)
                                     local blinklichts = currentVehicle
                                     if canSave then
