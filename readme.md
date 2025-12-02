@@ -65,7 +65,7 @@
 | **Zero F8 Warnings** (No 65534 BS)                  | ✅ **Clean Console**     | ❌ **Warning Hell**    |
 | **Statebags + Smart Cache**                         | ✅ **Lightning Fast**    | ❌ **DB Spam**         |
 | **QB / QBX / ESX Legacy**                           | ✅ **All Supported**     | ❌ **1 Framework**     |
-| **QB / QBX Target**                                 | ✅ **All Supported**     | ❌ **1 Target**        |
+| **QB / OX Target**                                 | ✅ **All Supported**     | ❌ **1 Target**        |
 | **No EntityStates Required**                        | ✅ **Works Everywhere**  | ❌ **Crashes**         |
 
 ---
