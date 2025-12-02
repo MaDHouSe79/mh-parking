@@ -1,22 +1,11 @@
--- [[ ===================================================== ]] --
--- [[              MH Park System by MaDHouSe79             ]] --
--- [[ ===================================================== ]] --
+--[[ ===================================================== ]]--
+--[[                 MH Lobbies by MaDHouSe                ]]--
+--[[ ===================================================== ]]--
 local function checkVersion(err, github, headers)
     local script = GetCurrentResourceName()
     local insversion, gitversion, cur_inst_version, cur_git_version = '0.0.0', '0.0.0', '0.0.0', '0.0.0'
     local notes = ""
-
     local installed = LoadResourceFile(script, "version")
-    if string.find(installed, "{") and string.find(installed, "}") then
-        installed = json.decode(installed)
-        cur_inst_version = installed.version
-        if installed.message ~= nil then notes = "[Release Notes:^2" .. tostring(installed.message) .. "^0]" end
-        insversion = string.gsub(cur_inst_version,'%.', '')
-    else
-        cur_inst_version = installed
-        insversion = string.gsub(installed, "%s+", "")
-    end
-
     if err == 200 then
         if github ~= nil then
             if string.find(github, "{") and string.find(github, "}") then
@@ -28,21 +17,28 @@ local function checkVersion(err, github, headers)
                 cur_git_version = github
                 gitversion = string.gsub(github, "%s+", "")
             end
-
+            if string.find(installed, "{") and string.find(installed, "}") then
+                installed = json.decode(installed)
+                cur_inst_version = installed.version
+                insversion = string.gsub(cur_inst_version,'%.', '')
+            else
+                cur_inst_version = installed
+                insversion = string.gsub(installed, "%s+", "")
+            end
             cur_inst_version = string.gsub(cur_inst_version, "%s+", "")
             cur_git_version = string.gsub(cur_git_version, "%s+", "")
             if insversion == gitversion then
-                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^2Success^0] "..notes)
+                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^2Success^0]")
             elseif insversion < gitversion then
-                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^1Outdated^0] "..notes)
+                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^1Outdated^0]")
             elseif insversion > gitversion then
-                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^1Failed^0] "..notes)
+                print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2"..cur_inst_version.."^0] [^3Github^0:^2"..cur_git_version.."^0] [Status:^1Failed^0]")
             end
         elseif github == nil then
-            print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2" .. cur_inst_version .. "^0] - ^0Unable to connect to ^3Github^0 host. ^0[STATUS:^1OFFLINE^0] "..notes)
+            print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2" .. cur_inst_version .. "^0] - ^0Unable to connect to ^3Github^0 host. ^0[STATUS:^1OFFLINE^0]")
         end
     elseif err == 404 then
-        print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2" .. cur_inst_version .. "^0] - ^0Unable to connect to ^3Github^0 host. ^0[STATUS:^1OFFLINE^0] "..notes)
+        print("^0[^2" .. script:upper() .. "^0] - ^0[^4UPDATE CHECK^0] - [^3Installed^0:^2" .. cur_inst_version .. "^0] - ^0Unable to connect to ^3Github^0 host. ^0[STATUS:^1OFFLINE^0]")
     end
 end
 

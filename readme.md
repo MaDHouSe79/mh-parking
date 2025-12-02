@@ -29,60 +29,71 @@
 # My Youtube Channel
 - [Subscribe](https://www.youtube.com/@MaDHouSe79) 
 
-# MH Park System (QB/QBX/ESX) by MaDHouSe79
-- With auto park and unpark vehicles when you press `F`.
-- VIP system included
-- Vehicle spawns are server side
-- Automatic police impound.
-- Park Timer, when the timer is 0 it will be impounded.
+---
 
-# Dependencies (QB/QBX/ESX)
-- [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
-- [ox_lib](https://github.com/overextended/ox_lib/releases)
+# 🔥 **MH-PARKING PRO** **(QB/QBX/ESX) by MaDHouSe79** 🔥
+### **This is the best realistic park system you can find for fivem in 2025, PERIOD!**
+### **When you own the vehicle and the engine is turned off, `Get out = Parked`. `Get in = Drive`. PERIOD.**
+### **When you park and your engine is turned off, all players will automatically exit the vehicle.**
+### **Supports a lot of Keyscripts and Frameworks like `ESX/QB/QBX` automaticly**
+### **It's realistic and fun to have on your server, and your players will definitely love to use it.**
+### **The best part is, all vehicles spawns are server side, and it uses stagebag and smart cache, what most scripts don't use.**
+### **`MH-Parking` is the best choice you can make for your FiveM Server in 2025, PERIOD.** 
+### **Many paid scripts don't work like `MH-Parking`, and `MH-Parking` will definitely outperform the most pro paid scripts, and the fun part is `MH-Parking` it is totaly free and open source 🤤**
+### **Why is it open source? So people can see that I'm not stealing code and that I created it myself, and maby people can learn from it.**
 
-# Installation
-- Step 2: Copy the directory `mh-parking` to `resources/[mh]/`.
-- Stap 3: Add `ensure [mh]` in `server.cfg` below `ensure [defaultmaps]`.
-- Step 4: Edit the config file in `shared/config.lua` to your needs.
-- Step 5: Retart your server.
+---
 
-# Admin Commands
-- `/addparkvip [id] [amount]` Add a player as vip, the amount is the max total this player can park vehicles
-- `/removeparkvip [id]` Remove a vip player
-- `/togglesteerangle` Disable or Enable the save teer angle when park
-- `/parkresetall` Reset all players vehicles.
-- `/parkresetplayer [id]` Reset all player vehicles for this player.
+## 🚀 **Why MH-Parking Pro CRUSHES Everything Else**
+| Feature                                             | 🔥  **MH-Parking** 🔥   |  😴 **Other Scripts**  |
+|-----------------------------------------------------|--------------------------|-------------------------|
+| **100% Automatic** (No E, No Menus to park)         | ✅ **PERFECT**           | ❌ Keybinds            |
+| **Server Restart = Exact Position**                 | ✅ **Bulletproof**       | ⚠️ **Sometimes**       |
+| **No Vehicle Duplications**                         | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **No FLOATING Vehicles**                            | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **VIP System included** (Admin Command)             | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **Languages Support** (NL/EN)                       | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **Police Impound** (Target)                         | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **Police Wheel Clams** (using a prop)               | ✅ **100%**              | ⚠️ **Sometimes**       |
+| **Saves EVERYTHING** (Mods/Damage/Fuel/Dirt)        | ✅ **100%**              | ❌ **Basic Only**      |
+| **Park ANYWARE YOU WANT** (No Limits)               | ✅ **100%**              | ❌ **Zones Only**      |
+| **Entity SPANWS** (Server side only)                | ✅ **100%**              | ❌ **Client Only**     |
+| **Never lose you vehicles again** (Waypoints/Blips) | ✅ **100%**              | ❌ **Manual**          |
+| **Automatic Database install**                      | ✅ **100%**              | ❌ **Manual**          |
+| **Automatic Keys** (Owner Online = Instant Keys)    | ✅ **Smart**             | ❌ **Manual**          |
+| **Resource Monitor 0.00/0.01**                      | ✅ **Optimized & Clean** | ❌ **Lag**             |
+| **Zero F8 Warnings** (No 65534 BS)                  | ✅ **Clean Console**     | ❌ **Warning Hell**    |
+| **Statebags + Smart Cache**                         | ✅ **Lightning Fast**    | ❌ **DB Spam**         |
+| **QB / QBX / ESX Legacy**                           | ✅ **All Supported**     | ❌ **1 Framework**     |
+| **QB / QBX Target**                                 | ✅ **All Supported**     | ❌ **1 Target**        |
+| **No EntityStates Required**                        | ✅ **Works Everywhere**  | ❌ **Crashes**         |
 
-# Admin Create/Delete Parking Lots
-- `/toggledebugpoly` You need to to this so you can see how it is placed.
-- `/createpark [player_id] [filename] [job] [label]` To create a prived parking spot.
-- `/deletepark [zone id] [filename]`To delete a created parking pot.
+---
 
-# User Commands
-- `/parkmenu` To Open the parked vehicle menu
-- `/park or F5 or F` To park of drive your vehicle.
-- `/toggleparktext` Disable or Enable the text above the parked vehicles (for streamers)
+# 🔥 Supported key scripts for now
+- qb-vehiclekeys
+- esx_vehiclekeys
+- qbx_vehiclekeys
+- qb-keys
+- Renewed-Vehiclekeys (2025 populair)
+- qs-vehiclekeys / qs-advancedgarages
+- JaksVehicleKeys
+- wasabi_carlock
+- if your key script is not in the list then reqeust a pullrequest on github and i will add it.
 
-# Rewrite Vehicle File
-- When you do this you get a file in de root folder inside `mh-parking`, the new file is `vehicles.lua`
-- You need to copy this data to the `shared/vehicles.lua` file in `mh-parking` folder.
-- When you did that you need to set `Config.RewriteVehicleFile` to `false` again.
+---
 
-# Add Code in your garage/vehicleshop scripts
-- You need to this inder to make parking work propperly,
-- add this below in your config file of your garage script,
-- go to your client file and add this after you spawn the vehcle.
-- `vehicle` can also by `veh` in your script.
-```lua
-SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
+## ⚡ **Installation – 2 Minutes Flat**
+```bash
+1. 🚀 Download → https://github.com/MaDHouSe79/mh-parking/releases/latest
+2. 📂 Drop into resources/[mh]/mh-parking
+3. ➕ Add to server.cfg: `ensure [mh]`
+4. 🗄️ Restart your server, and enjoy the most realistic park system you can find for fivem! :)
 ```
 
-# ScreenShots
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/2.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/3.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/4.png)
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/5.png)
+---
+# 🚀 If you need some support.
+**Just open is issue and we fix it as fast as possible.**
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />

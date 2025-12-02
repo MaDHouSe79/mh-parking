@@ -1,129 +1,59 @@
--- [[ ===================================================== ]] --
--- [[              MH Park System by MaDHouSe79             ]] --
--- [[ ===================================================== ]] --
-Framework, CreateCallback, AddCommand = nil, nil, nil
+-- ═══════════════════════════════════════════════════════════ --
+--          MH-PARKING – 100% Statebag by MaDHouSe79           --
+-- ═══════════════════════════════════════════════════════════ --
+Framework, OnPlayerLoaded, OnPlayerUnload, CreateCallback, AddCommand  = {},  nil, nil, nil, nil
 
-if GetResourceState("es_extended") ~= 'missing' then
-    Framework = exports['es_extended']:getSharedObject()
-    CreateCallback = Framework.RegisterServerCallback
-    AddCommand = Framework.RegisterCommand
-
-    function GetPlayers()
-        return Framework.Players
-    end
-
-    function GetPlayer(source)
-        return Framework.GetPlayerFromId(source)
-    end
-
-    function GetJob(source)
-        return Framework.GetPlayerFromId(source).job
-    end
-
-    function GetCitizenId(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.identifier
-    end
-
-    function GetCitizenFullname(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.name
-    end
-
-elseif GetResourceState("qb-core") ~= 'missing' then
-    Framework = exports['qb-core']:GetCoreObject()
-    CreateCallback = Framework.Functions.CreateCallback
-    AddCommand = Framework.Commands.Add
-
-    function GetPlayers()
-        return Framework.Players
-    end
-
-    function GetPlayer(source)
-        return Framework.Functions.GetPlayer(source)
-    end
-
-    function GetJob(source)
-        return Framework.Functions.GetPlayer(source).PlayerData.job
-    end
-
-    function GetPlayerDataByCitizenId(citizenid)
-        return Framework.Functions.GetPlayerByCitizenId(citizenid) or Framework.Functions.GetOfflinePlayerByCitizenId(citizenid)
-    end
-
-    function GetCitizenId(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.PlayerData.citizenid
-    end
-
-    function GetCitizenFullname(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.PlayerData.charinfo.firstname .. ' ' .. xPlayer.PlayerData.charinfo.lastname
-    end
-
-elseif GetResourceState("qbx_core") ~= 'missing' then
-    Framework = exports['qb-core']:GetCoreObject()
-    CreateCallback = Framework.Functions.CreateCallback
-    AddCommand = Framework.Commands.Add
-
-    function GetPlayers()
-        return Framework.Players
-    end
-
-    function GetPlayer(source)
-        return Framework.Functions.GetPlayer(source)
-    end
-
-    function GetJob(source)
-        return Framework.Functions.GetPlayer(source).PlayerData.job
-    end
-
-    function GetPlayerDataByCitizenId(citizenid)
-        return Framework.Functions.GetPlayerByCitizenId(citizenid) or Framework.Functions.GetOfflinePlayerByCitizenId(citizenid)
-    end
-
-    function GetCitizenId(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.PlayerData.citizenid
-    end
-
-    function GetCitizenFullname(src)
-        local xPlayer = GetPlayer(src)
-        return xPlayer.PlayerData.charinfo.firstname .. ' ' .. xPlayer.PlayerData.charinfo.lastname
-    end
-
+if GetResourceState('es_extended') == 'started' then
+    Framework = { name = 'esx', obj = exports['es_extended']:getSharedObject() }
+    CreateCallback = Framework.TriggerServerCallback
+    AddCommand = Framework.obj.RegisterCommand
+    function GetPlayer(src) return Framework.obj.GetPlayerFromId(src) end
+    function GetPlayers() return Framework.obj.GetPlayers() end
+elseif GetResourceState('qb-core') == 'started' then
+    Framework = { name = 'qb', obj = exports['qb-core']:GetCoreObject() }
+    CreateCallback = Framework.obj.Functions.CreateCallback
+    AddCommand = Framework.obj.Commands.Add
+    function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
+    function GetPlayers() return Framework.obj.Functions.GetPlayers() end
+elseif GetResourceState('qbx_core') == 'started' then
+    Framework = { name = 'qbx', obj = exports['qb-core']:GetCoreObject() }
+    CreateCallback = Framework.obj.Functions.CreateCallback
+    AddCommand = Framework.obj.Commands.Add
+    function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
+    function GetPlayers() return Framework.obj.Functions.GetPlayers() end
 end
 
-function Notify(src, message, type, length)
-    lib.notify(src, {
-        title = "MH Park System",
-        description = message,
-        type = type
-    })
+function IsAdmin(src)
+    if IsPlayerAceAllowed(src, 'admin') or IsPlayerAceAllowed(src, 'command') then return true end
+    return false
 end
 
--- Install Database
-local function InstallDatabase()
-    if Config.Framework == 'esx' then -- ESX Database
-        MySQL.Async.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS parkvip INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS parkmax INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS steerangle INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS location TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS lastlocation TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS street TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS parktime INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NOT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE owned_vehicles ADD COLUMN IF NOT EXISTS trailerdata LONGTEXT NULL DEFAULT NULL')
-    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then --- QB or QBX Database
-        MySQL.Async.execute('ALTER TABLE players ADD COLUMN IF NOT EXISTS parkvip INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE players ADD COLUMN IF NOT EXISTS parkmax INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS steerangle INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS location TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS lastlocation TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS street TEXT NULL DEFAULT NULL')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS parktime INT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS time BIGINT NOT NULL DEFAULT 0')
-        MySQL.Async.execute('ALTER TABLE player_vehicles ADD COLUMN IF NOT EXISTS trailerdata LONGTEXT NULL DEFAULT NULL')
-    end
+function IsPolice(src)
+    local Player = GetPlayer(src)
+    if Player ~= nil and Player.PlayerData ~= nil and Player.PlayerData.job ~= nil and Player.PlayerData.job.name ~= nil and Player.PlayerData.job.name == 'police' then return true end
+    return false  
 end
-InstallDatabase()
+
+function GetIdentifier(src)
+    local Player = GetPlayer(src)
+    if Player then
+        if Framework.name == "esx" then
+            return Player.identifier
+        elseif Framework.name == "qb" or Framework.name == "qbx" then
+            return Player.PlayerData.citizenid
+        end
+    end
+    return false
+end
+
+function GetFullname(citizenid)
+    local info = {fistname = "Unknow", lastname = "Unknow"}
+    local target = Database.GetPlayerData(citizenid)
+    if Framework.name == "esx" then 
+        info = {fistname = target.firstname, lastname = target.lastname}
+    elseif Framework.name == "qb" or Framework.name == "qbx" then
+        local charinfo = json.decode(target.charinfo)
+        info = {fistname = charinfo.firstname, lastname = charinfo.lastname}
+    end
+    return info
+end
