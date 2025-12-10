@@ -64,7 +64,7 @@ local function GetVehicleByPlate(plate)
     local vehicles = GetAllVehicles()
     for _, veh in ipairs(vehicles) do
         if DoesEntityExist(veh) then
-            local vehPlate = GetVehicleNumberPlateText(veh)
+            local vehPlate = GetPlate(veh)
             vehPlate = string.upper(tostring(vehPlate)):gsub("%s+", "")
             if vehPlate == plate then return veh end
         end
