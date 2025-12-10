@@ -78,22 +78,40 @@ function GiveKeys(src, plate)
     plate = string.upper(tostring(plate)):gsub("%s+", "")
     local realVehicle = GetVehicleByPlate(plate)
     if realVehicle ~= nil then
-        if GetResourceState('qbx_vehiclekeys') == 'started' then
+        if GetResourceState('qbx_vehiclekeys') == 'started' then 
             local sessionId = Entity(realVehicle).state.sessionId or exports.qbx_core:CreateSessionId(realVehicle)
             local keys = Player(src).state.keysList or {}
             keys[sessionId] = true
             Entity(realVehicle).state.owner = GetIdentifier(src)
             Player(src).state:set('keysList', keys, true)
+            return true
+        elseif GetResourceState('qs-vehiclekeys') == 'started' then 
+            exports['qs-vehiclekeys']:GiveKeys(plate, GetDisplayNameFromVehicleModel(GetEntityModel(realVehicle)), true)
+            return true
         end
-        if GetResourceState('qs-vehiclekeys') == 'started' then exports['qs-vehiclekeys']:GiveKeys(plate, GetDisplayNameFromVehicleModel(GetEntityModel(realVehicle)), true)  end
-        return true
     else
-        if GetResourceState('qb-vehiclekeys') == 'started' then local Player = GetPlayer(src); local keys = Player.PlayerData.metadata["vehicleKeys"] or {}; keys[plate] = true; Player.Functions.SetMetaData("vehicleKeys", keys); return true end
-        if GetResourceState('esx_vehiclekeys') == 'started' then TriggerEvent('esx_vehiclekeys:server:giveKey', plate, src); return true end
-        if GetResourceState('qb-keys') == 'started' then exports['qb-keys']:GiveKey(src, plate); return true end
-        if GetResourceState('Renewed-Vehiclekeys') == 'started' then exports['Renewed-Vehiclekeys']:addKey(plate); return true end
-        if GetResourceState('vehicles_keys') == 'started' then exports["vehicles_keys"]:giveVehicleKeysToPlayerId(src, plate, "owned"); return true end
-        if GetResourceState('wasabi_carlock') == 'started' then exports.wasabi_carlock:GiveKey(src, plate); return true end
+        if GetResourceState('qb-vehiclekeys') == 'started' then 
+            local Player = GetPlayer(src)
+            local keys = Player.PlayerData.metadata["vehicleKeys"] or {}
+            keys[plate] = true; 
+            Player.Functions.SetMetaData("vehicleKeys", keys)
+            return true 
+        elseif GetResourceState('esx_vehiclekeys') == 'started' then 
+            TriggerEvent('esx_vehiclekeys:server:giveKey', plate, src)
+            return true 
+        elseif GetResourceState('qb-keys') == 'started' then 
+            exports['qb-keys']:GiveKey(src, plate)
+            return true 
+        elseif GetResourceState('Renewed-Vehiclekeys') == 'started' then 
+            exports['Renewed-Vehiclekeys']:addKey(plate)
+            return true 
+        elseif GetResourceState('vehicles_keys') == 'started' then 
+            exports["vehicles_keys"]:giveVehicleKeysToPlayerId(src, plate, "owned")
+            return true 
+        elseif GetResourceState('wasabi_carlock') == 'started' then 
+            exports.wasabi_carlock:GiveKey(src, plate)
+            return true 
+        end
     end
     return false
 end
