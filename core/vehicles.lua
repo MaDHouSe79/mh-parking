@@ -1,5 +1,15 @@
 SV_Config.Vehicles = {
 
+    [1118611807] = {           -- vehicle hash
+        model = 'asbo',        -- This has to match the spawn code of the vehicle
+        name = 'Asbo',         -- This is the display of the vehicle
+        brand = 'Maxwell',     -- This is the vehicle's brand
+        category = 'compacts', -- Catgegory of the vehilce, stick with GetVehicleClass() options https://docs.fivem.net/natives/?_0x29439776AAA00A62
+        type = 'automobile',   -- Vehicle type, refer here https://docs.fivem.net/natives/?_0x6AE51D4B & here https://docs.fivem.net/natives/?_0xA273060E
+        shop = 'pdm',          -- Can be a single shop or multiple shops. For multiple shops for example {'shopname1','shopname2','shopname3'}
+        price = 4000,          -- The price that the vehicle sells for
+    },
+
     --- Compacts (0)
     [1549126457] = { model = "brioso", name = "Brioso R/A", brand = "Grotti", category = "compacts", type = "automobile", shop = "pdm", price = "20000" },
     [-1177863319] = { model = "issi2", name = "Issi", brand = "Weeny", category = "compacts", type = "automobile", shop = "pdm", price = "7000" },
@@ -14,7 +24,6 @@ SV_Config.Vehicles = {
     [-1450650718] = { model = "prairie", name = "Prairie", brand = "Bollokan", category = "compacts", type = "automobile", shop = "pdm", price = "30000" },
     [628003514] = { model = "issi4", name = "Issi Arena", brand = "Weeny", category = "compacts", type = "automobile", shop = "pdm", price = "80000" },
     [15214558] = { model = "brioso3", name = "Brioso 300 Widebody", brand = "Grotti", category = "compacts", type = "automobile", shop = "pdm", price = "125000" },
-    [1118611807] = { model = "asbo", name = "Asbo", brand = "Maxwell", category = "compacts", type = "automobile", shop = "pdm", price = "4000" },
     [1854776567] = { model = "issi7", name = "Issi Sport", brand = "Weeny", category = "compacts", type = "automobile", shop = "pdm", price = "100000" },
     [1429622905] = { model = "brioso2", name = "Brioso 300", brand = "Grotti", category = "compacts", type = "automobile", shop = "pdm", price = "12000" },
     [-2098954619] = { model = "club", name = "Club", brand = "BF", category = "compacts", type = "automobile", shop = "pdm", price = "8000" },
