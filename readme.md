@@ -88,13 +88,12 @@
 
 ---
 
-# ⚡ **Installation – 2 Minutes Flat**
+## ⚡ **Installation – 2 Minutes Flat**
 ```bash
 1. 🚀 Download → https://github.com/MaDHouSe79/mh-parking/releases/latest
 2. 📂 Drop into resources/[mh]/mh-parking
 3. ➕ Add to server.cfg: `setr mh_locale` "en" and `ensure [mh]`
 4. 🗄️ Restart your server, and enjoy the most realistic park system you can find for fivem! :)
-```
 ```
 
 # 📌 When is mh-parking useful?
@@ -112,6 +111,17 @@
 - Your server aims for a more immersive, real-life handling of player vehicles.
 - If your server is small or you just need a very simple garage system, mh-parking might be more than you need.
 - But for medium-to-large servers, especially serious RP communities, it can add a lot of structure and realism.
+
+---
+
+# Just some help code
+- when you want to remove vehicles and you have a automatic script that removes vehicles
+- you need to add this in your code, in this order like below.
+- this wil make sure your parked vehicle will stay.
+```lua
+if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
+DeleteEntity(vehicle) -- than delete
+```
 
 ---
 # 🚀 If you need some support.

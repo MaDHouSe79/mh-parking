@@ -150,7 +150,7 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
     SetNetworkIdCanMigrate(netId, false)
     SetNetworkIdExistsOnAllMachines(netId, true)
     local state = Entity(vehicle).state
-    if netId >= 1 then
+    if (netId > 0 and netId < 65535) then
         if isParked then
             if not parkedCache[plate] then
                 parkedCache[plate] = {vehicle = vehicle, pos = pos, plate = plate}

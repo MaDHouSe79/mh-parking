@@ -26,7 +26,9 @@ MySQL.ready(function()
 end)
 
 function Database.ImpoundVehicle(plate, cost)
-    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, depotprice = ? WHERE plate = ?', {0, cost, plate})
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, depotprice = ?, location = ?, street = ?, parktime = ?, time = ?, isClamped = ? WHERE plate = ?', {
+        0, cost, nil, nil, 0, 0, 0, plate
+    })
 end
 
 function Database.ParkVehicle(plate, location, steerangle, street, mods, fuel, body, engine)

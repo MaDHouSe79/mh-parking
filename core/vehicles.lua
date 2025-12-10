@@ -795,4 +795,3 @@ SV_Config.Vehicles = {
     [2091594960] = {model = "tr4", name = "tr4", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
     [2078290630] = {model = "tr2", name = "tr2", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
 }
-

@@ -9,6 +9,8 @@ description 'MH Parking - 100% Statebag - Server side spawns.'
 version '1.0.0'
 lua54 'yes'
 
+use_experimental_fxv2_oal "yes"
+
 files {'core/images/*.*'}
 
 shared_scripts {
@@ -16,6 +18,7 @@ shared_scripts {
     'locales/locale.lua',
     'locales/*.lua',
 }
+
 
 client_script {
     'core/framework/client.lua',
@@ -31,7 +34,6 @@ server_script {
     'core/framework/server.lua',    
     'core/database.lua',
     'core/functions/server.lua',
-    'server/commands.lua',
     'server/main.lua',
     'server/update.lua',
 }

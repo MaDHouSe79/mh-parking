@@ -40,7 +40,7 @@ function GetIdentifier(src)
         if Framework.name == "esx" then
             return Player.identifier
         elseif Framework.name == "qb" or Framework.name == "qbx" then
-            return Player.PlayerData.citizenid
+            return Player.PlayerData.citizenid or Player.PlayerData.identifier
         end
     end
     return false
