@@ -78,7 +78,13 @@ function GiveKeys(src, plate)
     plate = string.upper(tostring(plate)):gsub("%s+", "")
     local realVehicle = GetVehicleByPlate(plate)
     if realVehicle ~= nil then
-        if GetResourceState('qbx_vehiclekeys') == 'started' then exports.qbx_vehiclekeys.GiveKeys(src, realVehicle, true)  end
+        if GetResourceState('qbx_vehiclekeys') == 'started' then 
+            local sessionId = Entity(realVehicle).state.sessionId or exports.qbx_core:CreateSessionId(realVehicle)
+            local keys = Player(src).state.keysList or {}
+            if keys[sessionId] then return end
+            keys[sessionId] = true
+            Player(src).state:set('keysList', keys, true)
+        end
         if GetResourceState('qs-vehiclekeys') == 'started' then exports['qs-vehiclekeys']:GiveKeys(plate, GetDisplayNameFromVehicleModel(GetEntityModel(realVehicle)), true)  end
         return true
     else
