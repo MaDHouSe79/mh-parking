@@ -83,12 +83,18 @@
 
 ---
 
-## ⚡ **Installation – 2 Minutes Flat**
+# 🚗 Adding Vehicles 
+- If you have moddes vehicles you need to add them in SV_Server.Vehicles table.
+
+---
+
+# ⚡ **Installation – 2 Minutes Flat**
 ```bash
 1. 🚀 Download → https://github.com/MaDHouSe79/mh-parking/releases/latest
 2. 📂 Drop into resources/[mh]/mh-parking
-3. ➕ Add to server.cfg: `ensure [mh]`
+3. ➕ Add to server.cfg: `setr mh_locale` "en" and `ensure [mh]`
 4. 🗄️ Restart your server, and enjoy the most realistic park system you can find for fivem! :)
+```
 ```
 
 # 📌 When is mh-parking useful?
