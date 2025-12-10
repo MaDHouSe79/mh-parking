@@ -79,10 +79,11 @@ function GiveKeys(src, plate)
     local realVehicle = GetVehicleByPlate(plate)
     if realVehicle ~= nil then
         if GetResourceState('qbx_vehiclekeys') == 'started' then 
+            local citizenid = GetIdentifier(src)
             local sessionId = Entity(realVehicle).state.sessionId or exports.qbx_core:CreateSessionId(realVehicle)
             local keys = Player(src).state.keysList or {}
-            if keys[sessionId] then return end
             keys[sessionId] = true
+            Entity(realVehicle).state.owner = citizenid
             Player(src).state:set('keysList', keys, true)
         end
         if GetResourceState('qs-vehiclekeys') == 'started' then exports['qs-vehiclekeys']:GiveKeys(plate, GetDisplayNameFromVehicleModel(GetEntityModel(realVehicle)), true)  end
