@@ -28,6 +28,7 @@ client_script {
 server_script {
     '@oxmysql/lib/MySQL.lua',
     'core/sv_config.lua',
+    'core/vehicles.lua',
     'core/framework/server.lua',    
     'core/database.lua',
     'core/functions/server.lua',
