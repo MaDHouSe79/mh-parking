@@ -1,6 +1,6 @@
 SV_Config.Vehicles = {
 
-    [1118611807] = {           -- vehicle hash
+    [1118611807] = {           -- vehicle hash, GetEntityModel(entity) 
         model = 'asbo',        -- This has to match the spawn code of the vehicle
         name = 'Asbo',         -- This is the display of the vehicle
         brand = 'Maxwell',     -- This is the vehicle's brand
@@ -795,3 +795,4 @@ SV_Config.Vehicles = {
     [2091594960] = {model = "tr4", name = "tr4", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
     [2078290630] = {model = "tr2", name = "tr2", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
 }
+
