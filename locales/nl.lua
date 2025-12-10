@@ -37,3 +37,4 @@ if GetConvar('mh_locale', 'en') == 'nl' then
         fallbackLang = Lang,
     })
 end
+

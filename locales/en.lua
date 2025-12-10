@@ -36,4 +36,5 @@ if GetConvar('mh_locale', 'en') == 'en' then
         warnOnMissing = true,
         fallbackLang = Lang,
     })
+
 end

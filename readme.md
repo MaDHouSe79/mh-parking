@@ -31,7 +31,7 @@
 
 ---
 
-# 🔥 **MH-PARKING PRO** **(QB/QBX/ESX) by MaDHouSe79** 🔥
+# 🔥 **MH-PARKING PRO** **(QB/QBX/ESX) by MaDHouSe79**
 ### **This is the best realistic park system you can find for fivem in 2025, PERIOD!**
 ### **When you own the vehicle and the engine is turned off, `Get out = Parked`. `Get in = Drive`. PERIOD.**
 ### **When you park and your engine is turned off, all players will automatically exit the vehicle.**
@@ -86,6 +86,15 @@
 # 🚗 Adding Vehicles 
 - If you have modded vehicles you need to add them in `core/vehicles.lua`.
 
+---
+# Just some help code
+- when you want to remove vehicles and you have a automatic script that removes vehicles
+- you need to add this in your code, in this order like below.
+- this wil make sure your parked vehicle will stay.
+```lua
+if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
+DeleteEntity(vehicle) -- than delete
+```
 ---
 
 ## ⚡ **Installation – 2 Minutes Flat**
