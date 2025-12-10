@@ -93,7 +93,7 @@ function GiveKeys(src, plate)
         if GetResourceState('qb-vehiclekeys') == 'started' then 
             local Player = GetPlayer(src)
             local keys = Player.PlayerData.metadata["vehicleKeys"] or {}
-            keys[plate] = true; 
+            keys[plate] = true
             Player.Functions.SetMetaData("vehicleKeys", keys)
             return true 
         elseif GetResourceState('esx_vehiclekeys') == 'started' then 
