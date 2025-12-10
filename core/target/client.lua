@@ -92,7 +92,7 @@ local function createParkingOptions()
             end,
         },
         {
-            num      = 3,
+            num      = 5,
             name     = "give_keys",
             icon     = "fas fa-lock-open",
             label    = "Give Keys (owner)",
@@ -114,7 +114,7 @@ local function createParkingOptions()
             end,
         },
         {
-            num      = 3,
+            num      = 6,
             name     = "unpark_vehicle",
             icon     = "fas fa-lock-open",
             label    = "Unpark Vehicle (owner)",
@@ -140,7 +140,7 @@ local function createParkingOptions()
             end,
         },
         {
-            num      = 3,
+            num      = 7,
             name     = "park_vehicle",
             icon     = "fas fa-lock-open",
             label    = "Park Vehicle (owner)",
