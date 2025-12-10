@@ -84,7 +84,7 @@
 ---
 
 # 🚗 Adding Vehicles 
-- If you have moddes vehicles you need to add them in `core/vehicles.lua`.
+- If you have modded vehicles you need to add them in `core/vehicles.lua`.
 
 ---
 
