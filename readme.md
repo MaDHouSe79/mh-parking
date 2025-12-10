@@ -31,7 +31,7 @@
 
 ---
 
-# 🔥 **MH-PARKING PRO** **(QB/QBX/ESX) by MaDHouSe79** 🔥
+# 🔥 **MH-PARKING PRO** **(QB/QBX/ESX) by MaDHouSe79**
 ### **This is the best realistic park system you can find for fivem in 2025, PERIOD!**
 ### **When you own the vehicle and the engine is turned off, `Get out = Parked`. `Get in = Drive`. PERIOD.**
 ### **When you park and your engine is turned off, all players will automatically exit the vehicle.**
