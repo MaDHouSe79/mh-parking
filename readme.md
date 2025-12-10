@@ -87,6 +87,14 @@
 - If you have modded vehicles you need to add them in `core/vehicles.lua`.
 
 ---
+# ℹ️ Just some help code
+- when you want to remove vehicles or you have a automatic script that removes vehicles
+- you need to add this in your code, in this order like below.
+```lua
+if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
+DeleteEntity(vehicle) -- than delete
+```
+---
 
 # ⚡ **Installation – 2 Minutes Flat**
 ```bash
