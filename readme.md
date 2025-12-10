@@ -84,7 +84,7 @@
 ---
 
 # 🚗 Adding Vehicles 
-- If you have moddes vehicles you need to add them in SV_Server.Vehicles table.
+- If you have moddes vehicles you need to add them in `core/vehicles.lua`.
 
 ---
 
