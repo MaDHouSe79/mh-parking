@@ -122,17 +122,6 @@ DeleteEntity(vehicle) -- than delete
 - But for medium-to-large servers, especially serious RP communities, it can add a lot of structure and realism.
 
 ---
-
-# Just some help code
-- when you want to remove vehicles and you have a automatic script that removes vehicles
-- you need to add this in your code, in this order like below.
-- this wil make sure your parked vehicle will stay.
-```lua
-if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
-DeleteEntity(vehicle) -- than delete
-```
-
----
 # 🚀 If you need some support.
 **Just open is issue and we fix it as fast as possible.**
 
