@@ -96,7 +96,11 @@ end
 
 function Database.IsPlayerAVip(src)
     local citizenid = GetIdentifier(src)
-    local result = MySQL.single.await("SELECT * FROM "..ply.table.." WHERE "..ply.citizenid.." = ? LIMIT 1", {citizenid})
-    if citizenid ~= false and result ~= nil and result.parkvip == 1 then return true end
-    return false
+    if SV_Config.UseAsVip then
+        local result = MySQL.single.await("SELECT * FROM "..ply.table.." WHERE "..ply.citizenid.." = ? LIMIT 1", {citizenid})
+        if citizenid ~= false and result ~= nil and result.parkvip == 1 then return true end
+        return false
+    else
+        return true
+    end
 end
