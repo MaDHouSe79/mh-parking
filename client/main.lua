@@ -50,8 +50,8 @@ local function OpenParkingMenu()
                         plate = v.plate,
                         street = v.street,
                         fuel = v.fuel,
-                        engine = v.engine,
-                        body = v.body,
+                        engine = math.floor(v.engine),
+                        body = math.floor(v.body),
                         coords = json.decode(v.location)
                     })
                 end
