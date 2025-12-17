@@ -76,7 +76,7 @@ window.addEventListener("message", event => {
 
                 parkingList.appendChild(div);
             });
-        } else if (e.data.type == "info") {
+        } else if (data.type == "info") {
             menu.style.display = "block";
             if (data.vehicle != null) {
                 const div = document.createElement("div");
