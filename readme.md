@@ -138,9 +138,9 @@ DeleteEntity(vehicle) -- than delete
 
 ### Screenshot
 # Park menu normal look 
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/1.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)
 # Park menu editmode look
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshot/1.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/2.png)
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
