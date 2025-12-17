@@ -4,14 +4,14 @@
 Framework, TriggerCallback, OnPlayerLoaded, OnPlayerUnload = nil, nil, nil, nil
 isLoggedIn, PlayerData = false, {}
 
-if GetResourceState("es_extended") ~= 'missing' then
+if GetResourceState("es_extended") == 'started' then
     Framework = { name = 'esx', obj = exports['es_extended']:getSharedObject() }
     TriggerCallback = Framework.obj.TriggerServerCallback
     OnPlayerLoaded = 'esx:playerLoaded'
     OnPlayerUnload = 'esx:playerUnLoaded'
     function GetPlayerData() TriggerCallback('esx:getPlayerData', function(data) PlayerData = data end) return PlayerData end
     function IsDead() return (GetEntityHealth(PlayerPedId()) <= 0) end
-elseif GetResourceState("qb-core") ~= 'missing' then
+elseif GetResourceState("qb-core") == 'started' then
     Framework = { name = 'qb', obj = exports['qb-core']:GetCoreObject() }
     TriggerCallback = Framework.obj.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
@@ -19,8 +19,8 @@ elseif GetResourceState("qb-core") ~= 'missing' then
     function GetPlayerData() return Framework.obj.Functions.GetPlayerData() end
     function IsDead() return Framework.obj.Functions.GetPlayerData().metadata['isdead'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject() end)
-elseif GetResourceState("qbx_core") ~= 'missing' then
+    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework.obj = exports['qb-core']:GetCoreObject() end)
+elseif GetResourceState("qbx_core") == 'started' then
     Framework = { name = 'qb', obj = exports['qb-core']:GetCoreObject() }
     TriggerCallback = Framework.obj.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
@@ -28,7 +28,7 @@ elseif GetResourceState("qbx_core") ~= 'missing' then
     function GetPlayerData() return Framework.obj.Functions.GetPlayerData() end
     function IsDead() return Framework.obj.Functions.GetPlayerData().metadata['isdead'] end
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
-    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework = exports['qb-core']:GetCoreObject() end)
+    RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework.obj = exports['qb-core']:GetCoreObject() end)
 end
 
 function GetIdentifier()

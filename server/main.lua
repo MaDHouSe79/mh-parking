@@ -147,7 +147,7 @@ RegisterNetEvent('mh-parking:autoUnpark', function(netId)
 end)
 
 RegisterNetEvent('mh-parking:autoPark', function(netId, steerangle, street, mods, fuel, body, engine)
-    local src = source    
+    local src = source
     if not netId or netId <= 0 then return end
     local veh = NetworkGetEntityFromNetworkId(netId)
     if not veh or not DoesEntityExist(veh) or not NetworkGetEntityOwner(veh) then return end
@@ -256,6 +256,13 @@ local function ParkingTimeCheckLoop()
 end
 
 AddEventHandler('onResourceStart', function(resource)
+    if resource == "qb-smallresources" then
+        Wait(5000)
+        if hasSpawned then
+            print("Respawn vehicles")
+            SpawnVehicles()
+        end
+    end    
     if resource ~= GetCurrentResourceName() then return end
     Wait(5000)
     ParkingTimeCheckLoop()

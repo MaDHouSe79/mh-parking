@@ -26,7 +26,8 @@ local function createParkingOptions()
             label       = "Vehicle Info",
             distance    = 3.0,
             action = function(data)
-                TriggerEvent("mh-parking:infomenu")
+                local entity = getEntity(data)
+                TriggerEvent('mh-parking:infomenu', entity)
             end,
             canInteract = function(data)
                 local entity = getEntity(data)

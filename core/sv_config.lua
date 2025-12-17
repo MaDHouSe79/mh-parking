@@ -13,8 +13,8 @@ SV_Config.UseTimerPark = true -- when true players have a limit time to park
 SV_Config.PayTimeInSecs = 10
 SV_Config.ParkPrice = 500
 
-SV_Config.UseAsVip = true
-SV_Config.DefaultMaxParking = 1
+SV_Config.UseAsVip = false
+SV_Config.DefaultMaxParking = 10
 
 SV_Config.PoliceJobs = {'police', 'sheriff'} -- Jobs than can add a clamp to a vehicle
 SV_Config.ImpoundPrice = 500

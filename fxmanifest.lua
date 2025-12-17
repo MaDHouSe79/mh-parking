@@ -11,7 +11,16 @@ lua54 'yes'
 
 use_experimental_fxv2_oal "yes"
 
-files {'core/images/*.*'}
+ui_page 'html/index.html'
+
+files {
+    'html/theme.ini',
+    'html/index.html',
+    'html/assets/css/style.css',
+    'html/assets/js/script.js',
+    'html/assets/images/*.png',
+    'core/images/*.*',
+}
 
 shared_scripts {
     '@ox_lib/init.lua',

@@ -8,6 +8,27 @@ local blipCache = {}
 local wasInVehicle = false
 local currentVehicle = nil
 
+local function LoadThemeFromINI()
+    local theme = {}
+    local file = LoadResourceFile(GetCurrentResourceName(), "/html/theme.ini")
+    if not file then
+        print("^1[ERROR] theme.ini niet gevonden!")
+        return theme
+    end
+    for line in file:gmatch("[^\r\n]+") do
+        line = line:match("^%s*(.-)%s*$")
+        if line:sub(1,1) ~= ";" and line:sub(1,1) ~= "#" and line ~= "" and not line:find("^%[") then
+            local key, value = line:match("([^=]+)=([^=]+)")
+            if key and value then
+                key = key:match("^%s*(.-)%s*$")
+                value = value:match("^%s*(.-)%s*$")
+                theme[key] = value
+            end
+        end
+    end
+    return theme
+end
+
 local function SetVehicleWaypoit(coords)
     local playerCoords = GetEntityCoords(PlayerPedId())
     local distance = GetDistance(playerCoords, coords)
@@ -18,43 +39,26 @@ local function SetVehicleWaypoit(coords)
     end
 end
 
-local function GetVehicleMenu()
+local function OpenParkingMenu()
     TriggerCallback("mh-parking:server:GetVehicles", function(result)
         if result.status then
-            if result.data ~= nil then
-                local num = 0
-                local options = {}
-                for k, v in pairs(result.data) do
-                    if v.state == 3 then
-                        num = num + 1
-                        local coords = json.decode(v.location)
-                        options[#options + 1] = {
-                            id = num,
-                            title = FirstToUpper(v.vehicle) .. " " .. v.plate .. " is parked",
-                            icon = "nui://mh-parking/core/images/" .. v.vehicle .. ".png",
-                            description = Lang:t('info.street', {street = v.street}) .. '\n' .. Lang:t('info.fuel', {fuel = v.fuel}) .. '\n' .. Lang:t('info.engine', {engine = v.engine}) .. '\n' .. Lang:t('info.body', {body = v.body}) .. '\n' .. Lang:t('info.click_to_set_waypoint'),
-                            arrow = false,
-                            onSelect = function()
-                                SetVehicleWaypoit(coords)
-                            end
-                        }
-                    end
+            local options = {}
+            for _, v in pairs(result.data) do
+                if v.state == 3 then
+                    table.insert(options, {
+                        vehicle = v.vehicle,
+                        plate = v.plate,
+                        street = v.street,
+                        fuel = v.fuel,
+                        engine = v.engine,
+                        body = v.body,
+                        coords = json.decode(v.location)
+                    })
                 end
-                num = num + 1
-                options[#options + 1] = {
-                    id = num,
-                    title = 'close',
-                    icon = "fa-solid fa-stop",
-                    description = '',
-                    arrow = false,
-                    onSelect = function()
-                    end
-                }
-                lib.registerContext({id = 'parkMenu', title = "MH Parking Pro", icon = "fa-solid fa-warehouse", options = options})
-                lib.showContext('parkMenu')
-            else
-                Notify(Lang:t('info.no_vehicles_parked'), "error", 5000)
             end
+            local theme = LoadThemeFromINI()
+            SetNuiFocus(true, true)
+            SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme})
         end
     end)
 end
@@ -62,48 +66,25 @@ end
 local function OpenInfoMenu(vehicle)
     if not vehicle or not DoesEntityExist(vehicle) then return end
     if config.Vehicles[GetEntityModel(vehicle)] then
-        local model       = config.Vehicles[GetEntityModel(vehicle)].model
-        local body        = math.floor(GetVehicleBodyHealth(vehicle))
-        local engine      = math.floor(GetVehicleEngineHealth(vehicle))
-        local tank        = math.floor(GetVehicleFuelLevel(vehicle))
-        local oil         = math.floor(GetVehicleOilLevel(vehicle))
-        local temp        = math.floor(GetVehicleEngineTemperature(vehicle))
-        local plate       = GetPlate(vehicle)
-        local modelHash   = GetEntityModel(vehicle)
-        local displayName = GetDisplayNameFromVehicleModel(modelHash)
-        local class       = GetVehicleClass(vehicle)
-        local className   = GetLabelText("VEH_CLASS_"..class)
-        local bodyColor   = body > 700 and 'green' or body > 400 and 'yellow' or 'red'
-        local engineColor = engine > 700 and 'green' or engine > 400 and 'yellow' or 'red'
-        local tankColor   = tank > 50 and 'green' or tank > 20 and 'yellow' or 'red'
-        local tmpIcon     = temp > 90 and 'temperature-high' or 'temperature-half'
-        local oilIcon     = oil > 5 and 'blue' or 'orange'
-        local bodyIcon    = body > 700 and 'shield' or body > 400 and 'shield-halved' or 'shield-crack'
-        local engineIcon  = engine > 700 and 'engine' or engine > 400 and 'engine-warning' or 'fire-flame-curved'
-        local tankIcon    = tank > 50 and 'gas-pump' or tank > 20 and 'fill-drip' or 'fill'
-        local tmpEngineIcon = temp > 95 and 'red' or temp > 80 and 'orange' or 'blue'
-        local options = {}
-        options[#options + 1] = {
-            title = displayName:upper(),
-            description = className .. ' • ' .. plate,
-            icon = 'car',
-            iconColor = '#ff4444',
-            metadata = {
-                {label = '💸 Price', value = config.Vehicles[modelHash].price and ('$%s'):format(config.Vehicles[modelHash].price:reverse():gsub('(...)', '%1.'):reverse()) or 'Unknown'},
-                {label = '⚡ Class', value = className},
-            }
-        }
+
+        local identifier  = GetIdentifier()
         local state = Entity(vehicle).state
-        local owner = GetIdentifier()
-        if owner == state.citizenid then
-            options[#options + 1] = {title = Lang:t("vehicle.body_damage"),   description = body..'/1000',   progress = body/10,   icon = bodyIcon,   colorScheme = bodyColor}
-            options[#options + 1] = {title = Lang:t("vehicle.engine_damage"), description = engine..'/1000', progress = engine/10, icon = engineIcon, colorScheme = engineColor}
-            options[#options + 1] = {title = Lang:t("vehicle.fuel_level"),    description = tank..'%',       progress = tank,      icon = tankIcon,   colorScheme = tankColor}
-            options[#options + 1] = {title = Lang:t("vehicle.oil_level"),     description = oil.."fL",       progress = oil,       icon = 'oil-can',  colorScheme = oilIcon}
-            options[#options + 1] = {title = Lang:t("vehicle.engine_temp"),   description = temp..'°C',                            icon = tmpIcon,    colorScheme = tmpEngineIcon}            
-        end
-        lib.registerContext({id = 'mh_parkinfo_epic', title = "🚗 "..Lang:t("vehicle.info"), menu = 'mh_parkinfo_epic', canClose = true, options = options})
-        lib.showContext('mh_parkinfo_epic')
+        local isOwner = identifier == state.citizenid and true or false
+        local data = {
+            isOwner = isOwner,
+            model = config.Vehicles[GetEntityModel(vehicle)].model,
+            body = math.floor(GetVehicleBodyHealth(vehicle)),
+            engine = math.floor(GetVehicleEngineHealth(vehicle)),
+            fuel = math.floor(GetVehicleFuelLevel(vehicle)),
+            oil = math.floor(GetVehicleOilLevel(vehicle)),
+            temp = math.floor(GetVehicleEngineTemperature(vehicle)),
+            plate = GetPlate(vehicle),
+            displayName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)),
+            class = GetLabelText("VEH_CLASS_"..GetVehicleClass(vehicle)),
+        }
+        local theme = LoadThemeFromINI()
+        SetNuiFocus(true, true)
+        SendNUIMessage({action = "open", type = "info", vehicle = data, hour = GetClockHours(), theme = theme})
     end
 end
 
@@ -249,9 +230,8 @@ RegisterNetEvent('mh-parking:client:leaveVehicle', function(data)
     LeaveVehicle(data)
 end)
 
-RegisterNetEvent('mh-parking:openparkmenu', function()
-    GetVehicleMenu()
-end)
+RegisterKeyMapping("parkmenu", "Open PlayerBaord NUI", 'keyboard', "F4")
+RegisterNetEvent('mh-parking:openparkmenu', function() OpenParkingMenu() end)
 
 RegisterNetEvent('mh-parking:syncParked', function(netId, isParked, pos, mods, steerangle)
     while config == nil do Wait(10) end
@@ -290,7 +270,6 @@ RegisterNetEvent('mh-parking:syncWheelClamp', function(netId)
         end
     end
 end)
-
 RegisterNetEvent('mh-parking:onjoin', function(data)
     if data and data.status == true then
         config = data.config
@@ -298,9 +277,8 @@ RegisterNetEvent('mh-parking:onjoin', function(data)
     end
 end)
 
-RegisterNetEvent('mh-parking:infomenu', function()
-    local closestVehicle, closestDistance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
-    if closestVehicle ~= -1 and closestDistance ~= -1 and closestDistance < 3.0 then OpenInfoMenu(closestVehicle) end
+RegisterNetEvent('mh-parking:infomenu', function(vehicle)
+    OpenInfoMenu(vehicle)
 end)
 
 AddEventHandler('entityCreated', function(entity)
@@ -453,3 +431,27 @@ CreateThread(function()
         end
     end
 end)    
+
+RegisterNUICallback("setWaypoint", function(data, cb)
+    SetVehicleWaypoit(data.coords)
+    cb("ok")
+end)
+
+RegisterNUICallback("close", function(_, cb)
+    SetNuiFocus(false, false)
+    cb("ok")
+end)
+
+-- open menu nui
+RegisterNUICallback("saveHudPos", function(data, cb) 
+    SetResourceKvp("mh_parking_hud_pos", json.encode({x = data.x, y = data.y})); cb("ok") 
+end)
+
+CreateThread(function()
+    Wait(500)
+    local saved = GetResourceKvpString("mh_parking_hud_pos")
+    if saved then
+        local pos = json.decode(saved)
+        SendNUIMessage({action = "setHudPos", x = pos.x, y = pos.y})
+    end
+end)

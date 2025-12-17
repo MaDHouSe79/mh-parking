@@ -28,6 +28,12 @@ function SafeNetId(entity)
     return (netId > 0 and netId < 65535) and netId or nil
 end
 
+function Notify(msg, type)
+    if lib and lib.notify then
+        lib.notify({title = "MH Parking Pro", description = msg, type = type or "inform"})
+    end
+end
+
 function GetPedVehicleSeat(ped)
     local vehicle = GetVehiclePedIsIn(ped, false)
     for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
@@ -77,12 +83,6 @@ function GetClosestVehicle(coords)
         end
     end
     return closestVehicle, closestDistance
-end
-
-function Notify(msg, type)
-    if lib and lib.notify then
-        lib.notify({title = "MH Parking Pro", description = msg, type = type or "inform"})
-    end
 end
 
 function DoVehicleDamage(vehicle, body, engine)

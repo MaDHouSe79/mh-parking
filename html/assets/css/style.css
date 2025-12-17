@@ -1,0 +1,214 @@
+:root {
+    /* Fallback Default colors */
+    --primary-font: 'Roboto', sans-serif; 
+    --bg-transparent: transparent;
+    --bg-primary: rgba(50, 50, 80, 0.9);
+    --bg-secondary: linear-gradient(135deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 80, 0.9));
+    --text-color: white;
+    --text-color: white;
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(255, 255, 255, 0.14);
+    --neon-cyan: #00ffaa;
+    --neon-purple: #aa00ff;
+    --glow-cyan: 0 0 20px rgba(0, 255, 170, 0.5);
+    --glow-purple: 0 0 20px rgba(170, 0, 255, 0.4);
+    --border-glass: rgba(255, 255, 255, 0.12);
+    --border-bottom: rgba(255,255,255,0.1);
+    --box-shadow: rgba(0, 0, 0, 0.5);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--primary-font);
+    color: var(--text-color);
+    background: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    width: 100%;
+    margin-top: 0px;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+#stats {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#info-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+#info-bar-button {
+    display: inline-block;
+}
+
+h1 {
+    position: relative;
+    margin-top: 0px;
+    text-align: center;
+    padding-bottom: 10px;
+    font-size: 1.0em;
+    color: var(--text-color);
+}
+
+/* Dont change above */
+
+#menu {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    max-height: 600px;
+    background: var(--bg-primary);
+    border-radius: 15px;
+    color: var(--text-color);
+    padding: 12px;
+    animation: fadeInUp 0.4s ease-out; 
+    overflow-y: auto;
+}
+
+.vehicle {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.vehicle:hover {
+    background: var(--glass-hover);
+    box-shadow: var(--glow-cyan);
+    border-color: var(--neon-cyan);    
+}
+
+.vehicle small {
+    display: block;
+    opacity: 0.8;
+}
+
+#close {
+    position: absolute;
+    top: 1%;
+    right: 1%; 
+    width: 25px;
+    height: 25px;
+    color: var(--text-color);
+    border: none;
+    border-radius: 50%; 
+    cursor: pointer;
+    border-color: var(--bg-secondary);
+    font-size: 1.0em;
+    transition: all 0.3s;
+    background: transparent;
+}
+
+#close:hover { 
+    box-shadow: var(--glow-cyan);
+    border-color: var(--neon-cyan);
+}
+
+#edit {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    width: 25px;
+    height: 25px;
+    color: var(--text-color);
+    border-radius: 50%; 
+    cursor: pointer;
+    border: none;
+    border-color: var(--bg-secondary);
+    font-size: 1.0em;
+    transition: all 0.3s;
+    background: transparent;
+}
+#edit:hover { 
+    box-shadow: var(--glow-cyan);
+    border-color: var(--neon-cyan);
+}
+
+.player-card:hover {
+    box-shadow: var(--glow-cyan);
+    border-color: var(--neon-cyan);
+}
+
+.vehicleImage {
+    width: 150px;
+}
+
+span {
+    color: var(--text-color);
+    font-size: 1.0em;
+}
+
+div {
+    color: var(--text-color);
+    font-size: 1.0em;
+}
+
+table {
+    font-family: Arial, sans-serif;
+    font-size: 1.0em;
+}
+
+#parkingList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#vehicleInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+button.waypoint {
+    background: var(--bg-primary);
+    margin-top: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; 
+    cursor: pointer; 
+    font-size: 1.2em;
+    width: 50px;
+    max-height: 50px;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#modal {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Scrollbar */
+#content::-webkit-scrollbar { width: 5px; }
+#content::-webkit-scrollbar-track { background: transparent; }
+#content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+#content::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
