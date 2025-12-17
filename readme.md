@@ -95,6 +95,7 @@
 if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
 DeleteEntity(vehicle) -- than delete
 ```
+
 ---
 
 ## ⚡ **Installation – 2 Minutes Flat**
