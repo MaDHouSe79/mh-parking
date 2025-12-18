@@ -1,5 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Tajawal:700&display=swap&subset=arabic');
+
 :root {
     /* Fallback Default colors */
+    --header-title-text-color: rgb(0, 255, 191);
     --primary-font: 'Roboto', sans-serif; 
     --bg-transparent: transparent;
     --bg-primary: rgba(50, 50, 80, 0.9);
@@ -26,12 +31,23 @@ body {
     background: transparent;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 #header {
     width: 100%;
     margin-top: 0px;
     border-bottom: 1px solid var(--border-glass);
+}
+
+#footer {
+    position: relative;
+    left: 0%;
+    width: 100%;
+    margin-top: 50px;
+    bottom: 0%;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 #stats {
@@ -57,7 +73,7 @@ h1 {
     text-align: center;
     padding-bottom: 10px;
     font-size: 1.0em;
-    color: var(--text-color);
+    color: var(--header-title-text-color);
 }
 
 /* Dont change above */
@@ -68,14 +84,12 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 450px;
-    max-height: 600px;
+    width: 460px;
     background: var(--bg-primary);
     border-radius: 15px;
     color: var(--text-color);
     padding: 12px;
     animation: fadeInUp 0.4s ease-out; 
-    overflow-y: auto;
 }
 
 .vehicle {
@@ -155,19 +169,27 @@ div {
 }
 
 table {
+    width: 100%;
     font-family: Arial, sans-serif;
     font-size: 1.0em;
 }
 
+
 #parkingList {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow: scroll;
+    overflow-y: hidden;
     gap: 14px;
 }
 
 #vehicleInfo {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow: scroll;
+    overflow-y: hidden;
     gap: 14px;
 }
 
@@ -205,10 +227,16 @@ button.waypoint {
     cursor: pointer;
 }
 
-/* Scrollbar */
-#content::-webkit-scrollbar { width: 5px; }
-#content::-webkit-scrollbar-track { background: transparent; }
-#content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
-#content::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+/* Scrollbars */
+#parkingList::-webkit-scrollbar { width: 5px; }
+#parkingList::-webkit-scrollbar-track { background: transparent; }
+#parkingList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+#parkingList::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+#vehicleInfo::-webkit-scrollbar { width: 5px; }
+#vehicleInfo::-webkit-scrollbar-track { background: transparent; }
+#vehicleInfo::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+#vehicleInfo::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
