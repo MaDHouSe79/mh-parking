@@ -51,18 +51,14 @@ window.addEventListener("message", event => {
             data.vehicles.forEach(v => {
                 const div = document.createElement("div");
                 div.className = "vehicle";
-
                 var html = `<table><tr><td><img class="vehicleImage" src="../html/assets/images/`+ v.vehicle + `.png"></td><td>`;
-
                 html += `
                     <strong>${v.vehicle.toUpperCase()} ${v.plate}</strong>
                     <small>Parked Street: ${v.street}</small>
                     <small>Fuel: ${v.fuel}% | Engine: ${v.engine} | Body: ${v.body}</small>
                     <small>Press to set a waypoint</small>
                 `;
-
                 html += `</td></tr></table>`;
-
                 div.innerHTML = html;
                 div.onclick = () => {
                     fetch(`https://${GetParentResourceName()}/setWaypoint`, {
@@ -73,7 +69,6 @@ window.addEventListener("message", event => {
                     menu.style.display = "none";
                     fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
                 };
-
                 parkingList.appendChild(div);
             });
         } else if (data.type == "info") {
@@ -82,27 +77,21 @@ window.addEventListener("message", event => {
                 const div = document.createElement("div");
                 div.className = "vehicle";
                 var html = `<table><tr><td><img class="vehicleImage" src="../html/assets/images/`+ data.vehicle.model + `.png"></td><td>`;
-                html += `<table>`;
-                html += `<tr><td>Model</td><td>${data.vehicle.displayName}</td></tr>`;
-                html += `<tr><td>Plate</td><td>${data.vehicle.plate}</td></tr>`;
-                html += `<tr><td>Class</td><td>${data.vehicle.class}</td></tr>`;
+                html += `<small>${data.vehicle.displayName} ${data.vehicle.plate}</small>`;
                 if (data.vehicle.isOwner === true) { 
                     html += `
-                        <tr><td>Fuel</td><td>${data.vehicle.fuel}%</td></tr>
-                        <tr><td>Engine</td><td>${data.vehicle.engine}%</td></tr>
-                        <tr><td>Body</td><td>${data.vehicle.body}%</td></tr>
-                        <tr><td>Oil</td><td>${data.vehicle.oil} fL</td></tr>
-                        <tr><td>Temp</td><td>${data.vehicle.temp} °C</td></tr>
-                    `
+                        <small>Class: ${data.vehicle.class} </small>
+                        <small>Fuel: ${data.vehicle.fuel}% | Engine: ${data.vehicle.engine} | Body: ${data.vehicle.body}</small>
+                        <small>Oil: ${data.vehicle.oil}% | Temp: ${data.vehicle.temp} °C | Mills 0 </small>
+                    `;
                 }
-                html += `</table>`;
                 html += `</td></tr></table>`;
+
                 div.innerHTML = html;
 
                 vehicleInfo.appendChild(div);
             }
         }
-
     }
 });
 
