@@ -106,7 +106,7 @@ DeleteEntity(vehicle) -- than delete
 ```
 
 # 🎨 Theme colors
-- just go to html/thame.ini wile and change the colors to your needs.
+- just go to [html/theme.ini](https://github.com/MaDHouSe79/mh-parking/blob/main/html/theme.ini) file and change the colors to your needs.
   
 # 📌 When is mh-parking useful?
 - mh-parking is especially useful if you are running a roleplay or modded server where vehicles need to be managed realistically and persistently. 
