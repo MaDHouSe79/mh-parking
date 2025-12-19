@@ -136,6 +136,8 @@ DeleteEntity(vehicle) -- than delete
 # 🚀 If you need some support.
 **Just open is issue and we fix it as fast as possible.**
 
+---
+
 # Screenshots
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/2.png)
