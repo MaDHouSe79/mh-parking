@@ -30,11 +30,6 @@ local Translations = {
     }
 }
 
-if GetConvar('mh_locale', 'en') == 'nl' then
-    Lang = Locale:new({
-        phrases = Translations,
-        warnOnMissing = true,
-        fallbackLang = Lang,
-    })
+if (GetConvar('mh_locale', 'en') == 'nl') or (GetConvar('qb_locale', 'en') == 'nl') then
+    Lang = Locale:new({phrases = Translations, warnOnMissing = true, fallbackLang = Lang})
 end
-

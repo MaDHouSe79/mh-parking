@@ -1,10 +1,17 @@
 let editMode = false;
+let isPolice = false;
+let isClamped = false;
+let isOwner = false;
+
 const menu = document.getElementById("menu");
+const stats = document.getElementById("stats");
 const parkingList = document.getElementById("parkingList");
 const vehicleInfo = document.getElementById("vehicleInfo");
+const searchContainer = document.getElementById("search-container");
 
 function setTheme(theme) {
     const root = document.documentElement;
+    root.style.setProperty('--header-title-text-color', theme.header_title_text_color);
     root.style.setProperty('--primary-font', theme.primary_font);
     root.style.setProperty('--bg-transparent', theme.bg_transparent);
     root.style.setProperty('--bg-primary', theme.bg_primary);
@@ -22,19 +29,32 @@ function setTheme(theme) {
     root.style.setProperty('--text-secondary', theme.text_secondary);
 }
 
+/* This is the send client to nui */
 window.addEventListener("message", event => {
     const data = event.data;
+
+    if (data.action === "resetHudPos") {
+        menu.style.left = "50%";
+        menu.style.top = "50%";
+    }
+
+    if (data.action === "setHudPos") {
+        menu.style.left = event.data.x + "px";
+        menu.style.top = event.data.y + "px";
+    }
+
     if (data.action === "setHudPos") {
         menu.style.left = data.x + "px";
         menu.style.top = data.y + "px";
     }
-    
+
+    parkingList.innerHTML = "";
+    vehicleInfo.innerHTML = "";
+
     if (data.action === "open") {
-
-        if (data.theme) { setTheme(data.theme) }
-
+        
         const hour = parseInt(data.hour) || 12;
-
+        
         if (hour >= 6 && hour < 18) {
             menu.classList.add('day');
             menu.classList.remove('night');
@@ -43,57 +63,253 @@ window.addEventListener("message", event => {
             menu.classList.remove('day');
         }
 
-        parkingList.innerHTML = "";
-        vehicleInfo.innerHTML = "";
+        const div1 = document.createElement("div");
+        div1.className = "vehicle";
+        div1.innerHTML = ""
 
-        if (data.type == "parked") {
+        if (data.type == "parked") { // shows all the parked vehicles in a menu
             menu.style.display = "block";
-            data.vehicles.forEach(v => {
+            menu.style.height = "660px";
+            stats.style.height = "auto";
+
+            parkingList.innerHTML = "";
+            parkingList.style.display = "block";
+            searchContainer.style.display = "block";
+            vehicleInfo.style.display = "none";            
+
+            isOwner = data.isOwner
+
+
+
+            data.vehicles.forEach(v => { // vehicles list
                 const div = document.createElement("div");
                 div.className = "vehicle";
-                var html = `<table><tr><td><img class="vehicleImage" src="../html/assets/images/`+ v.vehicle + `.png"></td><td>`;
-                html += `
-                    <strong>${v.vehicle.toUpperCase()} ${v.plate}</strong>
-                    <small>Parked Street: ${v.street}</small>
-                    <small>Fuel: ${v.fuel}% | Engine: ${v.engine} | Body: ${v.body}</small>
-                    <small>Press to set a waypoint</small>
-                `;
-                html += `</td></tr></table>`;
+
+                var html = `<div class="card" id="${v.vehicle}">`;
+                html += `    <center><img class="card-img-top" style="width: 250px;" src="../html/assets/images/`+ v.vehicle + `.png" alt="Vehicle image cap"></center>`;
+                html += `    <div class="card-body">`;
+                html += `        <h5 class="card-title" style="text-align:center;">${v.vehicle} / ${v.plate}</h5>`;
+                if (isOwner === true) {
+                    html += `    <p class="card-text" style="text-align:center;">`;
+                    html += `        <small> Class ${v.class} | Engine ${v.engine} | Body ${v.body} | Fuel ${v.fuel}% | Oil ${v.oil}% </small>`;
+                    html += `    </p>`;
+                    html += `    <div class="btn-group-sm center" role="group" aria-label="Basic example">`;
+                    html += `        <a href="#" class="btn givekeys">Give Keys</a>`
+                    html += `        <a href="#" class="btn setwaypoint">Set Waypoint</a>`
+                    html += `    </div>`;
+                }            
+                html += `    </div>`;
+                html += `</div>`;
+
                 div.innerHTML = html;
-                div.onclick = () => {
-                    fetch(`https://${GetParentResourceName()}/setWaypoint`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ coords: v.coords })
-                    });
-                    menu.style.display = "none";
-                    fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
-                };
+
+                const setwaypoint = div.querySelector(".setwaypoint");
+                if (setwaypoint) {
+                    setwaypoint.onclick = (e) => {
+                        e.stopPropagation();
+                        setWaypoint(v.coords);
+                    };
+                    setwaypoint.style.cursor = "pointer";
+                }
+
+                const takekeys = div.querySelector(".givekeys");
+                if (takekeys) {
+                    takekeys.onclick = (e) => {
+                        e.stopPropagation();
+                        giveKeys(v.plate);
+                    };
+                    takekeys.style.cursor = "pointer";
+                }
+
                 parkingList.appendChild(div);
             });
-        } else if (data.type == "info") {
+        } else if (data.type == "info") { // look at parked vehicle info
+            
             menu.style.display = "block";
+            menu.style.height = "385px";
+            stats.style.height = "auto";
+            searchContainer.style.display = "none";
+            parkingList.style.display = "none";
+
+            vehicleInfo.style.display = "block";
+            vehicleInfo.innerHTML = "";
+
+            isPolice = data.isPolice
+            isClamped = data.isClamped
+            isOwner = data.isOwner
+            isParked = data.isParked
+
             if (data.vehicle != null) {
                 const div = document.createElement("div");
                 div.className = "vehicle";
-                var html = `<table><tr><td><img class="vehicleImage" src="../html/assets/images/`+ data.vehicle.model + `.png"></td><td>`;
-                html += `<small>${data.vehicle.displayName} ${data.vehicle.plate}</small>`;
-                if (data.vehicle.isOwner === true) { 
-                    html += `
-                        <small>Class: ${data.vehicle.class} </small>
-                        <small>Fuel: ${data.vehicle.fuel}% | Engine: ${data.vehicle.engine} | Body: ${data.vehicle.body}</small>
-                        <small>Oil: ${data.vehicle.oil}% | Temp: ${data.vehicle.temp} °C | Mills 0 </small>
-                    `;
+                var html = `<div class="card">`;
+                html += `    <center><img class="card-img-top" style="width: 250px;" src="../html/assets/images/`+ data.vehicle.model + `.png" alt="Vehicle image cap"></center>`;
+                html += `    <div class="card-body">`;
+                html += `        <h5 class="card-title" style="text-align:center;">${data.vehicle.displayName} / ${data.vehicle.plate}</h5>`;
+                if (isOwner === true) {
+                    html += `    <p class="card-text" style="text-align:center;">`;
+                    html += `        <small> Class ${data.vehicle.class} | Engine ${data.vehicle.engine} | Body ${data.vehicle.body} | Fuel ${data.vehicle.fuel}% | Oil ${data.vehicle.oil}% </small>`;
+                    html += `    </p>`;
                 }
-                html += `</td></tr></table>`;
+                html += `    </div>`;
+                html += `</div>`;
+                html += `<div class="card">`;
+                html += `    <h5 class="card-title" style="text-align:center;">Options</h5>`;
+                html += `    <div class="btn-group-sm center" role="group" aria-label="Options">`;
+
+                if (isOwner === true) {
+                    if (isParked === true) {
+                        html += `<a href="#" class="btn unpark">Unpark</a>`
+                    } else {
+                        html += `<a href="#" class="btn park">Park</a>`
+                    }
+                }   
+
+                if (isPolice === true) {
+                    if (isClamped === true) {
+                        html += `<a href="#" class="btn removewheelclamp">Remove Clamp</a>`;
+                    } else {
+                        html += `<a href="#" class="btn setwheelclamp">Add Clamp</a>`;
+                    }
+                    html += `<a href="#" class="btn impound">Impound</a>`;
+                }
+
+                html += `    </div>`;
+                html += `</div>`;
 
                 div.innerHTML = html;
+
+                const unparking = div.querySelector(".unpark");
+                if (unparking) {
+                    unparking.onclick = (e) => {
+                        e.stopPropagation();
+                        unpark(data.vehicle.plate);
+                    };
+                    unparking.style.cursor = "pointer";
+                }
+
+                const parking = div.querySelector(".park");
+                if (parking) {
+                    parking.onclick = (e) => {
+                        e.stopPropagation();
+                        park(data.vehicle.plate);
+                    };
+                    parking.style.cursor = "pointer";
+                }
+
+                const setwheelclamp = div.querySelector(".setwheelclamp");
+                if (setwheelclamp) {
+                    setwheelclamp.onclick = (e) => {
+                        e.stopPropagation();
+                        addWheelClamp();
+                    };
+                    setwheelclamp.style.cursor = "pointer";
+                }
+
+                const removewheelclamp = div.querySelector(".removewheelclamp");
+                if (removewheelclamp) {
+                    removewheelclamp.onclick = (e) => {
+                        e.stopPropagation();
+                        removeWheelClamp();
+                    };
+                    removewheelclamp.style.cursor = "pointer";
+                }
+
+                const impound = div.querySelector(".impound");
+                if (impound) {
+                    impound.onclick = (e) => {
+                        e.stopPropagation();
+                        impoundVehicle();
+                    };
+                    impound.style.cursor = "pointer";
+                }
 
                 vehicleInfo.appendChild(div);
             }
         }
     }
 });
+
+function park(plate) {
+    fetch(`https://${GetParentResourceName()}/park`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plate: plate })
+    });
+    menu.style.display = "none";
+    fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+
+}
+function unpark(plate) {
+    fetch(`https://${GetParentResourceName()}/unpark`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plate: plate })
+    });
+    menu.style.display = "none";
+    fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+}
+
+function giveKeys(plate) {
+    if (isOwner === true) {
+        isOwner = false;
+        fetch(`https://${GetParentResourceName()}/giveKeys`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plate: plate })
+        });
+        menu.style.display = "none";
+        fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+    }
+}
+
+function setWaypoint(coords) {
+    if (isOwner === true) {
+        isOwner = false;
+        fetch(`https://${GetParentResourceName()}/setWaypoint`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ coords: coords })
+        });
+        menu.style.display = "none";
+        fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+    }
+}
+
+function impoundVehicle() {
+    if (isPolice === true) {
+        isPolice = false;
+        fetch(`https://${GetParentResourceName()}/impoundVehicle`, {method: "POST"});
+        menu.style.display = "none";
+        fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+    }
+}
+
+function addWheelClamp() {
+    if (isPolice === true) {
+        isPolice = false;
+        fetch(`https://${GetParentResourceName()}/setWheelClamp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "add" })
+        });
+        menu.style.display = "none";
+        fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+    }
+}
+
+function removeWheelClamp() {
+    if (isPolice === true) {
+        isPolice = false;
+        fetch(`https://${GetParentResourceName()}/setWheelClamp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "remove" })
+        });
+        menu.style.display = "none";
+        fetch(`https://${GetParentResourceName()}/close`, { method: "POST" });
+    }
+}
 
 function toggleEditMode() {
     editMode = !editMode;

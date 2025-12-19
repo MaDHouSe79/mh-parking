@@ -17,6 +17,20 @@ function GetPlate(vehicle)
     return Trim(GetVehicleNumberPlateText(vehicle))
 end
 
+function GetVehicleByPlate(plate)
+    if not plate or plate == "" then return nil end
+    plate = string.upper(tostring(plate)):gsub("%s+", "")
+    local vehicles = GetGamePool('CVehicle')
+    for _, veh in ipairs(vehicles) do
+        if DoesEntityExist(veh) then
+            local vehPlate = GetPlate(veh)
+            vehPlate = string.upper(tostring(vehPlate)):gsub("%s+", "")
+            if vehPlate == plate then return veh end
+        end
+    end
+    return nil
+end
+
 function FirstToUpper(value)
     if not value then return nil end
     return (value:gsub("^%l", string.upper))

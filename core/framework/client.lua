@@ -18,6 +18,7 @@ elseif GetResourceState("qb-core") == 'started' then
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
     function GetPlayerData() return Framework.obj.Functions.GetPlayerData() end
     function IsDead() return Framework.obj.Functions.GetPlayerData().metadata['isdead'] end
+    RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job) PlayerData.job = job end)
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
     RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework.obj = exports['qb-core']:GetCoreObject() end)
 elseif GetResourceState("qbx_core") == 'started' then
@@ -27,6 +28,7 @@ elseif GetResourceState("qbx_core") == 'started' then
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
     function GetPlayerData() return Framework.obj.Functions.GetPlayerData() end
     function IsDead() return Framework.obj.Functions.GetPlayerData().metadata['isdead'] end
+    RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job) PlayerData.job = job end)
     RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) PlayerData = data end)
     RegisterNetEvent('QBCore:Client:UpdateObject', function() Framework.obj = exports['qb-core']:GetCoreObject() end)
 end

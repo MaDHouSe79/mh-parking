@@ -42,23 +42,28 @@ end
 local function OpenParkingMenu()
     TriggerCallback("mh-parking:server:GetVehicles", function(result)
         if result.status then
+            local theme = LoadThemeFromINI()
             local options = {}
+            local identifier  = GetIdentifier()
+            local isOwner = false
             for _, v in pairs(result.data) do
                 if v.state == 3 then
+                    isOwner = v.citizenid ~= nil and identifier == v.citizenid and true or false
                     table.insert(options, {
+                        owner = v.citizenid,
                         vehicle = v.vehicle,
                         plate = v.plate,
                         street = v.street,
                         fuel = v.fuel,
                         engine = math.floor(v.engine),
                         body = math.floor(v.body),
+                        class = config.Vehicles[GetHashKey(v.vehicle)].class,
                         coords = json.decode(v.location)
                     })
                 end
             end
-            local theme = LoadThemeFromINI()
             SetNuiFocus(true, true)
-            SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme})
+            SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner})
         end
     end)
 end
@@ -66,12 +71,13 @@ end
 local function OpenInfoMenu(vehicle)
     if not vehicle or not DoesEntityExist(vehicle) then return end
     if config.Vehicles[GetEntityModel(vehicle)] then
-
         local identifier  = GetIdentifier()
         local state = Entity(vehicle).state
-        local isOwner = identifier == state.citizenid and true or false
+        local isParked = state.isParked
+        local identifier  = GetIdentifier()
+        local isOwner = state.citizenid ~= nil and GetIdentifier() == state.citizenid and true or false
+        local isClamped = state.isClamped
         local data = {
-            isOwner = isOwner,
             model = config.Vehicles[GetEntityModel(vehicle)].model,
             body = math.floor(GetVehicleBodyHealth(vehicle)),
             engine = math.floor(GetVehicleEngineHealth(vehicle)),
@@ -84,7 +90,7 @@ local function OpenInfoMenu(vehicle)
         }
         local theme = LoadThemeFromINI()
         SetNuiFocus(true, true)
-        SendNUIMessage({action = "open", type = "info", vehicle = data, hour = GetClockHours(), theme = theme})
+        SendNUIMessage({action = "open", type = "info", vehicle = data, hour = GetClockHours(), theme = theme, isPolice = IsPolice(), isClamped = isClamped, isOwner = isOwner, isParked = isParked})
     end
 end
 
@@ -230,7 +236,9 @@ RegisterNetEvent('mh-parking:client:leaveVehicle', function(data)
     LeaveVehicle(data)
 end)
 
-RegisterKeyMapping("parkmenu", "Open PlayerBaord NUI", 'keyboard', "F4")
+RegisterKeyMapping(Config.Command, "Open PlayerBaord NUI", 'keyboard', Config.Keybind)
+RegisterCommand(Config.Command, function() OpenParkingMenu() end)
+RegisterCommand(Config.ResetHudCommand, function() SendNUIMessage({action = "resetHudPos"}) end)
 RegisterNetEvent('mh-parking:openparkmenu', function() OpenParkingMenu() end)
 
 RegisterNetEvent('mh-parking:syncParked', function(netId, isParked, pos, mods, steerangle)
@@ -270,6 +278,7 @@ RegisterNetEvent('mh-parking:syncWheelClamp', function(netId)
         end
     end
 end)
+
 RegisterNetEvent('mh-parking:onjoin', function(data)
     if data and data.status == true then
         config = data.config
@@ -279,6 +288,10 @@ end)
 
 RegisterNetEvent('mh-parking:infomenu', function(vehicle)
     OpenInfoMenu(vehicle)
+end)
+
+RegisterNetEvent('mh-parking:notify', function(msg, type)
+    Notify(msg, type)
 end)
 
 AddEventHandler('entityCreated', function(entity)
@@ -430,11 +443,81 @@ CreateThread(function()
             end
         end
     end
-end)    
+end)
 
-RegisterNUICallback("setWaypoint", function(data, cb)
+RegisterNUICallback("park", function(data, cb)
+    local vehicle, distance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+    if vehicle ~= -1 and distance ~= -1 then
+        local netid = SafeNetId(vehicle)
+        local steerangle = GetVehicleSteeringAngle(vehicle) 
+        local street = GetStreetName(GetEntityCoords(PlayerPedId()))
+        local fuel = GetVehicleFuelLevel(vehicle)
+        local engine = GetVehicleEngineHealth(vehicle)
+        local body = GetVehicleBodyHealth(vehicle)
+        local mods = GetVehicleProperties(vehicle)
+        BlinkVehiclelights(vehicle) 
+        SetVehicleEngineOn(vehicle, false, false, false)                                    
+        TriggerServerEvent('mh-parking:autoPark', netid, steerangle, street, mods, fuel, body, engine) 
+    end
+    cb('ok')
+end)
+
+RegisterNUICallback("unpark", function(data, cb)
+    local vehicle, distance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+    if vehicle ~= -1 and distance ~= -1 then
+        if DoesEntityExist(vehicle) then
+            local netid = SafeNetId(vehicle)
+            SetNetworkIdExistsOnAllMachines(netid, true)
+            BlinkVehiclelights(vehicle)
+            TriggerServerEvent('mh-parking:autoUnpark', netid)
+        end
+    end
+    cb('ok')
+end)
+
+RegisterNUICallback("giveKeys", function(data, cb)
+    TriggerServerEvent('mh-parking:givekey', data.plate)
+    cb('ok')
+end)
+
+RegisterNUICallback("impoundVehicle", function(data, cb)
+    local isPolice = IsPolice()
+    if isPolice then
+        local vehicle, distance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+        if vehicle ~= -1 and distance ~= -1 and distance < 3.5 then
+            local plate = GetPlate(vehicle)
+            TriggerServerEvent('mh-parking:impound', plate)
+            SetEntityAsMissionEntity(vehicle, true, true)
+            DeleteEntity(vehicle)
+            lib.notify({title = "Impound", description = "Voertuig " .. plate .. " in beslag genomen", type = "success"})
+        end
+    else
+        print("No no, you are not a police dumpass...")
+    end
+    cb('ok')
+end)
+
+RegisterNUICallback("setWheelClamp", function(data, cb)
+    local isPolice = IsPolice()
+    if isPolice then
+        local vehicle, distance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+        if vehicle ~= -1 and distance ~= -1 and distance < 3.5 then
+            local netid = SafeNetId(vehicle)
+            if data.action == "add" then
+                TriggerServerEvent("mh-parking:server:toggleClamp", SafeNetId(vehicle), true)
+            elseif data.action == "remove" then
+                TriggerServerEvent("mh-parking:server:toggleClamp", SafeNetId(vehicle), false)
+            end
+        end
+    else
+        print("No no, you are not a police dumpass...")
+    end
+    cb('ok')
+end)
+
+RegisterNUICallback('setWaypoint', function(data, cb)
     SetVehicleWaypoit(data.coords)
-    cb("ok")
+    cb('ok')
 end)
 
 RegisterNUICallback("close", function(_, cb)

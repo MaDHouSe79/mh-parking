@@ -16,9 +16,10 @@ function SafeNetId(entity)
 end
 
 function Notify(src, msg, type)
-    if lib and lib.notify then
-        lib.notify(src, {title = "MH Parking Pro", description = msg, type = type or "inform"})
-    end
+    TriggerClientEvent('mh-parking:notify', src, msg, type)
+    -- if lib and lib.notify then
+    --     lib.notify(src, {title = "MH Parking Pro", description = msg, type = type or "inform"})
+    -- end
 end
 
 function GetPlate(vehicle)

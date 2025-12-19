@@ -137,11 +137,8 @@ DeleteEntity(vehicle) -- than delete
 **Just open is issue and we fix it as fast as possible.**
 
 # Screenshots
--  Park menu normal look 
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)
--  Park menu editmode look
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/2.png)
--  Park  vehicle info menu look
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/3.png)
 
 # LICENSE

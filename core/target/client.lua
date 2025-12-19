@@ -113,64 +113,6 @@ local function createParkingOptions()
                 return true
             end,
         },
-        {
-            num      = 5,
-            name     = "clamp_wheel",
-            icon     = "fas fa-lock",
-            label    = "Add Wheelclamp (police)",
-            job      = { ["police"] = 0 },
-            distance = 3.0,
-            action = function(data)
-                local entity = getEntity(data)
-                local vehicle = entity
-                TriggerServerEvent("mh-parking:server:toggleClamp", SafeNetId(vehicle), true)
-            end,
-            canInteract = function(data)
-                local entity = getEntity(data)
-                local plate = GetPlate(entity)
-                local state = Entity(entity).state
-                return state and not state.isClamped and DoesEntityExist(entity)
-            end,
-        },
-        {
-            num      = 6,
-            name     = "unclamp_wheel",
-            icon     = "fas fa-lock-open",
-            label    = "Remove Wheel Clamp (police)",
-            job      = { ["police"] = 0 },
-            distance = 3.0,
-            action = function(data)
-                local entity = getEntity(data)
-                local vehicle = entity
-                TriggerServerEvent("mh-parking:server:toggleClamp", SafeNetId(vehicle), false)
-            end,
-            canInteract = function(data)
-                local entity = getEntity(data)
-                local state = Entity(entity).state
-                return state and state.isClamped
-            end,
-        },
-        {
-            num      = 7,
-            name     = "impound_vehicle",
-            icon     = "fas fa-truck-pickup",
-            label    = "Impound vehicle (police)",
-            job      = { ["police"] = 0 },
-            distance = 5.0,
-            action = function(data)
-                local entity = getEntity(data)
-                local plate = GetPlate(entity)
-                TriggerServerEvent('mh-parking:impound', plate)
-                SetEntityAsMissionEntity(entity, true, true)
-                DeleteEntity(entity)
-                lib.notify({title = "Impound", description = "Voertuig " .. plate .. " in beslag genomen", type = "success"})
-            end,            
-            canInteract = function(data)
-                local entity = getEntity(data)
-                local state = Entity(entity).state
-                return state and state.isParked
-            end,
-        },
     }
 end
 

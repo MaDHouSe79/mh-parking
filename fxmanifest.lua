@@ -25,6 +25,7 @@ files {
 shared_scripts {
     '@ox_lib/init.lua',
     'locales/locale.lua',
+    'shared/config.lua',
     'locales/*.lua',
 }
 
