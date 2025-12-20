@@ -28,26 +28,33 @@ local function OpenParkingMenu()
             local identifier  = GetIdentifier()
             local isOwner = false
             for _, v in pairs(result.data) do
-                if v.state == 3 then
-                    isOwner = v.citizenid ~= nil and identifier == v.citizenid and true or false
-                    table.insert(options, {
-                        owner = v.citizenid,
-                        vehicle = v.vehicle,
-                        plate = v.plate,
-                        street = v.street,
-                        fuel = v.fuel,
-                        engine = math.floor(v.engine),
-                        body = math.floor(v.body),
-                        class = config.Vehicles[GetHashKey(v.vehicle)].class,
-                        coords = json.decode(v.location)
-                    })
-                end
+                isOwner = v.citizenid ~= nil and identifier == v.citizenid and true or false
+                table.insert(options, {
+                    owner = v.citizenid,
+                    vehicle = v.vehicle,
+                    plate = v.plate,
+                    street = v.street,
+                    fuel = v.fuel,
+                    engine = math.floor(v.engine),
+                    body = math.floor(v.body),
+                    class = config.Vehicles[GetHashKey(v.vehicle)].class,
+                    coords = json.decode(v.location),
+                    parktime = v.parktime,
+                    overtime = v.overtime,
+                })
             end
             SetNuiFocus(true, true)
             SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner})
         end
     end)
 end
+function convertTime(time)
+    local days = math.floor(time / 86400)
+    local hours = math.floor(math.fmod(time, 86400) / 3600)
+    local minutes = math.floor(math.fmod(time, 3600) / 60)
+    local seconds = math.floor(math.fmod(time, 60))
+    return days, hours, minutes, seconds
+end 
 
 local function OpenInfoMenu(vehicle)
     if not vehicle or not DoesEntityExist(vehicle) then return end
@@ -69,9 +76,51 @@ local function OpenInfoMenu(vehicle)
             displayName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)),
             class = GetLabelText("VEH_CLASS_"..GetVehicleClass(vehicle)),
         }
-        local theme = LoadThemeFromINI()
-        SetNuiFocus(true, true)
-        SendNUIMessage({action = "open", type = "info", vehicle = data, hour = GetClockHours(), theme = theme, isPolice = IsPolice(), isClamped = isClamped, isOwner = isOwner, isParked = isParked})
+        local isPolice = IsPolice()
+        TriggerCallback("mh-parking:server:GetVehicleParkTime", function(result)
+            local time = 0
+            local parktime = 0
+            local currentTime = 0
+            if result.status then
+                parktime = result.parktime
+                time = result.time
+                currentTime = result.currentTime
+            end
+            local isOverTime = false
+            local overtime = currentTime - time
+
+            if overtime < currentTime then
+                print("Binnen de parkeer tijd")
+            else
+                isOverTime = true
+                print("Buiten de parkeer tijd")
+            end
+            
+
+            local overtime_days, overtime_hours, overtime_min, overtime_sec = convertTime(overtime) 
+            local parktime_days, parktime_hours, parktime_min, parktime_sec = convertTime(parktime)
+
+            local parkTime = parktime_hours..":"..parktime_min..":"..parktime_sec
+            local overTime = overtime_hours..":"..overtime_min..":"..overtime_sec
+
+            local theme = LoadThemeFromINI()
+            SetNuiFocus(true, true)
+            SendNUIMessage({
+                action = "open", 
+                type = "info", 
+                vehicle = data, 
+                hour = GetClockHours(), 
+                theme = theme, 
+                isPolice = isPolice, 
+                isClamped = isClamped, 
+                isOwner = isOwner, 
+                isParked = isParked,
+                isOverTime = isOverTime,
+                parktime = parkTime,
+                overtime = overTime,
+            })
+        end, data.plate)
+
     end
 end
 

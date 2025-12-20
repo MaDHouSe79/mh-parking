@@ -136,6 +136,7 @@ DeleteEntity(vehicle) -- than delete
 ```
 
 ---
+
 # 🚀 If you need some support.
 **Just open is issue and we fix it as fast as possible.**
 
@@ -149,6 +150,7 @@ DeleteEntity(vehicle) -- than delete
 - Police Vehicle Options
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/police.png)
 
+---
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />

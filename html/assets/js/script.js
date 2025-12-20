@@ -138,9 +138,17 @@ window.addEventListener("message", event => {
                 });
             });
         } else if (data.type == "info") { // look at parked vehicle info
-            
+
+            isPolice = data.isPolice
+            isClamped = data.isClamped
+            isOwner = data.isOwner
+            isParked = data.isParked            
+
             menu.style.display = "block";
+
             menu.style.height = "385px";
+            if (isPolice === true) { menu.style.height = "440px"; }
+            
             stats.style.height = "auto";
             searchContainer.style.display = "none";
             parkingList.style.display = "none";
@@ -148,10 +156,9 @@ window.addEventListener("message", event => {
             vehicleInfo.style.display = "block";
             vehicleInfo.innerHTML = "";
 
-            isPolice = data.isPolice
-            isClamped = data.isClamped
-            isOwner = data.isOwner
-            isParked = data.isParked
+
+            var overtime = data.overtime
+            var parktime = data.parktime
 
             if (data.vehicle != null) {
                 const div = document.createElement("div");
@@ -165,6 +172,12 @@ window.addEventListener("message", event => {
                     html += `        <small> Class ${data.vehicle.class} | Engine ${data.vehicle.engine} | Body ${data.vehicle.body} | Fuel ${data.vehicle.fuel}% | Oil ${data.vehicle.oil}% </small>`;
                     html += `    </p>`;
                 }
+                if (isPolice === true) {
+                    html += `    <p class="card-text" style="text-align:center;">`;
+                    html += `        <small> Max time ${data.parktime} | Park Time ${data.overtime}</small>`;
+                    html += `    </p>`;
+                }
+
                 html += `    </div>`;
                 html += `</div>`;
                 html += `<div class="card">`;
@@ -179,7 +192,7 @@ window.addEventListener("message", event => {
                     }
                 }   
 
-                if (isPolice === true) {
+                if (isPolice === true && data.isOverTime === true) {
                     if (isClamped === true) {
                         html += `<a href="#" class="btn removewheelclamp">Remove Clamp</a>`;
                     } else {

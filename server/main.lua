@@ -73,7 +73,7 @@ local function SpawnVehicles(src)
                 state.plate = vehicle.plate
                 state.isClamped = vehicle.isClamped == 1 and true or false
                 state.steerangle = tonumber(vehicle.steerangle)
-                state.parkedPos = {x = location.x, y = location.y, z = location.z, h = location.h}
+                state.parkedPos = {x = location.x, y = location.y, z = location.z, h = location.h}       
                 parkedVehicles[vehicle.plate] = {entity = entity, netid = netid}
                 TriggerClientEvent('mh-parking:syncParked', src, tonumber(netid), true, location, mods, tonumber(vehicle.steerangle))
                 GiveKeysIfOwnerOnline(vehicle.plate)
@@ -90,12 +90,19 @@ local function CanSave(src)
     return true
 end
 
+CreateCallback("mh-parking:server:GetVehicleParkTime", function(source, cb, plate)
+    local data = Database.GetVehicleData(plate)
+    if data ~= nil then
+        cb({status = true, parktime = data.parktime, time = data.time, currentTime = os.time()})
+    else
+        cb({status = true})
+    end
+end)
+
 CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
     local src = source
     local citizenid = GetIdentifier(src)
     local result = Database.GetPlayerVehicles(src)
-    local state = result.state or result.stored
-    result.state = state
     cb({status = true, data = result})
 end)
 
@@ -170,6 +177,8 @@ RegisterNetEvent('mh-parking:autoPark', function(netId, steerangle, street, mods
                         TriggerClientEvent('mh-parking:syncParked', -1, netId, true, state.parkedPos, mods)
                         Notify(src, Lang:t('vehicle.parked'), 'success')
                     end
+                    local parkFee = (math.floor(((os.time() - SV_Config.MaxTimeParking) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
+                    TakeMoney(src, parkFee)
                 end
             end
         else

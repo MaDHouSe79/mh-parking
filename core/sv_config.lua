@@ -9,9 +9,11 @@ SV_Config.onlyAutoParkWhenEngineIsOff = true
 
 SV_Config.UseSteerAnlgeParking = false -- when true is take some extra cpu, so keep it false if you dont need it
 
-SV_Config.UseTimerPark = true -- when true players have a limit time to park
+SV_Config.UseTimerPark = false -- when true players have a limit time to park
+SV_Config.MaxTimeParking = 1300000 -- 130 mins, this wil stil work if SV_Config.UseTimerParkis false
 SV_Config.PayTimeInSecs = 10
-SV_Config.ParkPrice = 500
+SV_Config.ParkPrice = 50
+
 
 SV_Config.UseAsVip = false
 SV_Config.DefaultMaxParking = 10

@@ -15,12 +15,16 @@ elseif GetResourceState('qb-core') == 'started' then
     AddCommand = Framework.obj.Commands.Add
     function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
     function GetPlayers() return Framework.obj.Functions.GetPlayers() end
+    function GiveMoney(src, amount) return Framework.obj.Functions.AddMoney(src, 'cash', amount) end
+    function TakeMoney(src, amount) return Framework.obj.Functions.RemoveMoney(src, 'cash', amount) end
 elseif GetResourceState('qbx_core') == 'started' then
     Framework = { name = 'qbx', obj = exports['qb-core']:GetCoreObject() }
     CreateCallback = Framework.obj.Functions.CreateCallback
     AddCommand = Framework.obj.Commands.Add
     function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
     function GetPlayers() return Framework.obj.Functions.GetPlayers() end
+    function GiveMoney(src, amount) return Framework.obj.Functions.AddMoney(src, 'cash', amount) end
+    function TakeMoney(src, amount) return Framework.obj.Functions.RemoveMoney(src, 'cash', amount) end
 end
 
 function IsAdmin(src)

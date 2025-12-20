@@ -32,8 +32,9 @@ function Database.ImpoundVehicle(plate, cost)
 end
 
 function Database.ParkVehicle(plate, location, steerangle, street, mods, fuel, body, engine)
-    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ?, mods = ?, fuel = ?, body = ?, engine = ? WHERE plate = ?', {
-        3, json.encode(location), street, steerangle, json.encode(mods), fuel, body, engine, plate
+    local parktime = SV_Config.MaxTimeParking
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ?, mods = ?, fuel = ?, body = ?, engine = ?, time = ?, parktime = ? WHERE plate = ?', {
+        3, json.encode(location), street, steerangle, json.encode(mods), fuel, body, engine, os.time(), parktime, plate
     })
 end
 
