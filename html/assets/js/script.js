@@ -33,6 +33,8 @@ function setTheme(theme) {
 window.addEventListener("message", event => {
     const data = event.data;
 
+    searchInput.value = "";
+
     if (data.theme != null) { setTheme(data.theme ); }
 
     if (data.action === "resetHudPos") {
@@ -91,7 +93,7 @@ window.addEventListener("message", event => {
                 html += `        <h5 class="card-title" style="text-align:center;">${v.vehicle} / ${v.plate}</h5>`;
                 if (isOwner === true) {
                     html += `    <p class="card-text" style="text-align:center;">`;
-                    html += `        <small> Class ${v.class} | Engine ${v.engine} | Body ${v.body} | Fuel ${v.fuel}% | Oil ${v.oil}% </small>`;
+                    html += `        <small> Engine ${v.engine} | Body ${v.body} | Fuel ${v.fuel}% </small>`;
                     html += `    </p>`;
                     html += `    <div class="btn-group-sm center" role="group" aria-label="Basic example">`;
                     html += `        <a href="#" class="btn givekeys">Give Keys</a>`
@@ -122,6 +124,18 @@ window.addEventListener("message", event => {
                 }
 
                 parkingList.appendChild(div);
+            });
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const vehicleItems = document.querySelectorAll('#parkingList .vehicle');
+                vehicleItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
             });
         } else if (data.type == "info") { // look at parked vehicle info
             
@@ -229,6 +243,7 @@ window.addEventListener("message", event => {
         }
     }
 });
+
 
 function park(plate) {
     fetch(`https://${GetParentResourceName()}/park`, {
