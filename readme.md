@@ -97,7 +97,7 @@ DeleteEntity(vehicle) -- than delete
 ```
 ---
 
-## ⚡ **Installation – 2 Minutes Flat**
+# ⚡ **Installation – 2 Minutes Flat**
 ```bash
 1. 🚀 Download → https://github.com/MaDHouSe79/mh-parking/releases/latest
 2. 📂 Drop into resources/[mh]/mh-parking
@@ -105,6 +105,9 @@ DeleteEntity(vehicle) -- than delete
 4. 🗄️ Restart your server, and enjoy the most realistic park system you can find for fivem! :)
 ```
 
+# 🎨 Theme colors
+- just go to [shared/config.lua](https://github.com/MaDHouSe79/mh-parking/blob/main/shared/config.lua) file and change the colors to your needs.
+  
 # 📌 When is mh-parking useful?
 - mh-parking is especially useful if you are running a roleplay or modded server where vehicles need to be managed realistically and persistently. 
 
@@ -135,6 +138,8 @@ DeleteEntity(vehicle) -- than delete
 ---
 # 🚀 If you need some support.
 **Just open is issue and we fix it as fast as possible.**
+
+---
 
 # Screenshots
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/1.png)

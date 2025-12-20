@@ -7,3 +7,48 @@ Config.AddVipCommand = "addparkvip"
 Config.RemoveVipCommand = "removeparkvip"
 
 Config.ResetHudCommand = "resetparkinghub"
+
+
+-- Standaard thema
+Config.DefaultTheme = 'mhstyle'
+
+-- Themas
+Config.Themes = {
+    mhstyle = {
+        header_title_text_color ='rgb(0, 255, 191)',
+        primary_font = 'Roboto', 'sans-serif',
+        bg_transparent = 'transparent',
+        bg_primary = 'rgba(50, 50, 80, 0.9)',
+        bg_secondary = 'linear-gradient(135deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 80, 0.9))',
+        text_color = '#ffffffff',
+        glass = 'rgba(255, 255, 255, 0.08)',
+        glass_hover = 'rgba(255, 255, 255, 0.14)',
+        neon_cyan = '#00ffaa',
+        neon_purple = '#aa00ff',
+        glow_cyan = '0 0 20px rgba(0, 255, 170, 0.5)',
+        glow_purple = '0 0 20px rgba(170, 0, 255, 0.4)',
+        border_glass = 'rgba(255, 255, 255, 0.12)',
+        border_bottom = 'rgba(255,255,255,0.1)',
+        box_shadow = 'rgba(0, 0, 0, 0.5)',
+        text_secondary = 'rgba(255, 255, 255, 0.7)',
+    },
+    -- you can make your own style if you want.
+    -- yourstyle = {
+    --     header_title_text_color ='rgb(0, 255, 191)',
+    --     primary_font = 'Roboto', 'sans-serif',
+    --     bg_transparent = 'transparent',
+    --     bg_primary = 'rgba(50, 50, 80, 0.9)',
+    --     bg_secondary = 'linear-gradient(135deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 80, 0.9))',
+    --     text_color = '#ffffffff',
+    --     glass = 'rgba(255, 255, 255, 0.08)',
+    --     glass_hover = 'rgba(255, 255, 255, 0.14)',
+    --     neon_cyan = '#00ffaa',
+    --     neon_purple = '#aa00ff',
+    --     glow_cyan = '0 0 20px rgba(0, 255, 170, 0.5)',
+    --     glow_purple = '0 0 20px rgba(170, 0, 255, 0.4)',
+    --     border_glass = 'rgba(255, 255, 255, 0.12)',
+    --     border_bottom = 'rgba(255,255,255,0.1)',
+    --     box_shadow = 'rgba(0, 0, 0, 0.5)',
+    --     text_secondary = 'rgba(255, 255, 255, 0.7)',
+    -- },
+}

@@ -8,26 +8,7 @@ local blipCache = {}
 local wasInVehicle = false
 local currentVehicle = nil
 
-local function LoadThemeFromINI()
-    local theme = {}
-    local file = LoadResourceFile(GetCurrentResourceName(), "/html/theme.ini")
-    if not file then
-        print("^1[ERROR] theme.ini niet gevonden!")
-        return theme
-    end
-    for line in file:gmatch("[^\r\n]+") do
-        line = line:match("^%s*(.-)%s*$")
-        if line:sub(1,1) ~= ";" and line:sub(1,1) ~= "#" and line ~= "" and not line:find("^%[") then
-            local key, value = line:match("([^=]+)=([^=]+)")
-            if key and value then
-                key = key:match("^%s*(.-)%s*$")
-                value = value:match("^%s*(.-)%s*$")
-                theme[key] = value
-            end
-        end
-    end
-    return theme
-end
+local function LoadThemeFromINI() return Config.Themes[Config.DefaultTheme] end
 
 local function SetVehicleWaypoit(coords)
     local playerCoords = GetEntityCoords(PlayerPedId())

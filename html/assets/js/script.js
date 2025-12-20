@@ -33,6 +33,8 @@ function setTheme(theme) {
 window.addEventListener("message", event => {
     const data = event.data;
 
+    if (data.theme != null) { setTheme(data.theme ); }
+
     if (data.action === "resetHudPos") {
         menu.style.left = "50%";
         menu.style.top = "50%";
@@ -78,8 +80,6 @@ window.addEventListener("message", event => {
             vehicleInfo.style.display = "none";            
 
             isOwner = data.isOwner
-
-
 
             data.vehicles.forEach(v => { // vehicles list
                 const div = document.createElement("div");

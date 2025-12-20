@@ -14,7 +14,6 @@ use_experimental_fxv2_oal "yes"
 ui_page 'html/index.html'
 
 files {
-    'html/theme.ini',
     'html/index.html',
     'html/assets/css/style.css',
     'html/assets/js/script.js',
