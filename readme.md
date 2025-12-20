@@ -147,7 +147,7 @@ DeleteEntity(vehicle) -- than delete
 -- Police Vehicle Options
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/police.png)
 -- Parked Vehicle vehicles
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/parkmenu.png)
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/park.png)
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
