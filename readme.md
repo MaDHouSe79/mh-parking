@@ -93,6 +93,7 @@
 
 # 🎨 Theme colors
 - just go to [shared/config.lua](https://github.com/MaDHouSe79/mh-parking/blob/main/shared/config.lua) file and change the colors to your needs.
+- nui is build with bootstrap@5.3.3 and jquery-3.2.1.slim
   
 # 🚗 Adding Vehicles 
 - If you have modded vehicles you need to add them in `core/vehicles.lua`.
