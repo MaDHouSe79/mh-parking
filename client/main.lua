@@ -49,7 +49,6 @@ local function OpenParkingMenu()
                 setwaypoint = Lang:t('nui.setwaypoint'),
                 givekeys = Lang:t('nui.givekeys'),
             }
-
             SetNuiFocus(true, true)
             SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner, lang = nuilang})
         end
@@ -85,15 +84,12 @@ local function OpenInfoMenu(vehicle)
                 time = result.parktime
                 currentTime = result.currentTime
             end
-
             local overtime = currentTime - time
             local isOverTime = overtime > currentTime and true or false
             local parkTime = Lang:t('nui.hour', {hour = config.MaxTimeParking / 3600000})
-
             local overtime_hours, overtime_min, overtime_sec = ConvertTime(overtime) 
             local overTime = overtime_hours..":"..overtime_min..":"..overtime_sec
             local theme = LoadThemeFromINI()
-
             local nuilang = {
                 options = Lang:t('nui.options'),
                 impound = Lang:t('nui.impound'),
@@ -105,8 +101,6 @@ local function OpenInfoMenu(vehicle)
                 unpark = Lang:t('nui.unpark'),
                 parkinfo = Lang:t('nui.parkinfo', {parktime = parkTime, overtime = overTime}),
             }
-
-
             SetNuiFocus(true, true)
             SendNUIMessage({
                 action = "open", 
@@ -384,6 +378,7 @@ CreateThread(function()
                             netId = SafeNetId(veh)
                         until netId and netId > 0 and netId < 65535 and NetworkDoesNetworkIdExist(netId)
                         if netId ~= -1 then
+                            SetEntityInvincible(veh, false)
                             SetNetworkIdExistsOnAllMachines(netId, true)
                             TriggerServerEvent('mh-parking:autoUnpark', netId) 
                         end
@@ -470,7 +465,6 @@ CreateThread(function()
                     end
                 end
             end
-            -- clear
             for plate, data in pairs(parkedCache) do
                 if not DoesEntityExist(data.vehicle) then
                     DeleteParkedBlip(plate)
@@ -564,7 +558,6 @@ RegisterNUICallback("resetHud", function(data, cb)
     SendNUIMessage({action = "resetHudPos"})
 end)
 
--- open menu nui
 RegisterNUICallback("saveHudPos", function(data, cb) 
     SetResourceKvp("mh_parking_hud_pos", json.encode({x = data.x, y = data.y})); cb("ok") 
 end)

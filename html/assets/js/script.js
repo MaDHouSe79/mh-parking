@@ -59,7 +59,7 @@ window.addEventListener("message", event => {
         const div1 = document.createElement("div");
         div1.className = "vehicle";
         div1.innerHTML = ""
-        if (data.type == "parked") { // shows all the parked vehicles in a menu
+        if (data.type == "parked") {
             menu.style.display = "block";
             menu.style.height = "660px";
             stats.style.height = "auto";
@@ -68,7 +68,6 @@ window.addEventListener("message", event => {
             searchContainer.style.display = "block";
             vehicleInfo.style.display = "none";            
             isOwner = data.isOwner
-            // vehicles list
             data.vehicles.forEach(v => { 
                 const div = document.createElement("div");
                 div.className = "vehicle";
@@ -88,7 +87,6 @@ window.addEventListener("message", event => {
                 html += `    </div>`;
                 html += `</div>`;
                 div.innerHTML = html;
-
                 const setwaypoint = div.querySelector(".setwaypoint");
                 if (setwaypoint) {
                     setwaypoint.onclick = (e) => {
@@ -97,7 +95,6 @@ window.addEventListener("message", event => {
                     };
                     setwaypoint.style.cursor = "pointer";
                 }
-
                 const takekeys = div.querySelector(".givekeys");
                 if (takekeys) {
                     takekeys.onclick = (e) => {
@@ -106,10 +103,8 @@ window.addEventListener("message", event => {
                     };
                     takekeys.style.cursor = "pointer";
                 }
-
                 parkingList.appendChild(div);
             });
-            // search vehicles
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const vehicleItems = document.querySelectorAll('#parkingList .vehicle');
@@ -121,7 +116,7 @@ window.addEventListener("message", event => {
                     }
                 });
             });
-        } else if (data.type == "info") { // look at parked vehicle info
+        } else if (data.type == "info") {
             isPolice = data.isPolice
             isClamped = data.isClamped
             isOwner = data.isOwner
@@ -175,7 +170,6 @@ window.addEventListener("message", event => {
                 }
                 html += `    </div>`;
                 html += `</div>`;
-
                 div.innerHTML = html;
 
                 const unparking = div.querySelector(".unpark");
@@ -327,7 +321,6 @@ function toggleEditMode() {
         menu.style.cursor = "move";
         menu.style.outline = "2px dashed #fff";
         resetBtn.style.display = "block";
-
     } else  {
         menu.style.cursor = "pointer";
         menu.style.outline = "0px";
@@ -364,7 +357,6 @@ resetBtn.onclick = () => {
 };
 
 // dragging hud
-
 let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
