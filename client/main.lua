@@ -33,7 +33,7 @@ local function OpenParkingMenu()
                 table.insert(options, {
                     owner = v.citizenid,
                     vehicle = v.vehicle,
-                    plate = Lang:t('nui.plate', {plate = v.plate}),
+                    plate = v.plate,
                     street = Lang:t('nui.street', {street = v.street}),
                     fuel = Lang:t('nui.fuel', {fuel = v.fuel}),
                     engine = Lang:t('nui.engine', {engine = math.floor(v.engine)}),
@@ -72,7 +72,8 @@ local function OpenInfoMenu(vehicle)
             fuel = Lang:t('nui.fuel', {fuel = math.floor(GetVehicleFuelLevel(vehicle))}),
             oil = Lang:t('nui.oil', {oil = math.floor(GetVehicleOilLevel(vehicle))}),
             temp = math.floor(GetVehicleEngineTemperature(vehicle)),
-            plate = Lang:t('nui.plate', {plate = GetPlate(vehicle)}),
+            plate = GetPlate(vehicle),
+            vehicle_plate = GetPlate(vehicle),
             class = Lang:t('nui.class', {class=GetLabelText("VEH_CLASS_"..GetVehicleClass(vehicle))}),
             displayName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)),
         }
@@ -97,6 +98,7 @@ local function OpenInfoMenu(vehicle)
                 removeclamp = Lang:t('nui.removeclamp'),
                 setwaypoint = Lang:t('nui.setwaypoint'),
                 givekeys = Lang:t('nui.givekeys'),
+                plate = Lang:t('nui.plate', {plate = GetPlate(vehicle)}),
                 park = Lang:t('nui.park'),
                 unpark = Lang:t('nui.unpark'),
                 parkinfo = Lang:t('nui.parkinfo', {parktime = parkTime, overtime = overTime}),
@@ -105,7 +107,7 @@ local function OpenInfoMenu(vehicle)
             SendNUIMessage({
                 action = "open", 
                 type = "info", 
-                vehicle = data, 
+                vehicle = data,
                 hour = GetClockHours(), 
                 theme = theme, 
                 isPolice = isPolice, 
@@ -119,7 +121,7 @@ local function OpenInfoMenu(vehicle)
             })
         end, GetPlate(vehicle))
     else
-        print("Geen model gevonden///")
+        print("Geen model gevonden...")
     end
 end
 

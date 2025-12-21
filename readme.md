@@ -83,20 +83,6 @@
 
 ---
 
-# 🚗 Adding Vehicles 
-- If you have modded vehicles you need to add them in `core/vehicles.lua`.
-
----
-# Just some help code
-- when you want to remove vehicles and you have a automatic script that removes vehicles
-- you need to add this in your code, in this order like below.
-- this wil make sure your parked vehicle will stay.
-```lua
-if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
-DeleteEntity(vehicle) -- than delete
-```
----
-
 # ⚡ **Installation – 2 Minutes Flat**
 ```bash
 1. 🚀 Download → https://github.com/MaDHouSe79/mh-parking/releases/latest
@@ -108,6 +94,25 @@ DeleteEntity(vehicle) -- than delete
 # 🎨 Theme colors
 - just go to [shared/config.lua](https://github.com/MaDHouSe79/mh-parking/blob/main/shared/config.lua) file and change the colors to your needs.
   
+# 🚗 Adding Vehicles 
+- If you have modded vehicles you need to add them in `core/vehicles.lua`.
+
+---
+# Just some help code
+- when you want to remove vehicles and you have a automatic script that removes vehicles
+- you need to add this in your code, in this order like below.
+- this wil make sure your vehicles will stay.
+```lua
+if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
+DeleteEntity(vehicle) -- than delete
+```
+
+```lua
+if Entity(vehicle).state and Entity(vehicle).state.isClamped then return end -- first check
+DeleteEntity(vehicle) -- than delete
+```
+---
+
 # 📌 When is mh-parking useful?
 - mh-parking is especially useful if you are running a roleplay or modded server where vehicles need to be managed realistically and persistently. 
 
@@ -123,17 +128,6 @@ DeleteEntity(vehicle) -- than delete
 - Your server aims for a more immersive, real-life handling of player vehicles.
 - If your server is small or you just need a very simple garage system, mh-parking might be more than you need.
 - But for medium-to-large servers, especially serious RP communities, it can add a lot of structure and realism.
-
----
-
-# Just some help code
-- when you want to remove vehicles and you have a automatic script that removes vehicles
-- you need to add this in your code, in this order like below.
-- this wil make sure your parked vehicle will stay.
-```lua
-if Entity(vehicle).state and Entity(vehicle).state.isParked then return end -- first check
-DeleteEntity(vehicle) -- than delete
-```
 
 ---
 

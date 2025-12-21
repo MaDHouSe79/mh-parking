@@ -22,14 +22,17 @@ window.addEventListener("message", event => {
     lang = data.lang;
     searchInput.value = "";
     if (data.theme) setTheme(data.theme);
+    
     if (data.action === "resetHudPos") {
         menu.style.left = "50%";
         menu.style.top = "50%";
     }
+    
     if (data.action === "setHudPos") {
         menu.style.left = data.x + "px";
         menu.style.top = data.y + "px";
     }
+
     parkingList.innerHTML = "";
     vehicleInfo.innerHTML = "";
     if (data.action !== "open") return;
@@ -53,7 +56,7 @@ window.addEventListener("message", event => {
             let html = `<div class="card" id="${v.vehicle}">`;
             html += `    <center><img class="card-img-top" style="width: 250px;" src="../html/assets/images/${v.vehicle}.png" alt="Vehicle image"></center>`;
             html += `    <div class="card-body">`;
-            html += `        <h1 class="card-title text-center">${v.vehicle} / ${v.plate}</h1>`;
+            html += `        <h5 class="card-title text-center">${v.vehicle} / ${v.plate}</h5>`;
             if (isOwner) {
                 html += `    <p class="card-text text-center"><small>${v.engine} | ${v.body} | ${v.fuel}</small></p>`;
                 html += `    <div class="btn-group-sm center" role="group">`;
@@ -110,6 +113,7 @@ window.addEventListener("message", event => {
             html += `    <h5 class="card-title text-center">${lang.options}</h5>`;
             html += `    <div class="btn-group-sm center" role="group">`;
             if (isOwner) {
+                html += `<a href="#" class="btn givekeys">${lang.givekeys}</a>` 
                 html += isParked ? `<a href="#" class="btn unpark">${lang.unpark}</a>` : `<a href="#" class="btn park">${lang.park}</a>`;
             }
             if (isPolice) {
@@ -121,6 +125,12 @@ window.addEventListener("message", event => {
             html += `    </div>`;
             html += `</div>`;
             div.innerHTML = html;
+
+            div.querySelector(".givekeys")?.addEventListener("click", e => {
+                e.stopPropagation();
+                giveKeys(data.vehicle.plate);
+            });
+
             div.querySelector(".unpark")?.addEventListener("click", e => {
                 e.stopPropagation();
                 unpark(data.vehicle.plate);
@@ -220,6 +230,7 @@ function unpark(plate) {
 }
 
 function giveKeys(plate) {
+    console.log(plate)
     if (!isOwner) return;
     isOwner = false;
     fetch(`https://${GetParentResourceName()}/giveKeys`, { method: "POST", body: JSON.stringify({ plate }) });
