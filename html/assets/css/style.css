@@ -64,6 +64,7 @@ body {
     margin-top: 10px;
     width: 100%;
     height: auto;
+    overflow: hidden;           /* voorkom scrollbalken */
 }
 
 #info-bar {
@@ -107,6 +108,8 @@ button:focus, input:focus, select:focus {
     color: var(--text-color);
     padding: 12px;
     animation: fadeInUp 0.4s ease-out;
+    cursor: pointer;
+    user-select: none; /* Prevent text selection while dragging */
 }
 
 #close {
@@ -115,7 +118,7 @@ button:focus, input:focus, select:focus {
     right: 1%; 
     width: 25px;
     height: 25px;
-    color: var(--text-color);
+    color: #ff0000;
     border: none;
     border-radius: 50%; 
     cursor: pointer;
@@ -332,6 +335,19 @@ table {
 
 .center {
     text-align: center;
+}
+
+#draggable {
+    width: 100%;
+    height: 100%;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none; /* Prevent text selection while dragging */
 }
 
 #modal {

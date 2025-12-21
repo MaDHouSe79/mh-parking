@@ -44,8 +44,14 @@ local function OpenParkingMenu()
                     overtime = v.overtime,
                 })
             end
+            local nuilang = {
+                options = Lang:t('nui.options'),
+                setwaypoint = Lang:t('nui.setwaypoint'),
+                givekeys = Lang:t('nui.givekeys'),
+            }
+
             SetNuiFocus(true, true)
-            SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner})
+            SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner, lang = nuilang})
         end
     end)
 end
@@ -87,7 +93,7 @@ local function OpenInfoMenu(vehicle)
             local overtime_hours, overtime_min, overtime_sec = ConvertTime(overtime) 
             local overTime = overtime_hours..":"..overtime_min..":"..overtime_sec
             local theme = LoadThemeFromINI()
-            SetNuiFocus(true, true)
+
             local nuilang = {
                 options = Lang:t('nui.options'),
                 impound = Lang:t('nui.impound'),
@@ -100,6 +106,8 @@ local function OpenInfoMenu(vehicle)
                 parkinfo = Lang:t('nui.parkinfo', {parktime = parkTime, overtime = overTime}),
             }
 
+
+            SetNuiFocus(true, true)
             SendNUIMessage({
                 action = "open", 
                 type = "info", 

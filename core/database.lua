@@ -41,7 +41,6 @@ function Database.UnparkVehicle(plate)
 end
 
 function Database.GetVehicleData(plate)
-    --local result = MySQL.single.await("SELECT * FROM "..sql.table.." WHERE plate = ?", {plate})
     local result = MySQL.Sync.fetchAll("SELECT * FROM "..sql.table.." WHERE plate = ?", {plate})[1]
     return result
 end

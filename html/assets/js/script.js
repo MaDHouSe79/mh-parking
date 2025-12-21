@@ -229,7 +229,6 @@ window.addEventListener("message", event => {
     }
 });
 
-
 function SetDayOrNight(_hour) {
     const hour = parseInt(_hour) || 12;
     if (hour >= 6 && hour < 18) {
@@ -365,6 +364,7 @@ resetBtn.onclick = () => {
 };
 
 // dragging hud
+
 let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
