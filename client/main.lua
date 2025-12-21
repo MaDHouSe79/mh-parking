@@ -21,6 +21,7 @@ local function SetVehicleWaypoit(coords)
 end
 
 local function OpenParkingMenu()
+    if config == nil then Notify(Lang:t('info.wait_one_moment')) return end
     TriggerCallback("mh-parking:server:GetVehicles", function(result)
         if result.status then
             local theme = LoadThemeFromINI()
@@ -32,12 +33,12 @@ local function OpenParkingMenu()
                 table.insert(options, {
                     owner = v.citizenid,
                     vehicle = v.vehicle,
-                    plate = v.plate,
-                    street = v.street,
-                    fuel = v.fuel,
-                    engine = math.floor(v.engine),
-                    body = math.floor(v.body),
-                    class = config.Vehicles[GetHashKey(v.vehicle)].class,
+                    plate = Lang:t('nui.plate', {plate = v.plate}),
+                    street = Lang:t('nui.street', {street = v.street}),
+                    fuel = Lang:t('nui.fuel', {fuel = v.fuel}),
+                    engine = Lang:t('nui.engine', {engine = math.floor(v.engine)}),
+                    body = Lang:t('nui.body', {body = math.floor(v.body)}),
+                    class = Lang:t('nui.class', {class = config.Vehicles[GetHashKey(v.vehicle)].class}),
                     coords = json.decode(v.location),
                     parktime = v.parktime,
                     overtime = v.overtime,
@@ -48,15 +49,9 @@ local function OpenParkingMenu()
         end
     end)
 end
-function convertTime(time)
-    local days = math.floor(time / 86400)
-    local hours = math.floor(math.fmod(time, 86400) / 3600)
-    local minutes = math.floor(math.fmod(time, 3600) / 60)
-    local seconds = math.floor(math.fmod(time, 60))
-    return days, hours, minutes, seconds
-end 
 
 local function OpenInfoMenu(vehicle)
+    if config == nil then Notify(Lang:t('info.wait_one_moment')) return end
     if not vehicle or not DoesEntityExist(vehicle) then return end
     if config.Vehicles[GetEntityModel(vehicle)] then
         local identifier  = GetIdentifier()
@@ -67,44 +62,44 @@ local function OpenInfoMenu(vehicle)
         local isClamped = state.isClamped
         local data = {
             model = config.Vehicles[GetEntityModel(vehicle)].model,
-            body = math.floor(GetVehicleBodyHealth(vehicle)),
-            engine = math.floor(GetVehicleEngineHealth(vehicle)),
-            fuel = math.floor(GetVehicleFuelLevel(vehicle)),
-            oil = math.floor(GetVehicleOilLevel(vehicle)),
+            body = Lang:t('nui.body', {body = math.floor(GetVehicleBodyHealth(vehicle))}),
+            engine = Lang:t('nui.engine', {engine = math.floor(GetVehicleEngineHealth(vehicle))}),
+            fuel = Lang:t('nui.fuel', {fuel = math.floor(GetVehicleFuelLevel(vehicle))}),
+            oil = Lang:t('nui.oil', {oil = math.floor(GetVehicleOilLevel(vehicle))}),
             temp = math.floor(GetVehicleEngineTemperature(vehicle)),
-            plate = GetPlate(vehicle),
+            plate = Lang:t('nui.plate', {plate = GetPlate(vehicle)}),
+            class = Lang:t('nui.class', {class=GetLabelText("VEH_CLASS_"..GetVehicleClass(vehicle))}),
             displayName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)),
-            class = GetLabelText("VEH_CLASS_"..GetVehicleClass(vehicle)),
         }
         local isPolice = IsPolice()
         TriggerCallback("mh-parking:server:GetVehicleParkTime", function(result)
             local time = 0
-            local parktime = 0
             local currentTime = 0
             if result.status then
-                parktime = result.parktime
-                time = result.time
+                time = result.parktime
                 currentTime = result.currentTime
             end
-            local isOverTime = false
+
             local overtime = currentTime - time
+            local isOverTime = overtime > currentTime and true or false
+            local parkTime = Lang:t('nui.hour', {hour = config.MaxTimeParking / 3600000})
 
-            if overtime < currentTime then
-                print("Binnen de parkeer tijd")
-            else
-                isOverTime = true
-                print("Buiten de parkeer tijd")
-            end
-            
-
-            local overtime_days, overtime_hours, overtime_min, overtime_sec = convertTime(overtime) 
-            local parktime_days, parktime_hours, parktime_min, parktime_sec = convertTime(parktime)
-
-            local parkTime = parktime_hours..":"..parktime_min..":"..parktime_sec
+            local overtime_hours, overtime_min, overtime_sec = ConvertTime(overtime) 
             local overTime = overtime_hours..":"..overtime_min..":"..overtime_sec
-
             local theme = LoadThemeFromINI()
             SetNuiFocus(true, true)
+            local nuilang = {
+                options = Lang:t('nui.options'),
+                impound = Lang:t('nui.impound'),
+                addclamp = Lang:t('nui.addclamp'),
+                removeclamp = Lang:t('nui.removeclamp'),
+                setwaypoint = Lang:t('nui.setwaypoint'),
+                givekeys = Lang:t('nui.givekeys'),
+                park = Lang:t('nui.park'),
+                unpark = Lang:t('nui.unpark'),
+                parkinfo = Lang:t('nui.parkinfo', {parktime = parkTime, overtime = overTime}),
+            }
+
             SendNUIMessage({
                 action = "open", 
                 type = "info", 
@@ -118,9 +113,11 @@ local function OpenInfoMenu(vehicle)
                 isOverTime = isOverTime,
                 parktime = parkTime,
                 overtime = overTime,
+                lang = nuilang
             })
-        end, data.plate)
-
+        end, GetPlate(vehicle))
+    else
+        print("Geen model gevonden///")
     end
 end
 
@@ -196,6 +193,7 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
             end
         else
             if state.isClamped then return end
+            SetEntityInvincible(vehicle, false)
             state.steerangle = 0
             state.isParked = false
             state.parkedPos = nil
@@ -370,7 +368,7 @@ CreateThread(function()
                 local plate = GetVehicleNumberPlateText(veh):gsub("^%s*(.-)%s*$", "%1"):upper()
                 if parkedCache[plate] then
                     local state = Entity(veh).state
-                    if state.isClamped then return Notify("You can't unpart, you have a wheel clamp...", "error") end
+                    if state.isClamped then return Notify(Lang:t('info.vehicle_has_wheelclamp'), "error") end
                     local netId = -1
                     CreateThread(function()
                         repeat
@@ -519,10 +517,10 @@ RegisterNUICallback("impoundVehicle", function(data, cb)
             TriggerServerEvent('mh-parking:impound', plate)
             SetEntityAsMissionEntity(vehicle, true, true)
             DeleteEntity(vehicle)
-            lib.notify({title = "Impound", description = "Voertuig " .. plate .. " in beslag genomen", type = "success"})
+            lib.notify({title = Lang:t('info.impound'), description = Lang:t('info.vehicle_impounded',{plate = plate}), type = "success"})
         end
     else
-        print("No no, you are not a police dumpass...")
+        Notify(Lang:t('info.no_cop'), 'error')
     end
     cb('ok')
 end)
@@ -540,19 +538,22 @@ RegisterNUICallback("setWheelClamp", function(data, cb)
             end
         end
     else
-        print("No no, you are not a police dumpass...")
+        Notify(Lang:t('info.no_cop'), 'error')
     end
     cb('ok')
 end)
 
 RegisterNUICallback('setWaypoint', function(data, cb)
     SetVehicleWaypoit(data.coords)
-    cb('ok')
 end)
 
 RegisterNUICallback("close", function(_, cb)
     SetNuiFocus(false, false)
     cb("ok")
+end)
+
+RegisterNUICallback("resetHud", function(data, cb) 
+    SendNUIMessage({action = "resetHudPos"})
 end)
 
 -- open menu nui

@@ -31,6 +31,13 @@ function GetVehicleByPlate(plate)
     return nil
 end
 
+function ConvertTime(time)
+    local hours = math.floor(math.fmod(time, 86400) / 3600)
+    local minutes = math.floor(math.fmod(time, 3600) / 60)
+    local seconds = math.floor(math.fmod(time, 60))
+    return hours, minutes, seconds
+end 
+
 function FirstToUpper(value)
     if not value then return nil end
     return (value:gsub("^%l", string.upper))

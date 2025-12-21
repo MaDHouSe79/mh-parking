@@ -93,7 +93,7 @@ end
 CreateCallback("mh-parking:server:GetVehicleParkTime", function(source, cb, plate)
     local data = Database.GetVehicleData(plate)
     if data ~= nil then
-        cb({status = true, parktime = data.parktime, time = data.time, currentTime = os.time()})
+        cb({status = true, parktime = data.parktime, currentTime = os.time()})
     else
         cb({status = true})
     end
@@ -111,7 +111,8 @@ RegisterNetEvent('mh-parking:givekey', function(plate)
     local isOwner = Database.IsVehicleOwned(src, plate)
     if isOwner then 
         GiveKeysIfOwnerOnline(plate)
-        Notify(src, "You have the vehcile key back!", 'success')
+        local vehicle = Database.GetPlayerVehicle(src, plate)
+        Notify(src, Lang:t('vehicle.getkeys', {vehicle=vehicle.vehicle, plate=vehicle.plate}), 'success')
     end
 end)
 
@@ -167,18 +168,21 @@ RegisterNetEvent('mh-parking:autoPark', function(netId, steerangle, street, mods
                 local heading = GetEntityHeading(veh)
                 local state = Entity(veh).state
                 if not state.isParked then
-                    Database.ParkVehicle(plate, {x=coords.x, y=coords.y, z=coords.z, h=heading}, steerangle, street, mods, fuel, body, engine)
-                    state.isParked = true
-                    state.parkedPos = {x=coords.x, y=coords.y, z=coords.z, h=heading}
-                    state.steerangle = tonumber(steerangle)
-                    local data = Database.GetVehicleData(plate)
-                    if data ~= nil and data.mods ~= nil then
-                        local mods = json.decode(data.mods)
-                        TriggerClientEvent('mh-parking:syncParked', -1, netId, true, state.parkedPos, mods)
-                        Notify(src, Lang:t('vehicle.parked'), 'success')
+                    if RemoveMoney(src, SV_Config.ParkPrice) then
+                        Notify(src, Lang:t('info.paid_parking',{money = SV_Config.MoneySign..SV_Config.ParkPrice}), 'success')
+                        Database.ParkVehicle(plate, {x=coords.x, y=coords.y, z=coords.z, h=heading}, steerangle, street, mods, fuel, body, engine)
+                        state.isParked = true
+                        state.parkedPos = {x=coords.x, y=coords.y, z=coords.z, h=heading}
+                        state.steerangle = tonumber(steerangle)
+                        local data = Database.GetVehicleData(plate)
+                        if data ~= nil and data.mods ~= nil then
+                            local mods = json.decode(data.mods)
+                            TriggerClientEvent('mh-parking:syncParked', -1, netId, true, state.parkedPos, mods)
+                            Notify(src, Lang:t('vehicle.parked'), 'success')
+                        end
+                    else
+                        Notify(src, Lang:t('info.no_money', {money = SV_Config.MoneySign..SV_Config.ParkPrice}), 'error')
                     end
-                    local parkFee = (math.floor(((os.time() - SV_Config.MaxTimeParking) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
-                    TakeMoney(src, parkFee)
                 end
             end
         else
@@ -249,8 +253,9 @@ local function ParkingTimeCheckLoop()
         local result = Database.GetVehicles()
         if result ~= nil then
             for k, v in pairs(result) do
-                local total = os.time() - v.time
-                if v.parktime > 0 and total > v.parktime then
+                local total = os.time() - v.parktime
+                local isOverTime = total > os.time() and true or false
+                if isOverTime then
                     print("[MH Parking] - [Time Parking Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been auto impound by the police.")
                     local cost = (math.floor(((os.time() - v.time) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and parkedVehicles[v.plate].entity ~= false then
@@ -268,7 +273,7 @@ AddEventHandler('onResourceStart', function(resource)
     if resource == "qb-smallresources" then
         Wait(5000)
         if hasSpawned then
-            print("Respawn vehicles")
+            print("[MH Parking] - Respawn parked vehicles")
             SpawnVehicles()
         end
     end    
@@ -278,22 +283,22 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 -- Admin Commands
-AddCommand(Config.AddVipCommand, "Add player as vip", {}, true, function(source, args)
+AddCommand(Config.AddVipCommand, Lang:t('info.addvip'), {}, true, function(source, args)
     local src, amount, targetID = source, SV_Config.DefaultMaxParking, -1
     if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
     if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
     if targetID ~= -1 then
         Database.AddVip(targetID, amount)
-        if targetID ~= src then Notify(targetID, 'player add as vip', "success", 10000) end
-        Notify(src, 'is added as vip', "success", 10000)
+        if targetID ~= src then Notify(targetID, Lang:t('info.addasvip'), "success", 10000) end
+        Notify(src, Lang:t('info.payerissvip'), "success", 10000)
     end
 end, 'admin')
 
-AddCommand(Config.RemoveVipCommand, "Remove player as vip", {}, true, function(source, args)
+AddCommand(Config.RemoveVipCommand, Lang:t('info.removevip'), {}, true, function(source, args)
     local src, targetID = source, -1
     if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
     if targetID ~= -1 then
         Database.RemovedVip(targetID)
-        Notify(src, 'player removed as vip', "success", 10000)
+        Notify(src, Lang:t('info.removeasvip'), "success", 10000)
     end
 end, 'admin')

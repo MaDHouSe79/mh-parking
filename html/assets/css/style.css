@@ -25,13 +25,22 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-    font-family: var(--primary-font);
-    color: var(--text-color);
-    background: transparent;
+/* Zorg dat body precies het scherm vult, maar iets kleiner */
+html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow: hidden;           /* voorkom scrollbalken */
+    width: 100vw;                /* 99% van viewport breedte */
+    height: 100vh;               /* 99% van viewport hoogte */
+    max-width: 100vw;
+    max-height: 100vh;
+    position: relative;
+    background: transparent;
+}
+
+/* Extra: voorkom dat draggable elementen buiten body kunnen */
+body {
+    overscroll-behavior: none;  /* voorkom dat je buiten het scherm kunt scrollen */
 }
 
 #header {
@@ -76,6 +85,11 @@ h1 {
     padding-bottom: 10px;
     font-size: 1.0em;
     color: var(--header-title-text-color);
+}
+
+button:focus, input:focus, select:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* Dont change above */
@@ -132,6 +146,26 @@ h1 {
     background: transparent;
 }
 #edit:hover { 
+    box-shadow: var(--glow-cyan);
+    border-color: var(--neon-cyan);
+}
+
+#reset {
+    position: absolute;
+    top: 1%;
+    left: 7%;
+    width: 25px;
+    height: 25px;
+    color: var(--text-color);
+    border-radius: 50%; 
+    cursor: pointer;
+    border: none;
+    border-color: var(--bg-secondary);
+    font-size: 1.0em;
+    transition: all 0.3s;
+    background: transparent;
+}
+#reset:hover { 
     box-shadow: var(--glow-cyan);
     border-color: var(--neon-cyan);
 }

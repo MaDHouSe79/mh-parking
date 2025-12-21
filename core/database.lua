@@ -21,20 +21,18 @@ MySQL.ready(function()
     MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS street TEXT NULL DEFAULT NULL')
     MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS location TEXT NULL DEFAULT NULL')
     MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS parktime INT NULL DEFAULT 0')
-    MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS time BIGINT NOT NULL DEFAULT 0')
     MySQL.Async.execute('ALTER TABLE '..sql.table..' ADD COLUMN IF NOT EXISTS isClamped INT NULL DEFAULT 0')
 end)
 
 function Database.ImpoundVehicle(plate, cost)
-    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, depotprice = ?, location = ?, street = ?, parktime = ?, time = ?, isClamped = ? WHERE plate = ?', {
-        0, cost, nil, nil, 0, 0, 0, plate
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, depotprice = ?, location = ?, street = ?, parktime = ?, isClamped = ? WHERE plate = ?', {
+        0, cost, nil, 0, 0, 0, plate
     })
 end
 
 function Database.ParkVehicle(plate, location, steerangle, street, mods, fuel, body, engine)
-    local parktime = SV_Config.MaxTimeParking
-    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ?, mods = ?, fuel = ?, body = ?, engine = ?, time = ?, parktime = ? WHERE plate = ?', {
-        3, json.encode(location), street, steerangle, json.encode(mods), fuel, body, engine, os.time(), parktime, plate
+    MySQL.Async.execute('UPDATE '..sql.table..' SET '..sql.state..' = ?, location = ?, street = ?, steerangle = ?, mods = ?, fuel = ?, body = ?, engine = ?, parktime = ? WHERE plate = ?', {
+        3, json.encode(location), street, steerangle, json.encode(mods), fuel, body, engine, os.time(), plate
     })
 end
 
@@ -43,7 +41,9 @@ function Database.UnparkVehicle(plate)
 end
 
 function Database.GetVehicleData(plate)
-    return MySQL.single.await("SELECT * FROM "..sql.table.." WHERE plate = ? LIMIT 1", {plate})
+    --local result = MySQL.single.await("SELECT * FROM "..sql.table.." WHERE plate = ?", {plate})
+    local result = MySQL.Sync.fetchAll("SELECT * FROM "..sql.table.." WHERE plate = ?", {plate})[1]
+    return result
 end
 
 function Database.GetVehicles()
@@ -76,6 +76,11 @@ end
 function Database.GetPlayerVehicles(src)
     local citizenid = GetIdentifier(src)
     return citizenid ~= false and MySQL.Sync.fetchAll("SELECT * FROM "..sql.table.." WHERE "..sql.citizenid.." = ? AND "..sql.state.." = ?", {citizenid, 3})
+end
+
+function Database.GetPlayerVehicle(src, plate)
+    local citizenid = GetIdentifier(src)
+    return citizenid ~= false and MySQL.single.await("SELECT * FROM "..sql.table.." WHERE "..sql.citizenid.." = ? AND plate = ? LIMIT 1", {citizenid, plate})
 end
 
 function Database.GetMaxParking(src)

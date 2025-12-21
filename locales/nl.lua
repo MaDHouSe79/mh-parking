@@ -7,29 +7,59 @@ local Translations = {
         no_cops = "Geen Politie..",
         wheel_clamp_added = "Voertuig geklemd! Boete: $%{fine}",
         wheel_clamp_deleted = "Wielklem verwijderd!",
-        street = "Street: %{street}",
-        fuel = "Brandstof: %{fuel}",
-        engine = "Motor: %{engine}",
-        body = "Body: %{body}",
         click_to_set_waypoint = "Click to set waypoint",
         no_waipoint = "Serieus heb je voor deze %{distance} meter een waypoint nodig?",
+        no_money = "Je hebt niet genoeg geld op zak, je hebt %{money} nodig voor de parkeerkosten.",
+        paid_parking = "Je hebt %{money} betaald voor de parkeerkosten.",
+        vehicle_has_wheelclamp = "Je kan niet uit parkeer stand, je voertuig heeft een wielklem...",
+        vehicle_impounded = "Voertuig %{plate} is in beslag genomen.",
+        no_cop = "Je bent geen politieagent....",
+        impound = "In beslag genomen",
+        wait_one_moment = "Even geduld, probeer het over ongeveer 3 seconden opnieuw..",
+        addvip = "Voeg speler toe als VIP",
+        removevip = "Verwijder speler als VIP",
+        addasvip = "Je bent toegevoegd als VIP-lid.",
+        payerissvip = "De speler is toegevoegd als VIP-lid.",
+        removeasvip = "De speler is verwijderd als VIP-lid.",
     },
     vehicle = {
-        info = "Vehicle Information",
-        body_damage = "Body Damage",
-        engine_damage = "Engine Health",
-        fuel_level = "Fuel Level",
+        info = "Voertuiginformatie",
+        body_damage = "Carrosserie Schade",
+        engine_damage = "Motor Schade",
+        fuel_level = "Brandstof Level",
         oil_level = "Oil Level",
-        engine_temp = "Engine Temp",
+        engine_temp = "Motor Temp",
         parked = "Voertuig automatisch geparkeerd!",
         unparked = "Voertuig automatisch ontparkeerd!",
-        
+        getkeys = "Je hebt de sleutel voor voertuig %{vehicle} en kenteken %{plate}!",
     },
+    
     blip = {
         label = "Parked:%{model} Plate: %{plate}",
-    }
+    },
+
+    nui = {
+        hour = "%{hour} Uur",
+        options = "Opties",
+        model = "Model: %{model}",
+        class = "Class: %{class}",
+        plate = "Kenteken: %{plate}",
+        street = "Straat: %{street}",
+        fuel = "Brandstof: %{fuel}%",
+        engine = "Motor: %{engine}",
+        body = "Body: %{body}",
+        oil = "Oil: %{oil}%",
+        addclamp = "Zet Wielklem",
+        removeclamp = "Verweider wielklem",
+        impound = "Beslag",
+        parkinfo = "Maximale parkeertijd: %{parktime} | Huidige parkeertijd: %{overtime}",
+        setwaypoint = "Zet Waypoint",
+        givekeys = "Geef sleutel",
+        park = "Park",
+        unpark = "Unpark",
+    },
 }
 
-if (GetConvar('mh_locale', 'en') == 'nl') or (GetConvar('qb_locale', 'en') == 'nl') then
+if (GetConvar('mh_locale', 'en') == 'nl') then
     Lang = Locale:new({phrases = Translations, warnOnMissing = true, fallbackLang = Lang})
 end
