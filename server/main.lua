@@ -226,7 +226,7 @@ RegisterNetEvent('mh-parking:server:PayWheelclampBill', function(netid, plate)
             if isOwner then
                 if RemoveMoney(src, SV_Config.ClampFine) then
                     PayPoliceBill(SV_Config.ClampFine, 'wheelclamp-fine')
-                    print(netid, plate)
+                    Database.UpdateWheelClamp(plate, false)
                     Entity(veh).state.isClamped = false
                     Notify(src, Lang:t('info.wheel_clamp_deleted'), 'success')
                     TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)
@@ -334,4 +334,5 @@ AddCommand(Config.RemoveVipCommand, Lang:t('info.removevip'), {}, true, function
         Database.RemovedVip(targetID)
         Notify(src, Lang:t('info.removeasvip'), "success", 10000)
     end
+
 end, 'admin')
