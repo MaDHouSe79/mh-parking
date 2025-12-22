@@ -134,7 +134,7 @@ local function DeleteParkedBlip(plate)
 end
 
 local function DeleteWheelClamp(plate)
-    if parkedCache[plate].vehicle ~= nil and DoesEntityExist(parkedCache[plate].vehicle) then
+    if parkedCache[plate] ~= nil and parkedCache[plate].vehicle ~= nil and DoesEntityExist(parkedCache[plate].vehicle) then
         local model = joaat(config.ClampProp)
         local ent = GetClosestObjectOfType(parkedCache[plate].pos.x, parkedCache[plate].pos.y, parkedCache[plate].pos.z, 5.0, model, false, false, false)
         SetEntityAsMissionEntity(ent, true, true)
