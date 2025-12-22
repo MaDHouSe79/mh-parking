@@ -118,9 +118,9 @@ window.addEventListener("message", event => {
                 html += isClamped ? `<a href="#" class="btn payclampbill">${lang.pay_to_unclamp}</a>` : ``;
             }
             if (isPolice) {
-                //if (data.isOverTime) {
+                if (data.isOverTime) {
                     html += isClamped ? `<a href="#" class="btn removewheelclamp">${lang.removeclamp}</a>` : `<a href="#" class="btn setwheelclamp">${lang.addclamp}</a>`;
-                //}
+                }
                 html += `<a href="#" class="btn impound">${lang.impound}</a>`;
             }
             html += `    </div>`;
