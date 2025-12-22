@@ -4,7 +4,6 @@
 local config = nil
 local isLoggedIn = false
 local parkedCache = {}
-local blipCache = {}
 local wasInVehicle = false
 local currentVehicle = nil
 
@@ -48,6 +47,7 @@ local function OpenParkingMenu()
                 options = Lang:t('nui.options'),
                 setwaypoint = Lang:t('nui.setwaypoint'),
                 givekeys = Lang:t('nui.givekeys'),
+                pay_to_unclamp = Lang:t('nui.pay_to_unclamp'),
             }
             SetNuiFocus(true, true)
             SendNUIMessage({action = "open", type = "parked", vehicles = options, hour = GetClockHours(), theme = theme, isOwner = isOwner, lang = nuilang})
@@ -102,6 +102,7 @@ local function OpenInfoMenu(vehicle)
                 park = Lang:t('nui.park'),
                 unpark = Lang:t('nui.unpark'),
                 parkinfo = Lang:t('nui.parkinfo', {parktime = parkTime, overtime = overTime}),
+                pay_to_unclamp = Lang:t('nui.pay_to_unclamp'),
             }
             SetNuiFocus(true, true)
             SendNUIMessage({
@@ -127,18 +128,31 @@ end
 
 local function DeleteParkedBlip(plate)
     if DoesBlipExist(parkedCache[plate].blip) then 
-        RemoveBlip(parkedCache[plate].blip) 
+        RemoveBlip(parkedCache[plate].blip)
+        parkedCache[plate].blip = nil
     end
 end
 
-local function DeleteParkedBlips()
-    for k, blip in pairs(blipCache) do
-        if DoesBlipExist(blip) then
-            RemoveBlip(blip)
-            blip = nil
+local function DeleteWheelClamp(plate)
+    if parkedCache[plate].vehicle ~= nil and DoesEntityExist(parkedCache[plate].vehicle) then
+        local model = joaat(config.ClampProp)
+        local ent = GetClosestObjectOfType(parkedCache[plate].pos.x, parkedCache[plate].pos.y, parkedCache[plate].pos.z, 5.0, model, false, false, false)
+        SetEntityAsMissionEntity(ent, true, true)
+        DeleteEntity(ent)
+    end
+end
+
+local function RemoveAllClamps()
+    while config == nil do Wait(10) end
+    for k, v in pairs(parkedCache) do
+        local model = joaat(config.ClampProp)
+        local ent = GetClosestObjectOfType(v.pos.x, v.pos.y, v.pos.z, 5.0, model, false, false, false)
+        if DoesEntityExist(ent) then
+            SetEntityAsMissionEntity(ent, true, true)
+            DeleteEntity(ent)
+            v = nil
         end
     end
-    blipCache = {}
 end
 
 local function CreateParkedBlip(entity, data)
@@ -190,7 +204,7 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
                     SetNetworkIdCanMigrate(netId, false)
                     SetNetworkIdExistsOnAllMachines(netId, true)
                     state.clamp_netid = netId
-                    parkedCache[plate].clamp_netid = netId
+                    parkedCache[plate].clamp_entity = clamp
                     AttachEntityToEntity(clamp, vehicle, GetEntityBoneIndexByName(vehicle, 'wheel_lf'), config.ClampOffset.x, config.ClampOffset.y, config.ClampOffset.z, config.ClampOffset.rx, config.ClampOffset.ry, config.ClampOffset.rz, false, false, false, false, 0, true)
                     SetEntityAsMissionEntity(clamp, true, true)
                 end
@@ -202,6 +216,7 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
             state.isParked = false
             state.parkedPos = nil
             DeleteParkedBlip(plate)
+            DeleteWheelClamp(plate)
             parkedCache[plate] = nil
         end
         return
@@ -245,7 +260,7 @@ end
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     isLoggedIn = false
-    DeleteParkedBlips()
+    RemoveAllClamps()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
@@ -256,7 +271,7 @@ end)
 RegisterNetEvent(OnPlayerUnload)
 AddEventHandler(OnPlayerUnload, function()
     isLoggedIn = false
-    DeleteParkedBlips()
+    RemoveAllClamps()
 end)
 
 RegisterNetEvent(OnPlayerLoaded)
@@ -293,16 +308,19 @@ RegisterNetEvent('mh-parking:syncWheelClamp', function(netId)
                 local netId = ObjToNet(clamp)
                 SetNetworkIdCanMigrate(netId, false)
                 SetNetworkIdExistsOnAllMachines(netId, true)
-                parkedCache[plate].clamp_netid = netId
+                state.clamp_netid = netId
+                parkedCache[plate].clamp_entity = clamp
                 AttachEntityToEntity(clamp, vehicle, GetEntityBoneIndexByName(vehicle, 'wheel_lf'), config.ClampOffset.x, config.ClampOffset.y, config.ClampOffset.z, config.ClampOffset.rx, config.ClampOffset.ry, config.ClampOffset.rz, false, false, false, false, 0, true)
                 SetEntityAsMissionEntity(clamp, true, true)
                 FreezeEntityPosition(vehicle, true)
-                SetVehicleUndriveable(vehicle, true)  
+                SetVehicleUndriveable(vehicle, true) 
             elseif state.isClamped == false then
-                if parkedCache[plate].clamp_netid ~= nil then
-                    while not NetworkDoesNetworkIdExist(parkedCache[plate].clamp_netid) do Wait(0) end
-                    local clamp = NetToObj(parkedCache[plate].clamp_netid)
-                    if DoesEntityExist(clamp) then DeleteObject(clamp); DeleteEntity(clamp) end
+                if parkedCache[plate].clamp_entity ~= nil then
+                    if DoesEntityExist(parkedCache[plate].clamp_entity) then
+                        SetEntityAsMissionEntity(parkedCache[plate].clamp_entity, true, true)
+                        DeleteObject(parkedCache[plate].clamp_entity) 
+                        DeleteEntity(parkedCache[plate].clamp_entity) 
+                    end
                     FreezeEntityPosition(vehicle, false)
                     SetVehicleUndriveable(vehicle, false)
                 end
@@ -459,6 +477,7 @@ CreateThread(function()
                             if state.isClamped then return end
                             if parkedCache[plate] then 
                                 DeleteParkedBlip(plate)
+                                DeleteWheelClamp(plate)
                                 parkedCache[plate] = nil 
                             end
                             SetVehicleUndriveable(vehicle, false)
@@ -470,6 +489,7 @@ CreateThread(function()
             for plate, data in pairs(parkedCache) do
                 if not DoesEntityExist(data.vehicle) then
                     DeleteParkedBlip(plate)
+                    DeleteWheelClamp(plate)
                     parkedCache[plate] = nil
                 end
             end
@@ -490,6 +510,18 @@ RegisterNUICallback("park", function(data, cb)
         BlinkVehiclelights(vehicle) 
         SetVehicleEngineOn(vehicle, false, false, false)                                    
         TriggerServerEvent('mh-parking:autoPark', netid, steerangle, street, mods, fuel, body, engine) 
+    end
+    cb('ok')
+end)
+
+RegisterNUICallback("payWheelclampBill", function(data, cb)
+    local vehicle, distance = GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+    if vehicle ~= -1 and distance ~= -1 then
+        if DoesEntityExist(vehicle) then
+            local netid = SafeNetId(vehicle)
+            SetNetworkIdExistsOnAllMachines(netid, true)
+            TriggerServerEvent('mh-parking:server:PayWheelclampBill', netid, data.plate)
+        end
     end
     cb('ok')
 end)
@@ -549,6 +581,7 @@ end)
 
 RegisterNUICallback('setWaypoint', function(data, cb)
     SetVehicleWaypoit(data.coords)
+    cb("ok")
 end)
 
 RegisterNUICallback("close", function(_, cb)
@@ -558,10 +591,12 @@ end)
 
 RegisterNUICallback("resetHud", function(data, cb) 
     SendNUIMessage({action = "resetHudPos"})
+    cb("ok")
 end)
 
 RegisterNUICallback("saveHudPos", function(data, cb) 
-    SetResourceKvp("mh_parking_hud_pos", json.encode({x = data.x, y = data.y})); cb("ok") 
+    SetResourceKvp("mh_parking_hud_pos", json.encode({x = data.x, y = data.y})); 
+    cb("ok") 
 end)
 
 CreateThread(function()

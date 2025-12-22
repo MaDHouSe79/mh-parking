@@ -57,6 +57,7 @@ local Translations = {
         givekeys = "Geef sleutel",
         park = "Park",
         unpark = "Unpark",
+        pay_to_unclamp = "Betaal Boete",
     },
 }
 

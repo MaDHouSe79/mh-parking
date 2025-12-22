@@ -15,16 +15,28 @@ elseif GetResourceState('qb-core') == 'started' then
     AddCommand = Framework.obj.Commands.Add
     function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
     function GetPlayers() return Framework.obj.Functions.GetPlayers() end
-    function AddMoney(src, amount) local Player = GetPlayer(src) return Player.Functions.AddMoney('cash', amount) end
-    function RemoveMoney(src, amount) local Player = GetPlayer(src) return Player.Functions.RemoveMoney('cash', amount) end
+    function AddMoney(src, amount) 
+        local Player = Framework.obj.Functions.GetPlayer(src)
+        return Player.Functions.AddMoney('cash', amount) 
+    end
+    function RemoveMoney(src, amount, reason) 
+        local Player = Framework.obj.Functions.GetPlayer(src) 
+        return Player.Functions.RemoveMoney('cash', amount, reason)
+    end
 elseif GetResourceState('qbx_core') == 'started' then
     Framework = { name = 'qbx', obj = exports['qb-core']:GetCoreObject() }
     CreateCallback = Framework.obj.Functions.CreateCallback
     AddCommand = Framework.obj.Commands.Add
     function GetPlayer(src) return Framework.obj.Functions.GetPlayer(src) end
     function GetPlayers() return Framework.obj.Functions.GetPlayers() end
-    function AddMoney(src, amount) local Player = GetPlayer(src) return Player.Functions.AddMoney('cash', amount) end
-    function RemoveMoney(src, amount) local Player = GetPlayer(src) return Player.Functions.RemoveMoney('cash', amount) end
+    function AddMoney(src, amount) 
+        local Player = Framework.obj.Functions.GetPlayer(src)
+        return Player.Functions.AddMoney('cash', amount) 
+    end
+    function RemoveMoney(src, amount, reason) 
+        local Player = Framework.obj.Functions.GetPlayer(src) 
+        return Player.Functions.RemoveMoney('cash', amount, reason)
+    end
 end
 
 function IsAdmin(src)

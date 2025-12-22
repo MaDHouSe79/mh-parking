@@ -4,6 +4,14 @@
 local parkedVehicles = {}
 local hasSpawned = false
 
+local function PayPoliceBill(amount, reason)
+    if SV_Config.PayCompany then
+        if GetResourceState("qb-banking") == 'started' then
+            exports['qb-banking']:AddMoney(SV_Config.BankAccount, amount, reason)
+        end
+    end
+end
+
 local function GiveKeysIfOwnerOnline(plate)
     if not plate then return end
     plate = plate:gsub("^%s*(.-)%s*$", "%1"):upper()
@@ -169,6 +177,7 @@ RegisterNetEvent('mh-parking:autoPark', function(netId, steerangle, street, mods
                 local state = Entity(veh).state
                 if not state.isParked then
                     if RemoveMoney(src, SV_Config.ParkPrice) then
+                        PayPoliceBill(SV_Config.ParkPrice, 'parking-fee')
                         Notify(src, Lang:t('info.paid_parking',{money = SV_Config.MoneySign..SV_Config.ParkPrice}), 'success')
                         Database.ParkVehicle(plate, {x=coords.x, y=coords.y, z=coords.z, h=heading}, steerangle, street, mods, fuel, body, engine)
                         state.isParked = true
@@ -208,17 +217,41 @@ RegisterNetEvent('mh-parking:server:AllPlayersLeaveVehicle', function(vehicleNet
     end
 end)
 
+RegisterNetEvent('mh-parking:server:PayWheelclampBill', function(netid, plate)
+    local src = source
+    local veh = NetworkGetEntityFromNetworkId(netid)
+    if DoesEntityExist(veh) then
+        if Entity(veh).state and Entity(veh).state.isClamped then
+            local isOwner = Database.IsVehicleOwned(src, plate)
+            if isOwner then
+                if RemoveMoney(src, SV_Config.ClampFine) then
+                    PayPoliceBill(SV_Config.ClampFine, 'wheelclamp-fine')
+                    print(netid, plate)
+                    Entity(veh).state.isClamped = false
+                    Notify(src, Lang:t('info.wheel_clamp_deleted'), 'success')
+                    TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)
+                else
+                    Notify(src, Lang:t('info.no_money', {money = SV_Config.MoneySign..SV_Config.ClampFine}), 'error')
+                end
+            end
+        end
+    end   
+end)
+
 RegisterNetEvent('mh-parking:server:toggleClamp', function(netid, state)
     local src = source
     if IsPolice(src) or IsAdmin(src) then
         local veh = NetworkGetEntityFromNetworkId(netid)
         if DoesEntityExist(veh) then
+            local plate = GetVehicleNumberPlateText(veh):gsub("^%s*(.-)%s*$", "%1"):upper()
             if Entity(veh).state then
                 local txt = nil
                 if state then
+                    Database.UpdateWheelClamp(plate, true)
                     Entity(veh).state.isClamped = true
                     Notify(src, Lang:t('info.wheel_clamp_added', {fine = SV_Config.ClampFine}), 'success')
                 else
+                    Database.UpdateWheelClamp(plate, false)
                     Entity(veh).state.isClamped = false
                     Notify(src, Lang:t('info.wheel_clamp_deleted'), 'success')
                 end

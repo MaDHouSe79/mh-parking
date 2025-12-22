@@ -15,13 +15,17 @@ SV_Config.PayTimeInSecs = 10
 SV_Config.ParkPrice = 50
 SV_Config.MoneySign = "€"
 
+SV_Config.PayCompany = true -- if true all fines and parking feess goes to the police bank account
+SV_Config.BankAccount = 'police'
 
 SV_Config.UseAsVip = false
 SV_Config.DefaultMaxParking = 10
 
 SV_Config.PoliceJobs = {'police', 'sheriff'} -- Jobs than can add a clamp to a vehicle
 SV_Config.ImpoundPrice = 500
-SV_Config.ClampFine = 500  -- fine for clamp
+
+
+SV_Config.ClampFine = 5000  -- fine for un clamping a wheel
 SV_Config.ClampProp = "prop_spot_clamp" -- Attach clamp prop (or use a custom stream model)
 SV_Config.ClampOffset = {
     x = 0.0, 

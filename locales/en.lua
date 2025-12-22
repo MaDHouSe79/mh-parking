@@ -58,6 +58,7 @@ local Translations = {
         givekeys = "Give keys",
         park = "Park",
         unpark = "Unpark",
+        pay_to_unclamp = "Pay to unclamp",
     },
 }
 
