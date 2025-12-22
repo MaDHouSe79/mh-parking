@@ -212,6 +212,8 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
         else
             if state.isClamped then return end
             SetEntityInvincible(vehicle, false)
+            SetVehicleUndriveable(vehicle, false)
+            FreezeEntityPosition(vehicle, false)
             state.steerangle = 0
             state.isParked = false
             state.parkedPos = nil
@@ -466,7 +468,7 @@ CreateThread(function()
                         local plate = GetVehicleNumberPlateText(vehicle):gsub("^%s*(.-)%s*$", "%1"):upper()
                         local state = Entity(vehicle).state
                         if state.isParked and state.parkedPos then
-                            if not parkedCache[plate] then
+                            if not parkedCache[plate] then 
                                 parkedCache[plate] = {vehicle = vehicle, pos = state.parkedPos}
                                 SetVehicleEngineOn(vehicle, false, false, true)
                                 SetVehicleUndriveable(vehicle, true)
@@ -478,10 +480,11 @@ CreateThread(function()
                             if parkedCache[plate] then 
                                 DeleteParkedBlip(plate)
                                 DeleteWheelClamp(plate)
+                                SetVehicleUndriveable(vehicle, false)
+                                SetEntityInvincible(vehicle, false)
+                                FreezeEntityPosition(vehicle, false)
                                 parkedCache[plate] = nil 
                             end
-                            SetVehicleUndriveable(vehicle, false)
-                            SetEntityInvincible(vehicle, false)
                         end
                     end
                 end
