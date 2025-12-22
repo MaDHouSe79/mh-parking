@@ -138,12 +138,12 @@ DeleteEntity(vehicle) -- than delete
 ---
 
 # Screenshots
-- Owner Vehicle Options
+- Owned vehicle Options
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/owner.png)
-- Parked Vehicle vehicles
+- Owned parked Vehicles
 ![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/park.png)
-- Police Vehicle Options
-![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/police.png)
+- Police vehicle options
+![foto](https://github.com/MaDHouSe79/mh-parking/blob/main/screenshots/parkmenu.png)
 
 ---
 
