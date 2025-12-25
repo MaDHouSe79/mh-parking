@@ -290,7 +290,7 @@ local function ParkingTimeCheckLoop()
                 local isOverTime = total > os.time() and true or false
                 if isOverTime then
                     print("[MH Parking] - [Time Parking Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been auto impound by the police.")
-                    local cost = (math.floor(((os.time() - v.time) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
+                    local cost = (math.floor(((os.time() - v.parktime) / SV_Config.PayTimeInSecs) * SV_Config.ParkPrice))
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and parkedVehicles[v.plate].entity ~= false then
                         RemoveVehicle(parkedVehicles[v.plate].netid)
                     end
@@ -336,3 +336,4 @@ AddCommand(Config.RemoveVipCommand, Lang:t('info.removevip'), {}, true, function
     end
 
 end, 'admin')
+
