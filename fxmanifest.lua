@@ -22,6 +22,7 @@ files {
 }
 
 shared_scripts {
+    --'@es_extended/imports.lua', -- only if you use esx framework
     '@ox_lib/init.lua',
     'locales/locale.lua',
     'shared/config.lua',
