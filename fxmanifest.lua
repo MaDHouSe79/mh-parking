@@ -30,14 +30,14 @@ shared_scripts {
 }
 
 
-client_script {
+client_scripts {
     'core/framework/client.lua',
     'core/functions/client.lua',
     'core/target/client.lua',
     'client/main.lua',
 }
 
-server_script {
+server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'core/sv_config.lua',
     'core/vehicles.lua',
