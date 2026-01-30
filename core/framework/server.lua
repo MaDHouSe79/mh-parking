@@ -5,7 +5,7 @@ Framework, OnPlayerLoaded, OnPlayerUnload, CreateCallback, AddCommand  = {},  ni
 
 if GetResourceState('es_extended') == 'started' then
     Framework = { name = 'esx', obj = exports['es_extended']:getSharedObject() }
-    CreateCallback = Framework.TriggerServerCallback
+    CreateCallback = Framework.obj.TriggerServerCallback
     AddCommand = Framework.obj.RegisterCommand
     function GetPlayer(src) return Framework.obj.GetPlayerFromId(src) end
     function GetPlayers() return Framework.obj.GetPlayers() end
