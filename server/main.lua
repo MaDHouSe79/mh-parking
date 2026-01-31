@@ -316,43 +316,50 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 -- Admin Commands
+local function AddVIP(src, targetID, amount)
+    if targetID ~= -1 then
+        Database.AddVip(targetID, amount)
+        if targetID ~= src then Notify(targetID, Lang:t('info.addasvip'), "success", 10000) end
+        Notify(src, Lang:t('info.payerissvip'), "success", 10000)
+    end
+end
+
+local function RemoveVIP(src, targetID)
+    if targetID ~= -1 then
+        Database.RemovedVip(targetID)
+        Notify(src, Lang:t('info.removeasvip'), "success", 10000)
+    end
+end
+
 if Framework.name == 'esx' then
-    Framework.obj.RegisterCommand(Config.AddVipCommand, "admin", function(source, args, showError)
+
+    Framework.obj.RegisterCommand(Config.AddVipCommand, "admin", function(xPlayer, args, showError)
         local src, amount, targetID = source, SV_Config.DefaultMaxParking, -1
         if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
         if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
-        if targetID ~= -1 then
-            Database.AddVip(targetID, amount)
-            if targetID ~= src then Notify(targetID, Lang:t('info.addasvip'), "success", 10000) end
-            Notify(src, Lang:t('info.payerissvip'), "success", 10000)
-        end
+        if targetID ~= -1 then AddVIP(src, targetID, amount) end
     end, false)
-    Framework.obj.RegisterCommand(Config.RemoveVipCommand, "admin", function(source, args, showError)
+
+    Framework.obj.RegisterCommand(Config.RemoveVipCommand, "admin", function(xPlayer, args, showError)
         local src, targetID = source, -1
         if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
-        if targetID ~= -1 then
-            Database.RemovedVip(targetID)
-            Notify(src, Lang:t('info.removeasvip'), "success", 10000)
-        end
+        if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, false)
+
 elseif Framework.name == 'qb' or Framework.name == 'qbx' then
+
     AddCommand(Config.AddVipCommand, Lang:t('info.addvip'), {}, true, function(source, args)
         local src, amount, targetID = source, SV_Config.DefaultMaxParking, -1
         if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
         if args[2] and tonumber(args[2]) > 0 then amount = tonumber(args[2]) end
-        if targetID ~= -1 then
-            Database.AddVip(targetID, amount)
-            if targetID ~= src then Notify(targetID, Lang:t('info.addasvip'), "success", 10000) end
-            Notify(src, Lang:t('info.payerissvip'), "success", 10000)
-        end
+        if targetID ~= -1 then AddVIP(src, targetID, amount) end
     end, 'admin')
+
     AddCommand(Config.RemoveVipCommand, Lang:t('info.removevip'), {}, true, function(source, args)
         local src, targetID = source, -1
         if args[1] and tonumber(args[1]) > 0 then targetID = tonumber(args[1]) end
-        if targetID ~= -1 then
-            Database.RemovedVip(targetID)
-            Notify(src, Lang:t('info.removeasvip'), "success", 10000)
-        end
+        if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, 'admin')
 end
+
 
