@@ -319,12 +319,7 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 local function UnparkWhenLockpick(netId)
-    if not netId or netId <= 0 then return end
-    local vehicle = NetworkGetEntityFromNetworkId(netId)
-    if not vehicle or not DoesEntityExist(vehicle) or not NetworkGetEntityOwner(vehicle) then return end
-    if Entity(vehicle).state and Entity(vehicle).state.isParked then 
-        Entity(vehicle).state.isParked = false
-    end
+    RemoveVehicle(netid)
 end
 exports('UnparkWhenLockpick', UnparkWhenLockpick)
 
@@ -374,3 +369,4 @@ elseif Framework.name == 'qb' or Framework.name == 'qbx' then
         if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, 'admin')
 end
+
