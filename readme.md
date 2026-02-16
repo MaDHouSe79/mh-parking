@@ -116,7 +116,7 @@ DeleteEntity(vehicle) -- than delete
 # To unpark when lockpick 
 - use this export in your script server side only.
 ```lua
-exports['mh-parking']:UnparkWhenLockpick(netId)
+exports['mh-parking']:UnparkWhenLockpick(vehicle_netId)
 ```
 ---
 
