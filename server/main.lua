@@ -102,8 +102,10 @@ CreateCallback("mh-parking:server:GetVehicleParkTime", function(source, cb, plat
     local data = Database.GetVehicleData(plate)
     if data ~= nil then
         cb({status = true, parktime = data.parktime, currentTime = os.time()})
+        return
     else
         cb({status = true})
+        return
     end
 end)
 
@@ -112,6 +114,7 @@ CreateCallback("mh-parking:server:GetVehicles", function(source, cb)
     local citizenid = GetIdentifier(src)
     local result = Database.GetPlayerVehicles(src)
     cb({status = true, data = result})
+    return
 end)
 
 RegisterNetEvent('mh-parking:givekey', function(plate)
@@ -371,6 +374,3 @@ elseif Framework.name == 'qb' or Framework.name == 'qbx' then
         if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, 'admin')
 end
-
-
-
