@@ -85,7 +85,7 @@ function populateVehicleList(garageLabel, vehicles) {
         } else if (v.state === 2) {
             status = "Impound";
 
-        } else if (v.state === 3) { // mh-oarking
+        } else if (v.state === 3) { // mh-parking
             status = "Parked outside"
         }
 
