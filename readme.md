@@ -120,6 +120,10 @@ exports['mh-parking']:UnparkWhenLockpick(vehicle_netId)
 ```
 ---
 
+# This park system only works if,
+- you OWN the vehicles, so when you buy a vehicle, then park it in the default garage, you need to do this anyway so do this first before you can use the park system.
+---
+
 # 📌 When is mh-parking useful?
 - mh-parking is especially useful if you are running a roleplay or modded server where vehicles need to be managed realistically and persistently. 
 
