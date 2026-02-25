@@ -44,11 +44,18 @@ function IsAdmin(src)
     return false
 end
 
+function IsOwner(src)
+    local Player = GetPlayer(src)
+    if Player ~= nil and Player.PlayerData ~= nil and Player.PlayerData.citizenid ~= nil and Player.PlayerData.citizenid ~= nil and Player.PlayerData.citizenid == citizenid then return true end
+    return false  
+end
+
 function IsPolice(src)
     local Player = GetPlayer(src)
     if Player ~= nil and Player.PlayerData ~= nil and Player.PlayerData.job ~= nil and Player.PlayerData.job.name ~= nil and Player.PlayerData.job.name == 'police' then return true end
     return false  
 end
+
 
 function GetIdentifier(src)
     local Player = GetPlayer(src)
