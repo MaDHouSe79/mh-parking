@@ -230,9 +230,8 @@ RegisterNetEvent('mh-parking:server:PayWheelclampBill', function(netid, plate)
                 if RemoveMoney(src, SV_Config.ClampFine) then
                     PayPoliceBill(SV_Config.ClampFine, 'wheelclamp-fine')
                     Database.UpdateWheelClamp(plate, false)
-                    --TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)
-                    Entity(veh).state.isClamped = false   
-                    DeleteEntity(wheel_clamp)
+                    Entity(veh).state.isClamped = false
+                    TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)    
                     Notify(src, Lang:t('info.wheel_clamp_deleted'), 'success')   
                 else
                     Notify(src, Lang:t('info.no_money', {money = SV_Config.MoneySign..SV_Config.ClampFine}), 'error')
@@ -370,6 +369,7 @@ elseif Framework.name == 'qb' or Framework.name == 'qbx' then
         if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, 'admin')
 end
+
 
 
 
