@@ -203,7 +203,9 @@ local function SyncParked(netId, isParked, pos, mods, steerangle)
                     local netId = ObjToNet(clamp)
                     SetNetworkIdCanMigrate(netId, false)
                     SetNetworkIdExistsOnAllMachines(netId, true)
+                    TriggerServerEvent('mh-parking:registerwheelclamp', netid)
                     state.clamp_netid = netId
+                    TriggerServerEvent('mh-parking:registerwheelclamp', EntToNet(vehicle), ObjToNet(clamp))
                     parkedCache[plate].clamp_entity = clamp
                     AttachEntityToEntity(clamp, vehicle, GetEntityBoneIndexByName(vehicle, 'wheel_lf'), config.ClampOffset.x, config.ClampOffset.y, config.ClampOffset.z, config.ClampOffset.rx, config.ClampOffset.ry, config.ClampOffset.rz, false, false, false, false, 0, true)
                     SetEntityAsMissionEntity(clamp, true, true)
