@@ -56,7 +56,6 @@ function IsPolice(src)
     return false  
 end
 
-
 function GetIdentifier(src)
     local Player = GetPlayer(src)
     if Player then
