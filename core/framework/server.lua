@@ -44,7 +44,7 @@ function IsAdmin(src)
     return false
 end
 
-function IsOwner(src)
+function IsOwner(src, citizenid)
     local Player = GetPlayer(src)
     if Player ~= nil and Player.PlayerData ~= nil and Player.PlayerData.citizenid ~= nil and Player.PlayerData.citizenid ~= nil and Player.PlayerData.citizenid == citizenid then return true end
     return false  
