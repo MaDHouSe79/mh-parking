@@ -227,11 +227,11 @@ RegisterNetEvent('mh-parking:server:PayWheelclampBill', function(netid, plate)
         if Entity(veh).state and Entity(veh).state.isClamped then
             local isOwner = Database.IsVehicleOwned(src, plate)
             if isOwner then
-                if RemoveMoney(src, SV_Config.ClampFine) then
-                    PayPoliceBill(SV_Config.ClampFine, 'wheelclamp-fine')
-                    Database.UpdateWheelClamp(plate, false)
-                    local wheel_clamp = NetworkGetEntityFromNetworkId(netid)
-                    if DoesEntityExist(wheel_clamp) then
+                local wheel_clamp = NetworkGetEntityFromNetworkId(netid)
+                if DoesEntityExist(wheel_clamp) then
+                    if RemoveMoney(src, SV_Config.ClampFine) then
+                        PayPoliceBill(SV_Config.ClampFine, 'wheelclamp-fine')
+                        Database.UpdateWheelClamp(plate, false)
                         --TriggerClientEvent('mh-parking:syncWheelClamp', -1, netid)
                         Entity(veh).state.isClamped = false   
                         DeleteEntity(wheel_clamp)
@@ -373,6 +373,7 @@ elseif Framework.name == 'qb' or Framework.name == 'qbx' then
         if targetID ~= -1 then RemoveVIP(src, targetID) end
     end, 'admin')
 end
+
 
 
 
